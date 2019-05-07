@@ -1,14 +1,14 @@
-from flask import Flask
-from flask_restful import Resource, Api
+from flask import Flask, Blueprint
+from flask_restful import Api, Resource, url_for
+from resources.users import Users
 
 app = Flask(__name__)
-api = Api(app)
+api_bp = Blueprint('api', __name__)
+api = Api(api_bp)
 
-class HelloWorld(Resource):
-    def get(self):
-        return {'hello': 'world'}
-
-api.add_resource(HelloWorld, '/')
+# Add resources
+api.add_resource(Users, '/users', '/users/<string:id>')
+app.register_blueprint(api_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)
