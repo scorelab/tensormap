@@ -1,10 +1,11 @@
 import * as React from "react";
-/*import * as _ from "lodash";*/
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./Application";
 import { TrayItemWidget } from "./TrayItemWidget";
 import { DefaultNodeModel, DiagramWidget } from "storm-react-diagrams";
-const _ = require('lodash');
+
+const _ = require("lodash")
+
 
 export interface BodyWidgetProps {
 	app: Application;
@@ -15,16 +16,13 @@ export interface BodyWidgetState {}
 /**
  * @author Dylan Vorster
  */
-class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
-	constructor(props : BodyWidgetProps) {
+export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
+	constructor(props: BodyWidgetProps) {
 		super(props);
-		this.state = {
-			app : this.props
-		};
+		this.state = {};
 	}
 
 	render() {
-		console.log(this.state.app);
 		return (
 			<div className="body">
 				<div className="header">
@@ -67,12 +65,10 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 							event.preventDefault();
 						}}
 					>
-						<DiagramWidget className="srd-demo-canvas" diagramEngine={this.state.app.getDiagramEngine()} />
+						<DiagramWidget className="srd-demo-canvas" diagramEngine={this.props.app.getDiagramEngine()} />
 					</div>
 				</div>
 			</div>
 		);
 	}
 }
-
-export default BodyWidget

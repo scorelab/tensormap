@@ -1,11 +1,14 @@
 import * as React   from 'react'
 import BodyWidget from './assets/BodyWidget'
+import { Application } from "./assets/Application";
+import "./sass/main.scss";
 
 class Workflow extends React.Component {
 
   render() {
+    var app = new Application();
     return (
-        <BodyWidget/>
+        <BodyWidget app={app} />
     )
   }
 
