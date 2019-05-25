@@ -13,9 +13,6 @@ export interface BodyWidgetProps {
 
 export interface BodyWidgetState {}
 
-/**
- * @author Dylan Vorster
- */
 export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 	constructor(props: BodyWidgetProps) {
 		super(props);

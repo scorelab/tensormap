@@ -11,8 +11,6 @@ class Workflow extends React.Component {
         <BodyWidget app={app} />
     )
   }
-
 }
-
 
 export default Workflow

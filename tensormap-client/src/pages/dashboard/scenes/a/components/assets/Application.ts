@@ -7,7 +7,7 @@ export class Application {
 	constructor() {
 		this.diagramEngine = new SRD.DiagramEngine();
 		this.diagramEngine.installDefaultFactories();
-    this.activeModel = new SRD.DiagramModel;
+    this.activeModel = new SRD.DiagramModel();
 		this.newModel();
 	}
 
