@@ -24,10 +24,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 
 	render() {
 		return (
-			<div className="body">
-				<div className="header">
-					<div className="title">Storm React Diagrams - Demo 5</div>
-				</div>
+			<div className="body_wf">
 				<div className="content">
 					<TrayWidget>
 						<TrayItemWidget model={{ type: "in" }} name="In Node" color="rgb(192,255,0)" />
