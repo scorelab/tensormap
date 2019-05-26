@@ -2,7 +2,7 @@ import * as React from "react";
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./Application";
 import { TrayItemWidget } from "./TrayItemWidget";
-import { DefaultNodeModel, DiagramWidget } from "storm-react-diagrams";
+import { DefaultNodeModel, DiagramWidget, DefaultPortModel } from "storm-react-diagrams";
 
 const _ = require("lodash")
 
@@ -24,8 +24,8 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 			<div className="body_wf">
 				<div className="content">
 					<TrayWidget>
-						<TrayItemWidget model={{ type: "in" }} name="In Node" color="rgb(192,255,0)" />
-						<TrayItemWidget model={{ type: "out" }} name="Out Node" color="rgb(0,192,255)" />
+						<TrayItemWidget model={{ type: "in" }} name="Input Layer" color="rgb(192,255,0)" />
+						<TrayItemWidget model={{ type: "out" }} name="Hidden Layer" color="rgb(0,192,255)" />
 					</TrayWidget>
 					<div
 						className="diagram-layer"
@@ -40,11 +40,12 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 
 							var node = null;
 							if (data.type === "in") {
-								node = new DefaultNodeModel("Node " + (nodesCount + 1), "rgb(192,255,0)");
+								node = new DefaultNodeModel("Input " + (nodesCount + 1), "rgb(192,255,0)");
 								node.addInPort("In");
 							} else {
-								node = new DefaultNodeModel("Node " + (nodesCount + 1), "rgb(0,192,255)");
-								node.addOutPort("Out");
+								node = new DefaultNodeModel("Hidden " + (nodesCount + 1), "rgb(0,192,255)");
+								node.addPort(new DefaultPortModel(false, "in-1", "In"));
+								node.addPort(new DefaultPortModel(false, "out-1", "Out"));
 							}
 							var points = this.props.app.getDiagramEngine().getRelativeMousePoint(event);
 							node.x = points.x;
