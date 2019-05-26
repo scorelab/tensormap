@@ -6,7 +6,7 @@ import Typography   from '@material-ui/core/Typography/index'
 import MenuIcon     from '@material-ui/icons/Menu'
 import PropTypes    from 'prop-types'
 import * as React   from 'react'
-import styles       from './Header.styles'
+import styles       from './styles'
 
 class Header extends React.Component {
   state = {

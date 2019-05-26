@@ -13,7 +13,7 @@ import LibraryBooksIcon from '@material-ui/icons/LibraryBooks'
 import PropTypes        from 'prop-types'
 import * as React       from 'react'
 import {Link}           from 'react-router-dom'
-import styles           from './Sidebar.styles'
+import styles           from './styles'
 
 
 class Sidebar extends React.Component {

@@ -1,9 +1,9 @@
-import {createMuiTheme} from "@material-ui/core";
-import {lightBlue} from "@material-ui/core/colors";
+import {createMuiTheme} from '@material-ui/core'
+import {lightBlue}      from '@material-ui/core/colors'
 
 const theme = createMuiTheme({
-  palette: {
-    primary: lightBlue,
+  palette   : {
+    primary  : lightBlue,
     secondary: {
       main: '#1976d2',
     },
@@ -11,9 +11,9 @@ const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
   },
-  layout: {
+  layout    : {
     sidebarWidth: 240
   },
-});
+})
 
 export default theme

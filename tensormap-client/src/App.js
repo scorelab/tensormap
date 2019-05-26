@@ -4,7 +4,7 @@ import React           from 'react'
 import {Route, Router} from 'react-router-dom'
 import styles          from './App.styles'
 import {history}       from './helpers'
-import {Dashboard}     from './pages/dashboard'
+import Dashboard       from './pages/dashboard/Dashboard'
 
 class App extends React.Component {
 

@@ -1,7 +1,7 @@
 import {withStyles} from '@material-ui/core'
 import PropTypes    from 'prop-types'
 import * as React   from 'react'
-import styles       from './SignUp.styles'
+import styles       from './styles'
 
 
 class SignUp extends React.Component {

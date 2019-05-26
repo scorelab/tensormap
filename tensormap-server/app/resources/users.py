@@ -11,11 +11,13 @@ user_response = {
     'username': fields.String
 }
 
+
 # User class
 class User(object):
     def __init__(self, id, username):
         self.id = id
         self.username = username
+
 
 # Users resource
 class Users(Resource):
@@ -31,4 +33,3 @@ class Users(Resource):
         args = req_parser.parse_args()
         # << Create user and return >>
         return User(id=args.id, username=args.username)
- 
