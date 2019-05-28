@@ -2546,13 +2546,6 @@ clone-deep@^2.0.1:
     kind-of "^6.0.0"
     shallow-clone "^1.0.0"
 
-closest@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/closest/-/closest-0.0.1.tgz#26da6f80b3e0e17e71f80f12782819e9f653495c"
-  integrity sha1-JtpvgLPg4X5x+A8SeCgZ6fZTSVw=
-  dependencies:
-    matches-selector "0.0.1"
-
 co@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
@@ -4642,11 +4635,6 @@ he@1.2.x:
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
-heap@0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/heap/-/heap-0.2.5.tgz#713b65590ebcc40fcbeeaf55e851694092b39af1"
-  integrity sha1-cTtlWQ68xA/L7q9V6FFpQJKzmvE=
-
 hex-color-regex@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
@@ -6372,11 +6360,6 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-matches-selector@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/matches-selector/-/matches-selector-0.0.1.tgz#1df5262243ae341c1a0804dd302048267ac713bb"
-  integrity sha1-HfUmIkOuNBwaCATdMCBIJnrHE7s=
-
 md5.js@^1.3.4:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/md5.js/-/md5.js-1.3.5.tgz#b5d07b8e3216e3e27cd728d72f70d1e6a342005f"
@@ -7371,18 +7354,6 @@ path-type@^3.0.0:
   integrity sha512-T2ZUsdZFHgA3u4e5PfPbjd7HDDpxPnQb5jN0SrDsjNSuVXHJqtwTnWqG0B1jZrgmJ/7lj1EmVIByWt1gxGkWvg==
   dependencies:
     pify "^3.0.0"
-
-pathfinding@^0.4.18:
-  version "0.4.18"
-  resolved "https://registry.yarnpkg.com/pathfinding/-/pathfinding-0.4.18.tgz#a9990f6fa22b7ef196e5651b049165403a045fe8"
-  integrity sha1-qZkPb6IrfvGW5WUbBJFlQDoEX+g=
-  dependencies:
-    heap "0.2.5"
-
-paths-js@^0.4.7:
-  version "0.4.7"
-  resolved "https://registry.yarnpkg.com/paths-js/-/paths-js-0.4.7.tgz#2e1d4e4a5a8e57e15c16bd29051d3f8be237e194"
-  integrity sha512-a6pYqToBgB/V7YUHHviYdRq41IcijUjY9XJ1NKu2COrR5eLhrx+HPZ/VL6vC3vyg3z4T6K00wsVMAqTzSR3ppg==
 
 pbkdf2@^3.0.3:
   version "3.0.17"
@@ -8563,7 +8534,7 @@ react-transition-group@^2.2.1:
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
-react@^16.3.2, react@^16.8.6:
+react@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
   integrity sha512-pC0uMkhLaHm11ZSJULfOBqV4tIZkx87ZLvbbQYunNixAAvjnC+snJCg0XQXn9VIsttVsbZP/H/ewzgsd5fxKXw==
@@ -9526,17 +9497,6 @@ stealthy-require@^1.1.1:
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
 
-storm-react-diagrams@^5.2.1:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/storm-react-diagrams/-/storm-react-diagrams-5.2.1.tgz#edc244011d78ac9ada958a2f45d9a71d0209f0ba"
-  integrity sha512-ikwRiRSXf1L/jA2Rci4S/ZXX+T9gKDbfuZogFeYTx9nekkB2xDV41zSbY/9zbTVMr3OMvTVVjNOteT5hDi1miA==
-  dependencies:
-    closest "^0.0.1"
-    lodash "^4.17.10"
-    pathfinding "^0.4.18"
-    paths-js "^0.4.7"
-    react "^16.3.2"
-
 stream-browserify@^2.0.1:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/stream-browserify/-/stream-browserify-2.0.2.tgz#87521d38a44aa7ee91ce1cd2a47df0cb49dd660b"
@@ -10022,11 +9982,6 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
-
-typescript@^3.4.5:
-  version "3.4.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.5.tgz#2d2618d10bb566572b8d7aad5180d84257d70a99"
-  integrity sha512-YycBxUb49UUhdNMU5aJ7z5Ej2XGmaIBL0x34vZ82fn3hGvD+bgrMrVDpatgz2f7YxUMJxMkbWxJZeAvDxVe7Vw==
 
 ua-parser-js@^0.7.18:
   version "0.7.19"

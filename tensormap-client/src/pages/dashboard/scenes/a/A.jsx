@@ -2,14 +2,13 @@ import {withStyles} from '@material-ui/core'
 import PropTypes    from 'prop-types'
 import * as React   from 'react'
 import styles       from './A.styles'
+import Workflow from './components/Workflow'
 
 class A extends React.Component {
 
   render() {
     return (
-        <div>
-          A
-        </div>
+        <Workflow/>
     )
   }
 

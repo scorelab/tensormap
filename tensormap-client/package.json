@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "history": "^4.9.0",
+    "lodash": "^4.17.11",
     "node-sass": "^4.12.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
@@ -15,7 +16,9 @@
     "react-scripts": "3.0.0",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "storm-react-diagrams": "^5.2.1",
+    "typescript": "^3.4.5"
   },
   "scripts": {
     "start": "react-scripts start",
