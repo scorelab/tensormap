@@ -1,0 +1,123 @@
+@import "./main";
+.body_wf{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+
+  .content{
+    display: flex;
+    flex-grow: 1;
+
+    .diagram-layer{
+      position: relative;
+      flex-grow: 1;
+    }
+
+    .tray{
+      min-width: 200px;
+      background: #e3e3e3;
+      padding-top:20px;
+      flex-grow: 0;
+      flex-shrink: 0;
+
+      .tray-item{
+        color: #000;
+        background: #fff;
+        font-family: Helvetica, Arial;
+        padding: 5px;
+        margin: 0px 10px;
+        border: solid 1px;
+        border-radius: 5px;
+        margin-bottom: 2px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.srd-demo-workspace{
+  background: #ccc;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+
+  &__toolbar{
+    padding: 5px;
+    display: flex;
+    flex-shrink: 0;
+
+    button{
+      background: #ccc;
+      font-size: 14px;
+      padding: 5px 10px;
+      border: none;
+      color: white;
+      outline: none;
+      cursor: pointer;
+      margin: 2px;
+      border-radius: 3px;
+
+      &:hover{
+        background: rgb(0,192,255);
+      }
+    }
+  }
+
+  &__content{
+    flex-grow: 1;
+    height: 100%;
+  }
+}
+
+.srd-demo-canvas{
+  height: 100%;
+  min-height: 300px;
+  background-color: #ccc !important;
+  $color: rgba(white, .5);
+  background-image:
+    linear-gradient(0deg,
+      transparent 24%,
+      $color 25%,
+      $color 26%,
+      transparent 27%,
+      transparent 74%,
+      $color 75%,
+      $color 76%,
+      transparent 77%,
+      transparent),
+    linear-gradient(90deg,
+      transparent 24%,
+      $color 25%,
+      $color 26%,
+      transparent 27%,
+      transparent 74%,
+      $color 75%,
+      $color 76%,
+      transparent 77%,
+      transparent);
+  background-size:50px 50px;
+
+
+}
+.srd-diagram {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    cursor: move;
+    overflow: hidden;
+  }
+
+  .srd-link-layer {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      transform-origin: 0 0;
+      overflow: visible !important;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+  }
