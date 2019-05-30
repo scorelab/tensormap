@@ -49,8 +49,9 @@ python run.py
 
 ## Built With
 
-* [Reactjs](https://reactjs.org/docs/getting-started.html) - The web framework used
-* [Flask](http://flask.pocoo.org/) - Backend 
+* [Reactjs](https://reactjs.org/docs/getting-started.html) : Frontend  
+* [Flask](http://flask.pocoo.org/) : Backend
+* [TensorFlow - Keras](https://www.tensorflow.org/) : Model implemetation 
 
 ## Contributing
 
