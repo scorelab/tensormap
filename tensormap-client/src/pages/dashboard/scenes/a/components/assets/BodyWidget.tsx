@@ -18,14 +18,20 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 		super(props);
 		this.state = {};
 	}
-
+	get_serialized(){
+		var str = JSON.stringify(this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram());
+		console.log(str);
+	}
 	render() {
 		return (
+			<div>
+			<button onClick={this.get_serialized.bind(this)}>get graph</button>
 			<div className="body_wf">
 				<div className="content">
 					<TrayWidget>
-						<TrayItemWidget model={{ type: "in" }} name="Input Layer" color="rgb(192,255,0)" />
-						<TrayItemWidget model={{ type: "out" }} name="Hidden Layer" color="rgb(0,192,255)" />
+						<TrayItemWidget model={{ type: "in",name:'inp_layer' }} name="Input Layer" color="rgb(192,255,0)" />
+						<TrayItemWidget model={{ type: "out",name:'hid_layer' }} name="Hidden Layer" color="rgb(0,192,255)" />
+						<TrayItemWidget model={{ type: "in",name:"out_layer" }} name="Output Layer" color="rgb(90,102,255)" />
 					</TrayWidget>
 					<div
 						className="diagram-layer"
@@ -39,10 +45,14 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 							).length;
 
 							var node = null;
-							if (data.type === "in") {
+							if (data.name === "inp_layer") {
 								node = new DefaultNodeModel("Input " + (nodesCount + 1), "rgb(192,255,0)");
 								node.addInPort("In");
-							} else {
+							} else if (data.name === "out_layer") {
+								node = new DefaultNodeModel("Output " + (nodesCount + 1), "rgb(90,102,255)");
+								node.addPort(new DefaultPortModel(true, "in-1", "In"));
+							}
+							else {
 								node = new DefaultNodeModel("Hidden " + (nodesCount + 1), "rgb(0,192,255)");
 								node.addPort(new DefaultPortModel(true, "in-1", "In"));
 								node.addPort(new DefaultPortModel(false, "out-1", "Out"));
@@ -63,6 +73,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 						<DiagramWidget className="srd-demo-canvas" diagramEngine={this.props.app.getDiagramEngine()} />
 					</div>
 				</div>
+			</div>
 			</div>
 		);
 	}
