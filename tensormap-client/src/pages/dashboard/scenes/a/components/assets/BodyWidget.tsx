@@ -3,6 +3,10 @@ import { TrayWidget } from "./TrayWidget";
 import { Application } from "./Application";
 import { TrayItemWidget } from "./TrayItemWidget";
 import { DefaultNodeModel, DiagramWidget, DefaultPortModel } from "storm-react-diagrams";
+import Drawer from '@material-ui/core/Drawer';
+import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
 
 const _ = require("lodash")
 
@@ -11,21 +15,62 @@ export interface BodyWidgetProps {
 	app: Application;
 }
 
-export interface BodyWidgetState {}
+export interface BodyWidgetState {
+	drawer:boolean;
+	hidden:{
+		param1:string,
+	}
+}
 
-export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
+export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidgetState> {
 	constructor(props: BodyWidgetProps) {
 		super(props);
-		this.state = {};
-	}
+		this.state = {
+			drawer:false,
+			hidden:{
+				param1:"",
+			}
+		};
+	};
+
+  toggleDrawer = (call_ : boolean, node_id : string) => {
+    this.setState({drawer:call_});
+		console.log(node_id);
+  };
+
 	get_serialized(){
 		var str = JSON.stringify(this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram());
 		console.log(str);
+		// var getnode = ReactDOM.findDOMNode().getElementsByClassName('srd-node--selected');
+
 	}
+
+	handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		console.log(event.target.value);
+		this.setState({
+			hidden:{
+				param1:event.target.value
+			}
+		})
+  };
+
+
 	render() {
 		return (
 			<div>
-			<button onClick={this.get_serialized.bind(this)}>get graph</button>
+			<Button onClick={this.get_serialized.bind(this)}>Send Graph</Button>
+			<Button onClick={() => this.toggleDrawer(true, "durgesh")}>Open Right</Button>
+			<Drawer anchor="right" open={this.state.drawer} onClose={() => this.toggleDrawer(false, "close")}>
+				<div
+					role="presentation"
+				>
+					<form noValidate autoComplete="off">
+						<TextField value = {this.state.hidden.param1} onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(event)}>
+						</TextField>
+						</form>
+				</div>
+      </Drawer>
+
 			<div className="body_wf">
 				<div className="content">
 					<TrayWidget>
@@ -68,6 +113,19 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 						}}
 						onDragOver={event => {
 							event.preventDefault();
+						}}
+
+						onDoubleClick={event => {
+								var selected_node =	document.getElementsByClassName("srd-node--selected");
+								if (selected_node.length > 0){
+									console.log(selected_node);
+									// data-nodeid
+									var node_id = selected_node[0].getAttribute("data-nodeid");
+									console.log(selected_node[0].getAttribute("data-nodeid"));
+									if (node_id !== null){
+										this.toggleDrawer(true,node_id);
+									}
+								}
 						}}
 					>
 						<DiagramWidget className="srd-demo-canvas" diagramEngine={this.props.app.getDiagramEngine()} />
