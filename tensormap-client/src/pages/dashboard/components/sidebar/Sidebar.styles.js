@@ -1,12 +1,12 @@
 const styles = theme => ({
   drawer     : {
     [theme.breakpoints.up('sm')]: {
-      width     : theme.layout.sidebarWidth,
+      width     : 240,
       flexShrink: 0,
     },
   },
   drawerPaper: {
-    width: theme.layout.sidebarWidth,
+    width: 240,
   },
 })
 
