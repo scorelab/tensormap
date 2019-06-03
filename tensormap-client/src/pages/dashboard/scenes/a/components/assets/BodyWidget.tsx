@@ -7,6 +7,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
+import socketIOClient from "socket.io-client";
 
 const _ = require("lodash")
 
@@ -16,9 +17,16 @@ export interface BodyWidgetProps {
 }
 
 export interface BodyWidgetState {
+	api_endpoint:string;
 	drawer:boolean;
-	hidden:{
-		param1:string,
+	tmp_id:string;
+	node:
+		{
+			id:string;
+			param:Array<any>;
+		}[];
+	tmp_form:{
+		[key:string]: any;
 	}
 }
 
@@ -26,12 +34,29 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 	constructor(props: BodyWidgetProps) {
 		super(props);
 		this.state = {
+			api_endpoint:"ws://localhost:5000/nn",
 			drawer:false,
-			hidden:{
+			tmp_id:"",
+			node:[
+				{
+					id:"",
+					param:new Array(),
+				}
+			]
+			,
+			tmp_form:
+			{
 				param1:"",
+				param2:"",
 			}
 		};
 	};
+
+	componentDidMount(){
+		const endpoint  = this.state.api_endpoint;
+    const socket = socketIOClient(endpoint);
+    socket.on("FromAPI", (data:any) => console.log(data));
+	}
 
   toggleDrawer = (call_ : boolean, node_id : string) => {
     this.setState({drawer:call_});
@@ -45,28 +70,56 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 
 	}
 
-	handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		console.log(event.target.value);
+	handleChange = (key: number, param_name: string, event: React.ChangeEvent<HTMLInputElement>) => {
+		var tmp_form = this.state.tmp_form;
+		tmp_form[param_name] = event.target.value
 		this.setState({
-			hidden:{
-				param1:event.target.value
-			}
-		})
+			tmp_form
+			} as any)
   };
+
+	handleSave = () => {
+		console.log(this.state.tmp_form);
+		var param_ = [
+			this.state.tmp_form,
+		]
+
+		var new_val = [{
+			id:this.state.tmp_id,
+			param:param_,
+		}];
+		console.log(new_val);
+		var joined = this.state.node.concat(new_val);
+		console.log(joined);
+		this.setState({ node: joined, });
+		console.log(this.state.node);
+	}
+
+	handleData = () => {
+		var json_graph = JSON.stringify(this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram());
+		var node_data = this.state.node
+	}
 
 
 	render() {
 		return (
 			<div>
 			<Button onClick={this.get_serialized.bind(this)}>Send Graph</Button>
-			<Button onClick={() => this.toggleDrawer(true, "durgesh")}>Open Right</Button>
+			<Button onClick={() => this.toggleDrawer(true, "abcd")}>Open Right</Button>
+			<Button onClick={() => this.handleData()}>Send Both</Button>
 			<Drawer anchor="right" open={this.state.drawer} onClose={() => this.toggleDrawer(false, "close")}>
+
 				<div
 					role="presentation"
 				>
 					<form noValidate autoComplete="off">
-						<TextField value = {this.state.hidden.param1} onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(event)}>
+						<TextField  id="standard-name" label="param1" value = {this.state.tmp_form.param1} onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "param1", event)} margin="normal">
 						</TextField>
+						<br/>
+						<TextField  id="standard-name" label="param2" value = {this.state.tmp_form.param2} onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "param2", event)} margin="normal">
+						</TextField>
+						<br/>
+						<Button onClick={() => this.handleSave()}>Save</Button>
 						</form>
 				</div>
       </Drawer>
@@ -124,6 +177,9 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 									console.log(selected_node[0].getAttribute("data-nodeid"));
 									if (node_id !== null){
 										this.toggleDrawer(true,node_id);
+										this.setState({
+											tmp_id : node_id,
+										})
 									}
 								}
 						}}
