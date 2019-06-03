@@ -1,10 +1,9 @@
-const styles = theme => ({
+const styles = (theme) => ({
   appBar    : {
-    height: theme.layout.headerHeight,
 
-    marginLeft                  : theme.layout.sidebarWidth,
+    marginLeft                  : 240,
     [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${theme.layout.sidebarWidth}px)`,
+      width: `calc(100% - 240px)`,
     },
   },
   menuButton: {
