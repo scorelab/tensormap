@@ -11,13 +11,13 @@ import socketIOClient from "socket.io-client";
 
 const _ = require("lodash")
 
+const endpoint  = "ws://localhost:5000/nn";
 
 export interface BodyWidgetProps {
 	app: Application;
 }
 
 export interface BodyWidgetState {
-	api_endpoint:string;
 	drawer:boolean;
 	tmp_id:string;
 	node:
@@ -34,7 +34,6 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 	constructor(props: BodyWidgetProps) {
 		super(props);
 		this.state = {
-			api_endpoint:"ws://localhost:5000/nn",
 			drawer:false,
 			tmp_id:"",
 			node:[
@@ -53,9 +52,8 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 	};
 
 	componentDidMount(){
-		const endpoint  = this.state.api_endpoint;
     const socket = socketIOClient(endpoint);
-    socket.on("FromAPI", (data:any) => console.log(data));
+    socket.on("nn_execute", (data:any) => console.log(data));
 	}
 
   toggleDrawer = (call_ : boolean, node_id : string) => {
@@ -98,14 +96,21 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 	handleData = () => {
 		var json_graph = JSON.stringify(this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram());
 		var node_data = this.state.node
+		var comp_data = {
+			graph:json_graph,
+			node_param:node_data
+		}
+		const socket = socketIOClient(endpoint);
+	 	socket.emit('nn_execute', comp_data)
+
 	}
 
 
 	render() {
 		return (
 			<div>
-			<Button onClick={this.get_serialized.bind(this)}>Send Graph</Button>
-			<Button onClick={() => this.toggleDrawer(true, "abcd")}>Open Right</Button>
+			// <Button onClick={this.get_serialized.bind(this)}>Send Graph</Button>
+			// <Button onClick={() => this.toggleDrawer(true, "abcd")}>Open Right</Button>
 			<Button onClick={() => this.handleData()}>Send Both</Button>
 			<Drawer anchor="right" open={this.state.drawer} onClose={() => this.toggleDrawer(false, "close")}>
 

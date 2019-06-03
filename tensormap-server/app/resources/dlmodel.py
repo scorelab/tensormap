@@ -25,28 +25,28 @@ def nn_execute(nnmodelconfig):
     # Convert movie review data to one-hot encoded feature matrix
     tokenizer = Tokenizer(num_words=number_of_features)
     train_features = tokenizer.sequences_to_matrix(train_data, mode='binary')
-    test_features = tokenizer.sequences_to_matrix(test_data, mode='binary')  
+    test_features = tokenizer.sequences_to_matrix(test_data, mode='binary')
 
     #constructing model from json
     model = keras.models.model_from_json(json_config)
 
-    model.compile(loss='binary_crossentropy', 
-                optimizer='rmsprop', 
+    model.compile(loss='binary_crossentropy',
+                optimizer='rmsprop',
                 metrics=['accuracy'])
 
     model.fit(train_features,
-                      train_target, 
-                      epochs=3, 
-                      verbose=1, 
-                      batch_size=100) 
+                      train_target,
+                      epochs=3,
+                      verbose=1,
+                      batch_size=100)
 
-    val_loss, val_acc = model.evaluate(test_features, test_target) 
+    val_loss, val_acc = model.evaluate(test_features, test_target)
 
     results = {}
     results['loss'] = float(val_loss)
     results['accuracy']= float(val_acc)
     results = json.dumps(results)
-        
+
     #TO_DO - change according to frontend
     emit('sample_response', results, namespace='/samplenamespace')
-
+    # emit("valla...")
