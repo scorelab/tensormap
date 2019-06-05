@@ -188,7 +188,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 								}
 						}}
 					>
-						<DiagramWidget className="srd-demo-canvas" diagramEngine={this.props.app.getDiagramEngine()} />
+						<DiagramWidget className="srd-demo-canvas" diagramEngine={this.props.app.getDiagramEngine()} deleteKeys={[27]} />
 					</div>
 				</div>
 			</div>
