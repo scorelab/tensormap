@@ -5,7 +5,6 @@ import { TrayItemWidget } from "./TrayItemWidget";
 import { DefaultNodeModel, DiagramWidget, DefaultPortModel } from "storm-react-diagrams";
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import socketIOClient from "socket.io-client";
 
@@ -100,6 +99,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 			graph:json_graph,
 			node_param:node_data
 		}
+		console.log(json_graph);
 		const socket = socketIOClient(endpoint);
 	 	socket.emit('nn_execute', comp_data)
 
@@ -188,7 +188,10 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 								}
 						}}
 					>
-						<DiagramWidget className="srd-demo-canvas" diagramEngine={this.props.app.getDiagramEngine()} deleteKeys={[27]} />
+						<DiagramWidget
+							className="srd-demo-canvas"
+							diagramEngine={this.props.app.getDiagramEngine()}
+							deleteKeys={[27]} />
 					</div>
 				</div>
 			</div>
