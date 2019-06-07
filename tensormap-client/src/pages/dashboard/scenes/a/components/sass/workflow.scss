@@ -17,21 +17,8 @@
     .tray{
       min-width: 200px;
       background: #e3e3e3;
-      padding-top:20px;
       flex-grow: 0;
       flex-shrink: 0;
-
-      .tray-item{
-        color: #000;
-        background: #fff;
-        font-family: Helvetica, Arial;
-        padding: 5px;
-        margin: 0px 10px;
-        border: solid 1px;
-        border-radius: 5px;
-        margin-bottom: 2px;
-        cursor: pointer;
-      }
     }
   }
 }
