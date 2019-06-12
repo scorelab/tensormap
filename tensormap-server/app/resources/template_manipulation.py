@@ -2,6 +2,7 @@ from flask import session, redirect, url_for, render_template, request
 from . import main
 from .. import db
 from .database_models.code_gen import template_copies
+import os
 
 def convertToBinaryData(filename):
     #Convert digital data to binary format
@@ -16,6 +17,9 @@ def write_file(data, filename):
 
 @main.route('/add', methods=['POST'])
 def addNewLine():
+
+        dirPath =os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', 'user_template'))
+        # paperInfoPath = '{}{}'.format(dirPath, "/userTemplate.py")
 
         ##updating
         # result = template_copies.query.filter_by(id="1").one()
