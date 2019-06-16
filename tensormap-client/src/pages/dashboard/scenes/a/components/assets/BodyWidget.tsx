@@ -6,6 +6,15 @@ import { DefaultNodeModel, DiagramWidget, DefaultPortModel } from "storm-react-d
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+
 import socketIOClient from "socket.io-client";
 
 const _ = require("lodash")
@@ -18,6 +27,9 @@ export interface BodyWidgetProps {
 
 export interface BodyWidgetState {
 	drawer:boolean;
+	dialog:boolean;
+	accuracy:boolean;
+	neg_mean_square_error:boolean;
 	tmp_id:string;
 	node:
 		{
@@ -27,6 +39,9 @@ export interface BodyWidgetState {
 	tmp_form:{
 		[key:string]: any;
 	}
+	config:{
+		[key:string]: any;
+	}
 }
 
 export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidgetState> {
@@ -34,7 +49,10 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 		super(props);
 		this.state = {
 			drawer:false,
+			dialog:false,
 			tmp_id:"",
+			accuracy:false,
+			neg_mean_square_error:false,
 			node:[
 				{
 					id:"",
@@ -46,12 +64,20 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 			{
 				param1:"",
 				param2:"",
+			},
+			config:{
+				"optimizer":"'Adam'",
+				"loss":"'sparse_categorical_crossentropy'",
+				"metrics": [],
 			}
 		};
 
 		this.handleNodeDelete = this.handleNodeDelete.bind(this)
 		this.handleNodeAdd = this.handleNodeAdd.bind(this)
 		this.handleNodeEdit = this.handleNodeEdit.bind(this)
+		this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this)
+		this.handleClose = this.handleClose.bind(this)
+		this.handleExeConfig = this.handleExeConfig.bind(this)
 	};
 
 	componentDidMount(){
@@ -102,8 +128,10 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 			node_param:node_data
 		}
 		console.log(comp_data);
+
 		const socket = socketIOClient(endpoint);
-	 	socket.emit('nn_execute', comp_data)
+	 	socket.emit('nn_execute', comp_data);
+
 	}
 
 	handleGetCode = () => {
@@ -114,6 +142,22 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 			node_param:node_data
 		}
 		console.log(data);
+		fetch('http://localhost:5000/getcode/', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		})
+		.then(response => response.json())
+		.catch(response => console.log(response));
+	}
+
+	handleExeConfig = () => {
+		var data = [this.state.config]
+		console.log(data);
+		this.handleClose();
 		fetch('http://localhost:5000/getcode/', {
 			method: 'POST',
 			headers: {
@@ -184,12 +228,42 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 		.catch(response => console.log(response));
 	}
 
+//Dialog functions
+
+	 handleClickOpen = ()=> {
+	    this.setState({
+				dialog:true
+			})
+	  }
+
+	 handleClose = ()=> {
+			this.setState({
+				dialog:false
+			})
+	  }
+
+	handleCheckBoxChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+		console.log("sdhfsdbjk")
+	  this.setState({ [name]: event.target.checked }as any);
+		var joined = this.state.config.metrics.concat(name);
+
+		var tmp_form = this.state.config;
+		tmp_form["metrics"] = joined
+		this.setState({
+			tmp_form
+			} as any)
+
+	console.log(tmp_form)
+	console.log(tmp_form.metrics)
+	};
+
 
 	render() {
 		return (
 			<div>
 
 			<Button className={'send_btn'} onClick={() => this.handleGetCode()}>Get Code</Button>
+			<Button className={'exe_config_btn'} onClick={this.handleClickOpen}>Change Exe Config</Button>
 			<Drawer anchor="right" open={this.state.drawer} onClose={() => this.toggleDrawer(false, "close")}>
 
 				<div
@@ -206,6 +280,77 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 						</form>
 				</div>
       </Drawer>
+
+			<Dialog open={this.state.dialog} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Execution Configuration</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+						value = {this.state.config.optimizer}
+            margin="dense"
+            id="name"
+            label="Optimizer"
+            type="text"
+						onChange={(e) => {
+							var tmp_form = this.state.config;
+							tmp_form["optimizer"] = e.target.value
+							this.setState({
+								tmp_form
+								} as any)
+						}}
+            fullWidth
+          />
+
+					<TextField
+            autoFocus
+						value = {this.state.config.loss}
+            margin="dense"
+            id="name"
+            label="loss"
+            type="text"
+						onChange={(e) => {
+							var tmp_form = this.state.config;
+							tmp_form["loss"] = e.target.value
+							this.setState({
+								tmp_form
+								} as any)
+						}}
+            fullWidth
+          />
+
+					<FormControlLabel
+			        control={
+								<Checkbox
+									onChange={this.handleCheckBoxChange("accuracy")}
+									value="accuracy"
+									color="primary"
+								/>
+			        }
+			        label="Accuracy"
+			      />
+
+						<FormControlLabel
+								control={
+									<Checkbox
+										onChange={this.handleCheckBoxChange("neg_mean_square_error")}
+										value="neg_mean_square_error"
+										color="primary"
+									/>
+								}
+								label="Neg mean square error"
+							/>
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={this.handleExeConfig} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+
 
 			<div className="body_wf">
 				<div className="content">
