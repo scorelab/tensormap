@@ -2,7 +2,7 @@ import * as React from "react";
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./Application";
 import { TrayItemWidget } from "./TrayItemWidget";
-import { DefaultNodeModel, DiagramWidget, DefaultPortModel } from "storm-react-diagrams";
+import { DefaultNodeModel, DiagramWidget, DefaultPortModel,DiagramProps } from "storm-react-diagrams";
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -426,8 +426,11 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 
 						onDoubleClick={event => {
 								var selected_node =	document.getElementsByClassName("srd-node--selected");
+								var selected_link = document.getElementsByClassName("srd-default-link--path-selected ")
+
 								if (selected_node.length > 0){
 									console.log(selected_node);
+									console.log(selected_link);
 									// data-nodeid
 									var node_id = selected_node[0].getAttribute("data-nodeid");
 									console.log(selected_node[0].getAttribute("data-nodeid"));
@@ -438,11 +441,24 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 										})
 									}
 								}
+								else if (selected_link.length > 0){
+									console.log(selected_link);
+									// data-nodeid
+									var link_id = selected_link[1].getAttribute("data-linkid");
+									console.log(selected_link[1].getAttribute("data-linkid"));
+									if (link_id !== null){
+										this.toggleDrawer(true,node_id);
+										this.setState({
+											tmp_id : link_id,
+										})
+									}
+								}
 						}}
 					>
 						<DiagramWidget
 							className="srd-demo-canvas"
 							diagramEngine={this.props.app.getDiagramEngine()}
+							maxNumberPointsPerLink= {0}
 							 />
 					</div>
 				</div>
