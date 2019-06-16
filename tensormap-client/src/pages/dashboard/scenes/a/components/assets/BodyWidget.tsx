@@ -2,7 +2,7 @@ import * as React from "react";
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./Application";
 import { TrayItemWidget } from "./TrayItemWidget";
-import { DefaultNodeModel,NodeModel, DiagramWidget, DefaultPortModel,PortModel } from "storm-react-diagrams";
+import { DefaultNodeModel, DiagramWidget, DefaultPortModel } from "storm-react-diagrams";
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -51,6 +51,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 
 		this.handleNodeDelete = this.handleNodeDelete.bind(this)
 		this.handleNodeAdd = this.handleNodeAdd.bind(this)
+		this.handleNodeEdit = this.handleNodeEdit.bind(this)
 	};
 
 	componentDidMount(){
@@ -76,22 +77,22 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 			} as any)
   };
 
-	handleSave = () => {
-		console.log(this.state.tmp_form);
-		var param_ = [
-			this.state.tmp_form,
-		]
-
-		var new_val = [{
-			id:this.state.tmp_id,
-			param:param_,
-		}];
-		console.log(new_val);
-		var joined = this.state.node.concat(new_val);
-		console.log(joined);
-		this.setState({ node: joined, });
-		console.log(this.state.node);
-	}
+	// handleSave = () => {
+	// 	console.log(this.state.tmp_form);
+	// 	var param_ = [
+	// 		this.state.tmp_form,
+	// 	]
+	//
+	// 	var new_val = [{
+	// 		id:this.state.tmp_id,
+	// 		param:param_,
+	// 	}];
+	// 	console.log(new_val);
+	// 	var joined = this.state.node.concat(new_val);
+	// 	console.log(joined);
+	// 	this.setState({ node: joined, });
+	// 	console.log(this.state.node);
+	// }
 
 	handleExecute = () => {
 		var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
@@ -129,7 +130,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 			layerSpec:layerSpec,
 			parentNodeId:parentnode
 		}
-		console.log(data);
+		// console.log(data);
 		fetch('http://localhost:5000/add/', {
 			method: 'POST',
 			headers: {
@@ -142,6 +143,25 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 		.catch(response => console.log(response));
 	}
 
+	handleNodeEdit = () => {
+		var new_val = [this.state.tmp_form];
+		console.log(new_val);
+		var data = {
+			layerId:this.state.tmp_id,
+			layerSpec:new_val,
+		}
+		console.log(data);
+		fetch('http://localhost:5000/edit/', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		})
+		.then(response => response.json())
+		.catch(response => console.log(response));
+	}
 
 
 	render() {
@@ -161,7 +181,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 						<TextField  id="standard-name" label="param2" value = {this.state.tmp_form.param2} onChange={(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "param2", event)} margin="normal">
 						</TextField>
 						<br/>
-						<Button onClick={() => this.handleSave()}>Save</Button>
+						<Button onClick={this.handleNodeEdit}>Save</Button>
 						</form>
 				</div>
       </Drawer>
@@ -189,7 +209,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 
 							var node = null;
 							if (data.name === "inp_layer") {
-								node = new DefaultNodeModel("Input ", "rgb(0,102,255)");
+								node = new DefaultNodeModel("Input", "rgb(0,102,255)");
 								node.addPort(new DefaultPortModel(false, "out-1", "out"));
 
 								add_node(node.id, node.name, [], this.props.app.getDiagramEngine().getDiagramModel().id )
@@ -197,30 +217,30 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 
 								node.addListener({
 									entityRemoved: function(e){
-										console.log("You deleted Input " + (nodesCount + 1));
+										console.log("You deleted Input node");
 										delete_node(e.entity.id)
 									}
 
 								})
 							} else if (data.name === "out_layer") {
-								node = new DefaultNodeModel("Output ", "rgb(90,102,255)");
+								node = new DefaultNodeModel("Output", "rgb(90,102,255)");
 								node.addPort(new DefaultPortModel(true, "in-1", "In"));
 
 								node.addListener({
 									entityRemoved: function(e){
-										console.log("You deleted Output " + (nodesCount + 1))
+										console.log("You deleted Output node")
 									}
 								})
 
 							}
 							else {
-								node = new DefaultNodeModel("Dense ", "rgb(0,192,255)");
+								node = new DefaultNodeModel("Dense", "rgb(0,192,255)");
 								node.addPort(new DefaultPortModel(true, "in-1", "In"));
 								node.addPort(new DefaultPortModel(false, "out-1", "Out"));
 
 								node.addListener({
 									entityRemoved: function(e){
-										console.log("You deleted Hidden " + (nodesCount + 1))
+										console.log("You deleted dense node")
 									}
 								})
 
