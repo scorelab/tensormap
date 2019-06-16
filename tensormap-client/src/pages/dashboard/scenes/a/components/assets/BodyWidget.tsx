@@ -110,7 +110,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 		return (
 			<div>
 
-			<Button onClick={() => this.handleData()}>Send</Button>
+			<Button className={'send_btn'} onClick={() => this.handleData()}>Send</Button>
 			<Drawer anchor="right" open={this.state.drawer} onClose={() => this.toggleDrawer(false, "close")}>
 
 				<div

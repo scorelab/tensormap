@@ -18,7 +18,7 @@ class Dashboard extends React.Component {
     return (
         <div className={classes.root}>
           <CssBaseline/>
-          <Header/>w
+          <Header/>
           <Sidebar/>
           <main className={classes.content}>
             <div className={classes.toolbar}/>
