@@ -4,6 +4,7 @@ from .. import db
 from .database_models.code_gen import template_copies,user_template_index,code_layers
 import os
 from flask import send_file
+from ..common import validate_model_json
 
 def convertToBinaryData(filename):
     #Convert digital data to binary format
@@ -181,7 +182,7 @@ def sendFile():
             
         filename = getFile()       
 
-        result = validate_json()
+        result = validate_model_json.validate_json(content)
 
         if result:
                 try:
@@ -242,7 +243,6 @@ def editExe():
         # "loss": "'sparse_categorical_crossentropy'",
 # 	"metrics": ["'accuracy'"]
 # }
-
             
                 
 ##adding file to database when user is first created

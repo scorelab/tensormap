@@ -26,7 +26,9 @@ npm start
 ```
 ### Setting up Backend
 
-First, go into 'tensormap-server' folder
+First make sure you have MySQL server and Python 3.x installed in your system.
+
+Then, go into 'tensormap-server' folder
 
 ```bash
 cd Tensormap
@@ -37,6 +39,22 @@ Then install all the required packages by running
 
 ```bash
 pip install -r requirements.txt
+```
+Next, login to MySQL and create a database named 'tensormap'
+
+```bash
+mysql -u <user> -p
+CREATE DATABASE tensormap;
+```
+Then in the '__init__' file that is inside the 'app' folder, replace the database connection string with your username and password
+
+```bash
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://<user>:<password>@localhost/tensormap"
+```
+
+Next, restore the sql dump 
+```bash
+mysql -u {user} -p -Dtensormap < {path-to-dump-file}/dump.sql
 ```
 
 To start the server run
