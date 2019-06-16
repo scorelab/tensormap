@@ -2,7 +2,7 @@ import * as React from "react";
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./Application";
 import { TrayItemWidget } from "./TrayItemWidget";
-import { DefaultNodeModel, DiagramWidget, DefaultPortModel } from "storm-react-diagrams";
+import { DefaultNodeModel,NodeModel, DiagramWidget, DefaultPortModel,PortModel } from "storm-react-diagrams";
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -48,6 +48,9 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 				param2:"",
 			}
 		};
+
+		this.handleNodeDelete = this.handleNodeDelete.bind(this)
+		this.handleNodeAdd = this.handleNodeAdd.bind(this)
 	};
 
 	componentDidMount(){
@@ -62,9 +65,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 
 	get_serialized(){
 		var str = JSON.stringify(this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram());
-		console.log(str);
-		// var getnode = ReactDOM.findDOMNode().getElementsByClassName('srd-node--selected');
-
+		console.log(str)
 	}
 
 	handleChange = (key: number, param_name: string, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +93,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 		console.log(this.state.node);
 	}
 
-	handleData = () => {
+	handleExecute = () => {
 		var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
 		var node_data = this.state.node
 		var comp_data = {
@@ -102,15 +103,52 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 		console.log(comp_data);
 		const socket = socketIOClient(endpoint);
 	 	socket.emit('nn_execute', comp_data)
-
 	}
+
+	handleNodeDelete = (nodeid:string) => {
+		var data = {
+			layerID:nodeid
+		}
+		console.log(data);
+		fetch('http://localhost:5000/delete/', {
+		  method: 'POST',
+		  headers: {
+		    Accept: 'application/json',
+		    'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify(data),
+		})
+		.then(response => response.json())
+		.catch(response => console.log(response));
+	}
+
+	handleNodeAdd = (nodeid:string, layertype:string, layerSpec:Array<any>, parentnode:string) => {
+		var data = {
+			layerId:nodeid,
+			layerType:layertype,
+			layerSpec:layerSpec,
+			parentNodeId:parentnode
+		}
+		console.log(data);
+		fetch('http://localhost:5000/add/', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		})
+		.then(response => response.json())
+		.catch(response => console.log(response));
+	}
+
 
 
 	render() {
 		return (
 			<div>
 
-			<Button className={'send_btn'} onClick={() => this.handleData()}>Send</Button>
+			<Button className={'send_btn'} onClick={() => this.handleExecute()}>Send</Button>
 			<Drawer anchor="right" open={this.state.drawer} onClose={() => this.toggleDrawer(false, "close")}>
 
 				<div
@@ -146,18 +184,47 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 									.getNodes()
 							).length;
 
+							var delete_node = this.handleNodeDelete
+							var add_node = this.handleNodeAdd
+
 							var node = null;
 							if (data.name === "inp_layer") {
-								node = new DefaultNodeModel("Input " + (nodesCount + 1), "rgb(192,255,0)");
-								node.addInPort("In");
+								node = new DefaultNodeModel("Input " + (nodesCount + 1), "rgb(0,102,255)");
+								node.addPort(new DefaultPortModel(false, "out-1", "out"));
+
+
+								// add_node()
+								console.log(node)
+
+								node.addListener({
+									entityRemoved: function(e){
+										console.log("You deleted Input " + (nodesCount + 1));
+										delete_node(e.entity.id)
+									}
+
+								})
 							} else if (data.name === "out_layer") {
 								node = new DefaultNodeModel("Output " + (nodesCount + 1), "rgb(90,102,255)");
 								node.addPort(new DefaultPortModel(true, "in-1", "In"));
+
+								node.addListener({
+									entityRemoved: function(e){
+										console.log("You deleted Output " + (nodesCount + 1))
+									}
+								})
+
 							}
 							else {
 								node = new DefaultNodeModel("Hidden " + (nodesCount + 1), "rgb(0,192,255)");
 								node.addPort(new DefaultPortModel(true, "in-1", "In"));
 								node.addPort(new DefaultPortModel(false, "out-1", "Out"));
+
+								node.addListener({
+									entityRemoved: function(e){
+										console.log("You deleted Hidden " + (nodesCount + 1))
+									}
+								})
+
 							}
 							var points = this.props.app.getDiagramEngine().getRelativeMousePoint(event);
 							node.x = points.x;
@@ -191,7 +258,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 						<DiagramWidget
 							className="srd-demo-canvas"
 							diagramEngine={this.props.app.getDiagramEngine()}
-							deleteKeys={[27]} />
+							 />
 					</div>
 				</div>
 			</div>
