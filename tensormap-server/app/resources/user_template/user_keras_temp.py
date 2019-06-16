@@ -5,15 +5,11 @@ import numpy as np
 
 np.random.seed(0)
 
-network = tf.keras.models.Sequential(name='user_model')
+network = tf.keras.models.Sequential(name='userModel')
 
-network.add(tf.keras.layers.Dense(units = 2,activation = 'relu',name = '87ba7b08-0557-475f-839f-0729f70c0384'))
+network.add(tf.keras.layers.Dense(units = 9,activation = 'tanh',name = 'input1'))
 
-network.add(tf.keras.layers.Dense(units = 2,activation = 'tanh',name = '87ba7b08-0557-475f-839f-0729f70c031'))
-
-network.add(tf.keras.layers.Dense(units = 9,activation = 'tanh',name = 'hidden3'))
-
-network.compile(loss='', optimizer='', metrics=[]) 
+network.compile (optimizer = 'adam',loss = 'sparse_categorical_crossentropy',metrics = ['accuracy'])
 
 mod_history = network.fit(x_train, y_train, epochs=, verbose=1, batch_size=, validation_data=(x_val, y_val))
 

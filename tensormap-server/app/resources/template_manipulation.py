@@ -43,25 +43,20 @@ def update_template_copies(filename):
         result.data = convertToBinaryData(filename)
         db.session.commit()
 
-def edit_line_no():
+def edit_line_no(filename):
         allLayers = user_template_index.query.all()
 
         for layer in allLayers:
-                if layer.layerId == "top":
-                        continue
-                else:
-                        with open(filename, "r") as f:
+                with open(filename, "r") as f:
                                 lines = f.readlines()
-                        f.close()
-                        for i, line in enumerate(lines):
-                                if layer.layerId in line:
-                                        print("line no: ",i)
-                                        result = user_template_index.query.filter_by(layerId = layer.layerId).one()
-                                        result.lineNo = i
-                                        db.session.commit()
-
-
-       
+                f.close()
+                for i, line in enumerate(lines):
+                        if layer.layerId in line:
+                                print("line no: ",i)
+                                result = user_template_index.query.filter_by(layerId = layer.layerId).one()
+                                result.lineNo = i
+                                db.session.commit()                                 
+                                
 
 @main.route('/add', methods=['POST'])
 def addNewLine():
@@ -99,7 +94,7 @@ def addNewLine():
         db.session.commit()
         user_template_index
 
-        edit_line_no()
+        edit_line_no(filename)
 
         return "done"
 
@@ -107,7 +102,7 @@ def addNewLine():
 # 	"layerId": "87ba7b08-0557-475f-839f-0729f70c0389",
 # 	"layerType": "dense",
 # 	"layerSpec": ["2","'relu'","'87ba7b08-0557-475f-839f-0729f70c0389'"],
-# 	"parentNodeName": "top"
+# 	"parentNodeId": "userModel"
 # }
 
 @main.route('/edit', methods=['POST'])
@@ -170,7 +165,7 @@ def deleteLine():
         user_template_index.query.filter_by(layerId=content["layerId"]).delete()
         db.session.commit()
 
-        edit_line_no()
+        edit_line_no(filename)
         
         update_template_copies(filename)
 
@@ -181,45 +176,80 @@ def deleteLine():
 # }
 
 @main.route('/getCode', methods=['GET'])
-    def sendFile():
-
-            content = request.get_json()
+def sendFile():
+        content = request.get_json()
             
-            filename = getFile()
+        filename = getFile()       
 
-            return send_file(filename,
-                     mimetype='text/csv',
-                     attachment_filename='user_keras_temp.py.py',
-                     as_attachment=True)
+        result = validate_json()
 
+        if result:
+                try:
+                        return send_file(filename,
+                        attachment_filename='user_keras_temp.py.py',
+                        as_attachment=True)
+                except Exception as e:
+                        return str(e)
+        else:
+                return "Model Not Valid"
 
+#         sample json: <the complete JSON of model>
 
+@main.route('/editExeConfig', methods=['POST'])
+def editExe():
 
+        content = request.get_json()
+            
+        filename = getFile()   
 
+        layerInfo = user_template_index.query.filter_by(layerId="network.compile").one()
+        lineToReplace = layerInfo.lineNo
 
+        layerInfo = code_layers.query.filter_by(name="compile").one()
+
+        tempCode = layerInfo.code
+        codeAttributes = layerInfo.attributes
+        splitAttr = codeAttributes.split(",")
+        tempString = tempCode
+        tempString += splitAttr[0] + " = " + content["optimizer"]+","+splitAttr[1] + " = "+content["loss"]+","+splitAttr[2]+ " = ["
         
+        for i in range(len(content["metrics"])):
+                tempString += content["metrics"][i]
 
+                if i != (len(content["metrics"])-1):
+                        tempString += ","
+                else:    
+                        tempString += "])"                                                           
 
+        tempString += "\n"
 
+        f = open(filename, "r")
+        fileContents = f.readlines()
+        f.close()
 
+        fileContents[lineToReplace] = tempString
 
+        f = open(filename, "w")
+        f.writelines(fileContents)
+        f.close()
 
+        update_template_copies(filename)
 
+        return "done"
+
+#         sample json: {
+        # "optimizer":"'adam'",
+        # "loss": "'sparse_categorical_crossentropy'",
+# 	"metrics": ["'accuracy'"]
+# }
+
+            
                 
-
-
-
-
-
-
-
-
-
-        ##adding file to database when user is first created
-        # file = convertToBinaryData("/home/suleka/Documents/Tensormap_GSOC/TensorMap/tensormap-server/app/resources/user_template/user_keras_temp.py")
-        # data = template_copies("1","user_keras_temp.py",file)
-        # db.session.add(data)
-        # db.session.commit()
+##adding file to database when user is first created
+# file = convertToBinaryData("/home/suleka/Documents/Tensormap_GSOC/TensorMap/tensormap-server/app/resources/user_template/user_keras_temp.py")
+# data = template_copies("1","user_keras_temp.py",file)
+# db.session.add(data)
+# db.session.commit()
 
         
     

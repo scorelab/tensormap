@@ -24,7 +24,8 @@ DROP TABLE IF EXISTS `code_layers`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `code_layers` (
   `name` varchar(255) NOT NULL,
-  `code` varchar(500) NOT NULL,
+  `code` varchar(500) DEFAULT NULL,
+  `attributes` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -35,7 +36,7 @@ CREATE TABLE `code_layers` (
 
 LOCK TABLES `code_layers` WRITE;
 /*!40000 ALTER TABLE `code_layers` DISABLE KEYS */;
-INSERT INTO `code_layers` VALUES ('dense','network.add(tf.keras.layers.Dense(, activation, name))');
+INSERT INTO `code_layers` VALUES ('compile','network.compile (','optimizer,loss,metrics'),('dense','network.add(tf.keras.layers.Dense(','units,activation,name');
 /*!40000 ALTER TABLE `code_layers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -60,32 +61,31 @@ CREATE TABLE `template_copies` (
 
 LOCK TABLES `template_copies` WRITE;
 /*!40000 ALTER TABLE `template_copies` DISABLE KEYS */;
-INSERT INTO `template_copies` VALUES ('1','user_keras_temp.py',_binary '#updated\nimport tensorflow as tf\nfrom tensorflow import keras\nfrom tensorflow.keras import layers\nimport numpy as np\n\nnp.random.seed(0)\n\nnetwork = tf.keras.models.Sequential(name=\'user_model\')\n\nnetwork.compile(loss=\'\', optimizer=\'\', metrics=[]) \n\nmod_history = network.fit(x_train, y_train, epochs=, verbose=1, batch_size=, validation_data=(x_val, y_val))\n\ntest_loss, = network.evaluate(x_test, y_test)\n\npredictions = network.predict(x_test, verbose=1)\n\ntrain_loss = mod_history.history[\'loss\']\nval_loss   = mod_history.history[\'val_loss\']\ntrain_acc  = mod_history.history[\'acc\']\nval_acc    = mod_history.history[\'val_acc\']\n\nprint(\"train loss: \", train_loss)\nprint(\"validation loss: \", val_loss)\nprint(\"train accuracy: \", train_acc)\nprint(\"validation accuracy: \", val_acc)\nprint(\"test loss: \", test_loss)\n\nwith open(\"results.csv\", \"w\") as f:\n    writer = csv.writer(f)\n    writer.writerows(zip(y_test,predictions))\n\n\n\n');
+INSERT INTO `template_copies` VALUES ('1','user_keras_temp.py',_binary 'import tensorflow as tf\nfrom tensorflow import keras\nfrom tensorflow.keras import layers\nimport numpy as np\n\nnp.random.seed(0)\n\nnetwork = tf.keras.models.Sequential(name=\'userModel\')\n\nnetwork.compile (loss=\'\', optimizer=\'\', metrics=[]) \n\nmod_history = network.fit(x_train, y_train, epochs=, verbose=1, batch_size=, validation_data=(x_val, y_val))\n\ntest_loss, = network.evaluate(x_test, y_test)\n\npredictions = network.predict(x_test, verbose=1)\n\ntrain_loss = mod_history.history[\'loss\']\nval_loss   = mod_history.history[\'val_loss\']\ntrain_acc  = mod_history.history[\'acc\']\nval_acc    = mod_history.history[\'val_acc\']\n\nprint(\"train loss: \", train_loss)\nprint(\"validation loss: \", val_loss)\nprint(\"train accuracy: \", train_acc)\nprint(\"validation accuracy: \", val_acc)\nprint(\"test loss: \", test_loss)\n\nwith open(\"results.csv\", \"w\") as f:\n    writer = csv.writer(f)\n    writer.writerows(zip(y_test,predictions))\n\n\n\n');
 /*!40000 ALTER TABLE `template_copies` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_template_info`
+-- Table structure for table `user_template_index`
 --
 
-DROP TABLE IF EXISTS `user_template_info`;
+DROP TABLE IF EXISTS `user_template_index`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_template_info` (
-  `lineNo` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`lineNo`)
+CREATE TABLE `user_template_index` (
+  `lineNo` int(11) DEFAULT NULL,
+  `layerId` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user_template_info`
+-- Dumping data for table `user_template_index`
 --
 
-LOCK TABLES `user_template_info` WRITE;
-/*!40000 ALTER TABLE `user_template_info` DISABLE KEYS */;
-INSERT INTO `user_template_info` VALUES (8,'network');
-/*!40000 ALTER TABLE `user_template_info` ENABLE KEYS */;
+LOCK TABLES `user_template_index` WRITE;
+/*!40000 ALTER TABLE `user_template_index` DISABLE KEYS */;
+INSERT INTO `user_template_index` VALUES (7,'userModel'),(9,'network.compile');
+/*!40000 ALTER TABLE `user_template_index` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -97,4 +97,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-15  1:52:21
+-- Dump completed on 2019-06-16 12:13:14
