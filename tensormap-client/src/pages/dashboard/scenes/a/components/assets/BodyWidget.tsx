@@ -189,12 +189,11 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 
 							var node = null;
 							if (data.name === "inp_layer") {
-								node = new DefaultNodeModel("Input " + (nodesCount + 1), "rgb(0,102,255)");
+								node = new DefaultNodeModel("Input ", "rgb(0,102,255)");
 								node.addPort(new DefaultPortModel(false, "out-1", "out"));
 
-
-								// add_node()
-								console.log(node)
+								add_node(node.id, node.name, [], this.props.app.getDiagramEngine().getDiagramModel().id )
+								// console.log(this.props.app.getDiagramEngine().getDiagramModel().id)
 
 								node.addListener({
 									entityRemoved: function(e){
@@ -204,7 +203,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 
 								})
 							} else if (data.name === "out_layer") {
-								node = new DefaultNodeModel("Output " + (nodesCount + 1), "rgb(90,102,255)");
+								node = new DefaultNodeModel("Output ", "rgb(90,102,255)");
 								node.addPort(new DefaultPortModel(true, "in-1", "In"));
 
 								node.addListener({
@@ -215,7 +214,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 
 							}
 							else {
-								node = new DefaultNodeModel("Hidden " + (nodesCount + 1), "rgb(0,192,255)");
+								node = new DefaultNodeModel("Dense ", "rgb(0,192,255)");
 								node.addPort(new DefaultPortModel(true, "in-1", "In"));
 								node.addPort(new DefaultPortModel(false, "out-1", "Out"));
 
