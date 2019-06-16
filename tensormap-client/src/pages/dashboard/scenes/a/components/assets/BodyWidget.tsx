@@ -93,13 +93,13 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 	}
 
 	handleData = () => {
-		var json_graph = JSON.stringify(this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram());
+		var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
 		var node_data = this.state.node
 		var comp_data = {
-			graph:json_graph,
+			graph:[json_graph],
 			node_param:node_data
 		}
-		console.log(json_graph);
+		console.log(comp_data);
 		const socket = socketIOClient(endpoint);
 	 	socket.emit('nn_execute', comp_data)
 
