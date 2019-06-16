@@ -77,22 +77,22 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 			} as any)
   };
 
-	// handleSave = () => {
-	// 	console.log(this.state.tmp_form);
-	// 	var param_ = [
-	// 		this.state.tmp_form,
-	// 	]
-	//
-	// 	var new_val = [{
-	// 		id:this.state.tmp_id,
-	// 		param:param_,
-	// 	}];
-	// 	console.log(new_val);
-	// 	var joined = this.state.node.concat(new_val);
-	// 	console.log(joined);
-	// 	this.setState({ node: joined, });
-	// 	console.log(this.state.node);
-	// }
+	handleSave = () => {
+		console.log(this.state.tmp_form);
+		var param_ = [
+			this.state.tmp_form,
+		]
+
+		var new_val = [{
+			id:this.state.tmp_id,
+			param:param_,
+		}];
+		console.log(new_val);
+		var joined = this.state.node.concat(new_val);
+		console.log(joined);
+		this.setState({ node: joined, });
+		console.log(this.state.node);
+	}
 
 	handleExecute = () => {
 		var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
@@ -104,6 +104,26 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 		console.log(comp_data);
 		const socket = socketIOClient(endpoint);
 	 	socket.emit('nn_execute', comp_data)
+	}
+
+	handleGetCode = () => {
+		var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
+		var node_data = this.state.node
+		var data = {
+			graph:[json_graph],
+			node_param:node_data
+		}
+		console.log(data);
+		fetch('http://localhost:5000/getcode/', {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		})
+		.then(response => response.json())
+		.catch(response => console.log(response));
 	}
 
 	handleNodeDelete = (nodeid:string) => {
@@ -144,6 +164,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 	}
 
 	handleNodeEdit = () => {
+		this.handleSave()
 		var new_val = [this.state.tmp_form];
 		console.log(new_val);
 		var data = {
@@ -168,7 +189,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 		return (
 			<div>
 
-			<Button className={'send_btn'} onClick={() => this.handleExecute()}>Send</Button>
+			<Button className={'send_btn'} onClick={() => this.handleGetCode()}>Get Code</Button>
 			<Drawer anchor="right" open={this.state.drawer} onClose={() => this.toggleDrawer(false, "close")}>
 
 				<div
