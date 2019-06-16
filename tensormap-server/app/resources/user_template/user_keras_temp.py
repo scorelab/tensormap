@@ -1,4 +1,3 @@
-#updated
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -7,6 +6,12 @@ import numpy as np
 np.random.seed(0)
 
 network = tf.keras.models.Sequential(name='user_model')
+
+network.add(tf.keras.layers.Dense(units = 2,activation = 'relu',name = '87ba7b08-0557-475f-839f-0729f70c0384'))
+
+network.add(tf.keras.layers.Dense(units = 2,activation = 'tanh',name = '87ba7b08-0557-475f-839f-0729f70c031'))
+
+network.add(tf.keras.layers.Dense(units = 9,activation = 'tanh',name = 'hidden3'))
 
 network.compile(loss='', optimizer='', metrics=[]) 
 

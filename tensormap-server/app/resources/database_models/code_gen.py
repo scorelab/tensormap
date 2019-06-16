@@ -1,5 +1,5 @@
 from ... import db
-from sqlalchemy.dialects.mysql import VARCHAR, BLOB
+from sqlalchemy.dialects.mysql import VARCHAR, BLOB, INTEGER
 
 class template_copies(db.Model):
     id = db.Column(VARCHAR(50),primary_key=True)
@@ -11,6 +11,23 @@ class template_copies(db.Model):
         self.fileName = fileName
         self.data = data
         
+class user_template_index(db.Model):
+    layerId = db.Column(VARCHAR(50),primary_key=True)
+    lineNo = db.Column(INTEGER) 
+    
+    def __init__(self,layerId,lineNo):
+        self.layerId = layerId
+        self.lineNo = lineNo
+
+class code_layers(db.Model):
+    name = db.Column(VARCHAR(255),primary_key=True)
+    code = db.Column(VARCHAR(500)) 
+    attributes = db.Column(VARCHAR(500)) 
+    
+    def __init__(self,name,code,attributes):
+        self.name = name
+        self.code = code
+        self.attributes = lineattributesNo
 
 
 
