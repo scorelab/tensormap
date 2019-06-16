@@ -2,22 +2,19 @@ import * as React from "react";
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./Application";
 import { TrayItemWidget } from "./TrayItemWidget";
-import { DefaultNodeModel, DiagramWidget, DefaultPortModel,DiagramProps } from "storm-react-diagrams";
+import { DefaultNodeModel, DiagramWidget, DefaultPortModel } from "storm-react-diagrams";
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 
 import socketIOClient from "socket.io-client";
-
-const _ = require("lodash")
 
 const endpoint  = "ws://localhost:5000/nn";
 
@@ -56,7 +53,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 			node:[
 				{
 					id:"",
-					param:new Array(),
+					param:[],
 				}
 			]
 			,
@@ -209,6 +206,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 
 	handleNodeEdit = () => {
 		this.handleSave()
+		this.toggleDrawer(false, "close")
 		var new_val = [this.state.tmp_form];
 		console.log(new_val);
 		var data = {
@@ -243,7 +241,6 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 	  }
 
 	handleCheckBoxChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-		console.log("sdhfsdbjk")
 	  this.setState({ [name]: event.target.checked }as any);
 		var joined = this.state.config.metrics.concat(name);
 
@@ -363,12 +360,6 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 						className="diagram-layer"
 						onDrop={event => {
 							var data = JSON.parse(event.dataTransfer.getData("storm-diagram-node"));
-							var nodesCount = _.keys(
-								this.props.app
-									.getDiagramEngine()
-									.getDiagramModel()
-									.getNodes()
-							).length;
 
 							var delete_node = this.handleNodeDelete
 							var add_node = this.handleNodeAdd
@@ -389,13 +380,16 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 
 								})
 							} else if (data.name === "out_layer") {
+
 								node = new DefaultNodeModel("Output", "rgb(90,102,255)");
 								node.addPort(new DefaultPortModel(true, "in-1", "In"));
+								add_node(node.id, node.name, [], this.props.app.getDiagramEngine().getDiagramModel().id )
 
 								node.addListener({
 									entityRemoved: function(e){
-										console.log("You deleted Output node")
+										delete_node(e.entity.id)
 									}
+
 								})
 
 							}
@@ -403,10 +397,11 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 								node = new DefaultNodeModel("Dense", "rgb(0,192,255)");
 								node.addPort(new DefaultPortModel(true, "in-1", "In"));
 								node.addPort(new DefaultPortModel(false, "out-1", "Out"));
+								add_node(node.id, node.name, [], this.props.app.getDiagramEngine().getDiagramModel().id )
 
 								node.addListener({
 									entityRemoved: function(e){
-										console.log("You deleted dense node")
+										delete_node(e.entity.id)
 									}
 								})
 
@@ -447,7 +442,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps,BodyWidg
 									var link_id = selected_link[1].getAttribute("data-linkid");
 									console.log(selected_link[1].getAttribute("data-linkid"));
 									if (link_id !== null){
-										this.toggleDrawer(true,node_id);
+										this.toggleDrawer(true,link_id);
 										this.setState({
 											tmp_id : link_id,
 										})
