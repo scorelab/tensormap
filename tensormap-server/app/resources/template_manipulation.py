@@ -187,7 +187,7 @@ def sendFile():
         if result:
                 try:
                         return send_file(filename,
-                        attachment_filename='user_keras_temp.py.py',
+                        attachment_filename='user_keras_temp.py',
                         as_attachment=True)
                 except Exception as e:
                         return str(e)
