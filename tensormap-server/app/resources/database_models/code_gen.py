@@ -1,5 +1,5 @@
 from ... import db
-from sqlalchemy.dialects.mysql import VARCHAR, BLOB, INTEGER
+from sqlalchemy.dialects.mysql import VARCHAR, BLOB, INTEGER,TEXT, JSON
 
 class template_copies(db.Model):
     id = db.Column(VARCHAR(50),primary_key=True)
@@ -22,12 +22,14 @@ class user_template_index(db.Model):
 class code_layers(db.Model):
     name = db.Column(VARCHAR(255),primary_key=True)
     code = db.Column(VARCHAR(500)) 
-    attributes = db.Column(VARCHAR(500)) 
+    attributes = db.Column(VARCHAR(500))
+    kerasConfig = db.Column(JSON) 
     
-    def __init__(self,name,code,attributes):
+    def __init__(self,name,code,attributes,kerasConfig):
         self.name = name
         self.code = code
         self.attributes = lineattributesNo
+        self.kerasConfig = kerasConfig
 
 
 

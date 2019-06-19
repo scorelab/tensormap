@@ -5,9 +5,9 @@ import numpy as np
 
 np.random.seed(0)
 
-network = tf.keras.models.Sequential(name='user_model')
+network = tf.keras.models.Sequential(name='userModel')
 
-network.compile(loss='', optimizer='', metrics=[]) 
+network.compile (optimizer = ,loss = ,metrics = )
 
 mod_history = network.fit(x_train, y_train, epochs=, verbose=1, batch_size=, validation_data=(x_val, y_val))
 
@@ -29,6 +29,5 @@ print("test loss: ", test_loss)
 with open("results.csv", "w") as f:
     writer = csv.writer(f)
     writer.writerows(zip(y_test,predictions))
-
 
 

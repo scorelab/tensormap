@@ -5,6 +5,9 @@ from .database_models.code_gen import template_copies,user_template_index,code_l
 import os
 from flask import send_file
 from ..common import validate_model_json
+import ast
+import json
+
 
 def convertToBinaryData(filename):
     #Convert digital data to binary format
@@ -56,7 +59,51 @@ def edit_line_no(filename):
                                 print("line no: ",i)
                                 result = user_template_index.query.filter_by(layerId = layer.layerId).one()
                                 result.lineNo = i
-                                db.session.commit()                                 
+                                db.session.commit()   
+
+
+
+
+
+
+
+
+def getNodeVal(layerId,sentKey,json_config):
+    for i in range(len(json_config["node_param"])):
+        if json_config["node_param"][i]["id"] == layerId:
+            for key, value in json_config["node_param"][i]["param"][0].items():
+                if key == sentKey:
+                    return value
+                    break
+            break
+        
+
+def iterate(splitAttr,index,pointInJSON,layerId,json_config):
+        print("i**************************************")
+        for key, value in pointInJSON.items():    
+                print("in")
+                if hasattr(value,'iteritems'):
+                        iterate(splitAttr,index,value,layerId,json_config)
+                                                        
+                elif splitAttr[index] == key:
+                        value = getNodeVal(layerId,key,json_config )
+                        pointInJSON[key]= value
+                        print(pointInJSON)
+                        break
+
+
+
+
+
+
+
+
+
+
+
+
+
+                              
                                 
 
 @main.route('/add', methods=['POST'])
@@ -179,12 +226,14 @@ def deleteLine():
 @main.route('/getCode', methods=['GET'])
 def sendFile():
         content = request.get_json()
+        print("aesxfcgvhbj")
+        print(content)
             
         filename = getFile()       
 
         result = validate_model_json.validate_json(content)
 
-        if result:
+        if result == True:
                 try:
                         return send_file(filename,
                         attachment_filename='user_keras_temp.py',
@@ -192,7 +241,7 @@ def sendFile():
                 except Exception as e:
                         return str(e)
         else:
-                return "Model Not Valid"
+                return result
 
 #         sample json: <the complete JSON of model>
 
@@ -243,6 +292,44 @@ def editExe():
         # "loss": "'sparse_categorical_crossentropy'",
 # 	"metrics": ["'accuracy'"]
 # }
+
+@main.route('/test', methods=['POST'])
+def editthis():
+
+        json_config = request.get_json()
+
+        dict_list = []
+
+        for i in range(len(json_config["graph"][0]["nodes"])):
+
+                layerType = json_config["graph"][0]["nodes"][i]["layerType"]
+                layerId = json_config["graph"][0]["nodes"][i]["id"]
+
+                layerInfo = code_layers.query.filter_by(name=layerType).one()
+                attributeInfo = layerInfo.attributes
+                splitAttr = attributeInfo.split(",")                
+                layer_dict = layerInfo.kerasConfig
+
+                for j in range(len(splitAttr)):
+                        pointInJSON = layer_dict["config"]
+                        print(pointInJSON)
+                        iterate(splitAttr,j, pointInJSON,layerId,json_config)
+
+                dict_list.append(layer_dict)
+
+        layerCommon = {"name": "userModel", "layers":"None"}
+        layerCommon["layers"] = dict_list
+        modelCommon = {"class_name": "Sequential", "config":layerCommon, "keras_version": "2.2.4-tf", "backend": "tensorflow"}
+
+        print(modelCommon)
+
+        finalresult = json.dumps(modelCommon)
+
+        return finalresult
+
+
+
+
             
                 
 ##adding file to database when user is first created
@@ -260,3 +347,170 @@ def editExe():
 
 
 
+# {
+#   "graph": [
+#     {
+#       "id": "e0d57cd7-00ba-4c27-9007-6914eeba4995",
+#       "offsetX": 0,
+#       "offsetY": 0,
+#       "zoom": 100,
+#       "gridSize": 0,
+#       "links": [
+#         {
+#           "id": "516449cc-c982-4e3a-a3ad-979caf715ccd",
+#           "type": "default",
+#           "selected": false,
+#           "source": "9825cd47-20e0-44ae-bb76-aa92af5f321b",
+#           "sourcePort": "87ba7b08-0557-475f-839f-0729f70c0389",
+#           "target": "019842a3-ee19-4b8f-883c-0600c702294d",
+#           "targetPort": "cbc6617b-651e-4fbd-85ea-dd941e9e3650",
+#           "points": [
+#             {
+#               "id": "aa9fc1fe-4053-433d-b911-0c7b5f978142",
+#               "selected": false,
+#               "x": 128.98748779296875,
+#               "y": 132.5
+#             },
+#             {
+#               "id": "edd5dc14-cd6e-4b21-b33a-362d3ee959dd",
+#               "selected": false,
+#               "x": 409.5,
+#               "y": 132.5
+#             }
+#           ],
+#           "extras": {},
+#           "labels": [],
+#           "width": 3,
+#           "color": "rgba(255,255,255,0.5)",
+#           "curvyness": 50
+#         }
+#       ],
+#       "nodes": [
+#         {
+#           "id": "9825cd47-20e0-44ae-bb76-aa92af5f321d",
+#           "type": "default",
+#           "selected": true,
+#           "x": 100,
+#           "y": 100,
+#           "extras": {},
+#           "ports": [
+#             {
+#               "id": "87ba7b08-0557-475f-839f-0729f70c0389",
+#               "type": "default",
+#               "selected": false,
+#               "name": "8e219951-6b45-42f1-8425-df751727bd25",
+#               "parentNode": "userModel",
+#               "links": [
+#                 "516449cc-c982-4e3a-a3ad-979caf715ccd"
+#               ],
+#               "in": false,
+#               "label": "Out"
+#             }
+#           ],
+#           "name": "Input",
+#           "color": "rgb(0,192,255)",
+#           "layerType":"dense"
+#         },
+#         {
+#           "id": "9825cd47-20e0-44ae-bb76-aa92af5f321c",
+#           "type": "default",
+#           "selected": false,
+#           "x": 400,
+#           "y": 100,
+#           "extras": {},
+#           "ports": [
+#             {
+#               "id": "cbc6617b-651e-4fbd-85ea-dd941e9e3650",
+#               "type": "default",
+#               "selected": false,
+#               "name": "894b0115-6231-4e31-a2a0-09716125500d",
+#               "parentNode": "019842a3-ee19-4b8f-883c-0600c702294d",
+#               "links": [
+#                 "516449cc-c982-4e3a-a3ad-979caf715ccd"
+#               ],
+#               "in": true,
+#               "label": "In"
+#             },
+#             {
+#               "id": "4b1ed401-7720-4cc7-b28b-953ea8d38674",
+#               "type": "default",
+#               "selected": false,
+#               "name": "out-1",
+#               "parentNode": "019842a3-ee19-4b8f-883c-0600c702294d",
+#               "links": [],
+#               "in": false,
+#               "label": "Out"
+#             }
+#           ],
+#           "name": "Hidden 0",
+#           "color": "rgb(192,255,0)",
+#           "layerType":"dense"
+#         },
+#         {
+#           "id": "9825cd47-20e0-44ae-bb76-aa92af5f321b",
+#           "type": "default",
+#           "selected": false,
+#           "x": 400,
+#           "y": 100,
+#           "extras": {},
+#           "ports": [
+#             {
+#               "id": "cbc6617b-651e-4fbd-85ea-dd941e9e3650",
+#               "type": "default",
+#               "selected": false,
+#               "name": "894b0115-6231-4e31-a2a0-09716125500d",
+#               "parentNode": "019842a3-ee19-4b8f-883c-0600c702294d",
+#               "links": [
+#                 "516449cc-c982-4e3a-a3ad-979caf715ccd"
+#               ],
+#               "in": true,
+#               "label": "In"
+#             },
+#             {
+#               "id": "4b1ed401-7720-4cc7-b28b-953ea8d38674",
+#               "type": "default",
+#               "selected": false,
+#               "name": "out-1",
+#               "parentNode": "019842a3-ee19-4b8f-883c-0600c702294d",
+#               "links": [],
+#               "in": false,
+#               "label": "Out"
+#             }
+#           ],
+#           "name": "Output",
+#           "color": "rgb(192,255,0)",
+#           "layerType":"dense"
+#         }
+#       ]
+#     }
+#   ],
+#   "node_param": [
+#    {
+#       "id": "9825cd47-20e0-44ae-bb76-aa92af5f321d",
+#       "param": [
+#         {
+#           "units": "100",
+#           "activation": "relu",
+#           "name": "9825cd47-20e0-44ae-bb76-aa92af5f321d"
+#         }]
+#         },
+#      {
+#       "id": "9825cd47-20e0-44ae-bb76-aa92af5f321c",
+#       "param": [
+#         {
+#           "units": "200",
+#           "activation": "relu",
+#           "name": "9825cd47-20e0-44ae-bb76-aa92af5f321c"
+#         }]},
+#     {
+#       "id": "9825cd47-20e0-44ae-bb76-aa92af5f321b",
+#       "param": [
+#         {
+#           "units": "1",
+#           "activation": "relu",
+#           "name": "9825cd47-20e0-44ae-bb76-aa92af5f321b"
+#         }
+#       ]
+#     }
+#   ]
+# }
