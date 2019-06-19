@@ -127,7 +127,9 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     console.log(comp_data);
 
     const socket = socketIOClient(endpoint);
-    socket.emit('nn_execute', comp_data);
+    socket.emit('nn_execute', comp_data, function(response:any){
+      console.log(response)
+    });
 
   }
 
@@ -155,12 +157,15 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     var data = [this.state.config]
     console.log(data);
     this.handleClose();
+
     fetch('http://localhost:5000/getcode/', {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
+        'access-control-allow-origin':'*',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
+
       body: JSON.stringify(data),
     })
       .then(response => response.json())
@@ -259,7 +264,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     return (
       <div>
 
-      <Button className= { 'send_btn'} onClick = {() => this.handleGetCode()
+      <Button className= { 'send_btn'} onClick = {() => this.handleExecute()
   }> Get Code </Button>
     <Button className = { 'exe_config_btn'} onClick = { this.handleClickOpen } > Change Exe Config </Button>
       < Drawer anchor = "right" open = { this.state.drawer } onClose = {() => this.toggleDrawer(false, "close")}>
