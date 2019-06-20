@@ -16,46 +16,46 @@ from ..common import validate_model_json, make_model_json
 @socketio.on('nn_execute', namespace='/nn')
 def nn_execute(nnmodelconfig):
 
-    print(nnmodelconfig)
-
     resultString = validate_model_json.validate_json(nnmodelconfig)
 
     if resultString == True:
 
+        modelJSON=make_model_json.makeKerasModel(nnmodelconfig)
 
-        #sample model (IMDB) - Binary Classification
+        np.random.seed(0)
+
         number_of_features = 1000
 
-        (train_data, train_target), (test_data, test_target) = imdb.load_data(num_words=number_of_features)
+        np_load_old = np.load
 
-        # Convert movie review data to one-hot encoded feature matrix
+        np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
+
+        (train_data, train_labels), (test_data, test_labels) = imdb.load_data(num_words=number_of_features)
+
+        np.load = np_load_old
+
         tokenizer = Tokenizer(num_words=number_of_features)
         train_features = tokenizer.sequences_to_matrix(train_data, mode='binary')
-        test_features = tokenizer.sequences_to_matrix(test_data, mode='binary')  
+        test_features = tokenizer.sequences_to_matrix(test_data, mode='binary')
 
-        json_result = make_model_json.makeKerasModel(nnmodelconfig)
-
-        json_config = json.dumps(json_result)
-
-        #constructing model from json
-        model = keras.models.model_from_json(json_config)
+        model = keras.models.model_from_json(modelJSON)
 
         model.compile(loss='binary_crossentropy', 
-                    optimizer='rmsprop', 
-                    metrics=['accuracy'])
+                        optimizer='rmsprop', 
+                        metrics=['accuracy'])
 
         model.fit(train_features,
-                        train_target, 
+                        train_labels, 
                         epochs=3, 
                         verbose=1, 
                         batch_size=100) 
 
-        val_loss, val_acc = model.evaluate(test_features, test_target) 
+        val_loss, val_acc = model.evaluate(test_features, test_labels) 
 
         results = {}
         results['loss'] = float(val_loss)
         results['accuracy']= float(val_acc)
-        results = json.dumps(results)
+        results = json.dumps(results)        
             
         #TO_DO - change according to frontend
         emit('sample_response', results, namespace='/samplenamespace')
@@ -65,5 +65,6 @@ def nn_execute(nnmodelconfig):
         results['error'] = resultString
         results = json.dumps(results)
 
+        #TO_DO - change according to frontend
         emit('sample_response', results, namespace='/samplenamespace')
 

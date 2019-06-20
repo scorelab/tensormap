@@ -1,8 +1,12 @@
 
+errorString = " "
+
 def validate_json(content):
 
+    global errorString
+
     layers = {'input': False, 'hidden':False, 'output':False}
-    errorString = None
+   
     inputCounter = 0
     hiddenCounter = 0
     outputCounter = 0
@@ -43,19 +47,17 @@ def validate_json(content):
     else:     
         for i in range(len(content["node_param"])):
             try:
-                param1 = float(content["node_param"][i]["param"][0]["param1"])
+                units = float(content["node_param"][i]["param"][0]["units"])
             except ValueError:
-                errorString += " param1 not a digit."
+                errorString += " units is a digit."
                 node_param_validation = False
                 break
-            try:
-                param2 = float(content["node_param"][i]["param"][0]["param2"])
-            except ValueError:
-                errorString += " param2 not a digit."
+            if not (content["node_param"][i]["param"][0]["activation"] == "relu" or content["node_param"][i]["param"][0]["activation"] =="sigmoid" or content["node_param"][i]["param"][0]["activation"]=="tanh"):
+                errorString += " Invalid Activation."
                 node_param_validation = False
                 break
       
-    if layers['input'] and layers['output'] and layers['hidden'] and layers['inputNo'] == 1 and layers['outputNo'] == 1 and node_param_validation:
+    if layers['input'] and layers['output'] and layers['hidden'] and inputCounter == 1 and outputCounter == 1 and node_param_validation:
         errorString = True    
 
     print(errorString)
