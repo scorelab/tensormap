@@ -2,7 +2,7 @@ import * as React from "react";
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./Application";
 import { TrayItemWidget } from "./TrayItemWidget";
-import { DefaultNodeModel, DiagramWidget, DefaultPortModel } from "storm-react-diagrams";
+import { DefaultNodeModel, DiagramWidget, DefaultPortModel,DefaultLinkModel } from "storm-react-diagrams";
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -82,11 +82,30 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     const socket = socketIOClient(endpoint);
     socket.on("nn_execute", (data: any) => console.log(data));
     var model = this.props.app.getDiagramEngine().getDiagramModel();
-    model.addListener({
-      linksUpdated: (e) => {
-        console.log(e)
-      }
-    })
+      model.addListener({
+        linksUpdated: (e) => {
+          var link = e.link;
+          link.extras = {
+            weight:"0.3",
+          };
+          (link as DefaultLinkModel).addLabel(link.extras.weight);
+          if (e.isCreated){
+            link.addListener({
+              targetPortChanged: (e) => {
+                //call function a valid link added
+              }
+            })
+          }
+          else{
+            //call function link deleted
+          }
+        },
+        nodesUpdated: (e) => {
+          // call functions in here that are realted to node addition and deletetion
+          console.log(e);
+          this.get_serialized()
+        }
+      })
   }
 
   toggleDrawer = (call_: boolean, node_id: string) => {
@@ -391,6 +410,11 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 
               add_node(node.id, node.name, [], this.props.app.getDiagramEngine().getDiagramModel().id)
               // console.log(this.props.app.getDiagramEngine().getDiagramModel().id)
+              node.extras = {
+                name:"Input Node",
+                wight:0.5
+              }
+              console.log(node)
 
               node.addListener({
                 entityRemoved: function(e) {
