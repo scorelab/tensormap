@@ -12,6 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import SaveIcon from '@material-ui/icons/Save';
 
 
 import socketIOClient from "socket.io-client";
@@ -59,8 +60,8 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       ,
       tmp_form:
       {
-        param1: "",
-        param2: "",
+        units: "",
+        activation: "",
       },
       config: {
         "optimizer": "'Adam'",
@@ -80,6 +81,12 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
   componentDidMount() {
     const socket = socketIOClient(endpoint);
     socket.on("nn_execute", (data: any) => console.log(data));
+    var model = this.props.app.getDiagramEngine().getDiagramModel();
+    model.addListener({
+      linksUpdated: (e) => {
+        console.log(e)
+      }
+    })
   }
 
   toggleDrawer = (call_: boolean, node_id: string) => {
@@ -264,23 +271,29 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     return (
       <div>
 
-      <Button className= { 'send_btn'} onClick = {() => this.handleExecute()
-  }> Get Code </Button>
-    <Button className = { 'exe_config_btn'} onClick = { this.handleClickOpen } > Change Exe Config </Button>
-      < Drawer anchor = "right" open = { this.state.drawer } onClose = {() => this.toggleDrawer(false, "close")}>
+      <Button variant="contained" className= { 'send_btn'} onClick = {() => this.handleExecute()}> Get Code </Button>
+      <Button variant="contained" className = { 'exe_config_btn'} onClick = { this.handleClickOpen } > Change Exe Config </Button>
+      <Drawer anchor = "right" open = { this.state.drawer } onClose = {() => this.toggleDrawer(false, "close")}>
+
 
         <div
 					role="presentation"
-  >
-  <form noValidate autoComplete = "off" >
-    <TextField  id="standard-name" label = "param1" value = { this.state.tmp_form.param1 } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "param1", event)} margin = "normal" >
-      </TextField>
-      <br/>
-      <TextField  id="standard-name" label = "param2" value = { this.state.tmp_form.param2 } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "param2", event)} margin = "normal" >
-        </TextField>
-        <br/>
-        <Button onClick={ this.handleNodeEdit } > Save </Button>
+          className={"param_drawer"}>
+        <h2>Hyper Parameters</h2>
+        <form noValidate autoComplete = "off" className={"drawer_form"}>
+          <TextField  id="standard-name" label = "units" value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event)} margin = "normal" >
+          </TextField>
+            <br/>
+          <TextField  id="standard-name" label = "activation" value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event)} margin = "normal" >
+          </TextField>
+
+
         </form>
+        <br/>
+        <Button variant="contained"  onClick={ this.handleNodeEdit } >
+          <SaveIcon className={'right_icon'}/>
+            Save
+          </Button>
         </div>
         </Drawer>
 
@@ -323,7 +336,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 
         <FormControlLabel
 			        control={
-								< Checkbox
+								<Checkbox
 									onChange = { this.handleCheckBoxChange("'accuracy'") }
 									value = "accuracy"
 									color = "primary"
@@ -334,7 +347,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 
         <FormControlLabel
 								control={
-									< Checkbox
+									<Checkbox
 										onChange = { this.handleCheckBoxChange("'neg_mean_square_error'") }
 										value = "neg_mean_square_error"
 										color = "primary"
@@ -344,14 +357,14 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
         />
 
         </DialogContent>
-        < DialogActions >
-        <Button onClick={ this.handleClose } color = "primary" >
-        Cancel
-        </Button>
-        <Button onClick = { this.handleExeConfig } color = "primary" >
-        Save
-        </Button>
-        </DialogActions>
+          < DialogActions >
+          <Button onClick={ this.handleClose } color = "primary" >
+            Cancel
+          </Button>
+          <Button onClick = { this.handleExeConfig } color = "primary" >
+            Save
+          </Button>
+          </DialogActions>
         </Dialog>
 
 
@@ -430,37 +443,36 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 }
 
 						onDoubleClick = {
-          event => {
-            var selected_node = document.getElementsByClassName("srd-node--selected");
-            var selected_link = document.getElementsByClassName("srd-default-link--path-selected ")
+              event => {
+                var selected_node = document.getElementsByClassName("srd-node--selected");
+                var selected_link = document.getElementsByClassName("srd-default-link--path-selected ")
 
-            if (selected_node.length > 0) {
-              console.log(selected_node);
-              console.log(selected_link);
-              // data-nodeid
-              var node_id = selected_node[0].getAttribute("data-nodeid");
-              console.log(selected_node[0].getAttribute("data-nodeid"));
-              if (node_id !== null) {
-                this.toggleDrawer(true, node_id);
-                this.setState({
-                  tmp_id: node_id,
-                })
+                if (selected_node.length > 0) {
+                  console.log(selected_node);
+                  console.log(selected_link);
+                  // data-nodeid
+                  var node_id = selected_node[0].getAttribute("data-nodeid");
+                  console.log(selected_node[0].getAttribute("data-nodeid"));
+                  if (node_id !== null) {
+                    this.toggleDrawer(true, node_id);
+                    this.setState({
+                      tmp_id: node_id,
+                    })
+                  }
+                }
+                else if (selected_link.length > 0) {
+                  console.log(selected_link);
+                  var link_id = selected_link[1].getAttribute("data-linkid");
+                  console.log(selected_link[1].getAttribute("data-linkid"));
+                  if (link_id !== null) {
+                    this.toggleDrawer(true, link_id);
+                    this.setState({
+                      tmp_id: link_id,
+                    })
+                  }
+                }
               }
             }
-            else if (selected_link.length > 0) {
-              console.log(selected_link);
-              // data-nodeid
-              var link_id = selected_link[1].getAttribute("data-linkid");
-              console.log(selected_link[1].getAttribute("data-linkid"));
-              if (link_id !== null) {
-                this.toggleDrawer(true, link_id);
-                this.setState({
-                  tmp_id: link_id,
-                })
-              }
-            }
-          }
-        }
         >
         <DiagramWidget
 							className="srd-demo-canvas"
