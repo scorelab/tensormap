@@ -2,7 +2,7 @@ import * as React from "react";
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./Application";
 import { TrayItemWidget } from "./TrayItemWidget";
-import { DefaultNodeModel, DiagramWidget, DefaultPortModel,DefaultLinkModel, DefaultLabelModel } from "storm-react-diagrams";
+import { DefaultNodeModel, DiagramWidget, DefaultPortModel, DefaultLinkModel, DefaultLabelModel } from "storm-react-diagrams";
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -26,7 +26,7 @@ export interface BodyWidgetProps {
 
 export interface BodyWidgetState {
   drawer: boolean;
-  drawerlink:boolean;
+  drawerlink: boolean;
   dialog: boolean;
   accuracy: boolean;
   neg_mean_square_error: boolean;
@@ -49,7 +49,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     super(props);
     this.state = {
       drawer: false,
-      drawerlink:false,
+      drawerlink: false,
       dialog: false,
       tmp_id: "",
       accuracy: false,
@@ -86,43 +86,43 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     socket.on("nn_execute", (data: any) => console.log(data));
     var model = this.props.app.getDiagramEngine().getDiagramModel();
 
-      model.addListener({
-        linksUpdated: (e) => {
-          var link = e.link;
-          link.extras = {
-            weight:"0.3",
-          };
-          var data_  = link.extras as any;
-          (link as DefaultLinkModel).addLabel(data_.weight);
-          if (e.isCreated){
-            link.addListener({
-              targetPortChanged: (e) => {
-                //call function a valid link added
-              }
-            })
-          }
-          else{
-            //call function link deleted
-          }
-        },
-        nodesUpdated: (e) => {
-          // call functions in here that are realted to node addition and deletetion
-          var node = e.node;
-          if (e.isCreated){
-            this.handleNodeAdd(node.id,node.extras.name , [], model.id);
-            console.log("node created");
-          }
-          else{
-            //call function link deleted
-            this.handleNodeDelete(node.id)
-            console.log("node deleted");
-
-          }
+    model.addListener({
+      linksUpdated: (e) => {
+        var link = e.link;
+        link.extras = {
+          weight: "0.3",
+        };
+        var data_ = link.extras as any;
+        (link as DefaultLinkModel).addLabel(data_.weight);
+        if (e.isCreated) {
+          link.addListener({
+            targetPortChanged: (e) => {
+              //call function a valid link added
+            }
+          })
         }
-      })
+        else {
+          //call function link deleted
+        }
+      },
+      nodesUpdated: (e) => {
+        // call functions in here that are realted to node addition and deletetion
+        var node = e.node;
+        if (e.isCreated) {
+          this.handleNodeAdd(node.id, node.extras.name, [], model.id);
+          console.log("node created");
+        }
+        else {
+          //call function link deleted
+          this.handleNodeDelete(node.id)
+          console.log("node deleted");
+
+        }
+      }
+    })
   }
 
-  toggleDrawer = (call_: boolean, node_id: string, islink:boolean) => {
+  toggleDrawer = (call_: boolean, node_id: string, islink: boolean) => {
     this.setState({
       tmp_form:
       {
@@ -130,37 +130,37 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
         activation: "",
       },
     });
-    if (islink){
+    if (islink) {
       console.log("link selected");
       this.setState({ drawerlink: call_ });
-    }else{
-    this.setState({ drawer: call_ });
-    console.log(node_id);}
+    } else {
+      this.setState({ drawer: call_ });
+      // console.log(node_id);
+    }
   };
 
   get_serialized() {
     var str = JSON.stringify(this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram());
-    console.log(str)
-  }
+    return str
+  };
 
-  handleChange = (key: number, param_name: string, event: React.ChangeEvent<HTMLInputElement>,islink:boolean,id:string) => {
-    if(islink){
+  handleChange = (key: number, param_name: string, event: React.ChangeEvent<HTMLInputElement>, islink: boolean, id: string) => {
+    var tmp_form = this.state.tmp_form;
+    if (islink) {
       var link = this.props.app.getDiagramEngine().getDiagramModel().getLink(id);
-      if (link != null){
+      if (link != null) {
         link.extras = {
-          weight:event.target.value
+          weight: event.target.value
         };
         var labels_node = link.labels[0] as DefaultLabelModel;
         labels_node.setLabel(event.target.value);
       }
-      var tmp_form = this.state.tmp_form;
       tmp_form[param_name] = event.target.value
       this.setState({
         tmp_form
       } as any)
     }
-    else{
-      var tmp_form = this.state.tmp_form;
+    else {
       tmp_form[param_name] = event.target.value
       this.setState({
         tmp_form
@@ -169,7 +169,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
   };
 
   handleSave = () => {
-    console.log(this.state.tmp_form);
+    // console.log(this.state.tmp_form);
     var param_ = [
       this.state.tmp_form,
     ]
@@ -178,11 +178,11 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       id: this.state.tmp_id,
       param: param_,
     }];
-    console.log(new_val);
+    // console.log(new_val);
     var joined = this.state.node.concat(new_val);
-    console.log(joined);
+    // console.log(joined);
     this.setState({ node: joined, });
-    console.log(this.state.node);
+    // console.log(this.state.node);
   }
 
   handleExecute = () => {
@@ -192,10 +192,10 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       graph: [json_graph],
       node_param: node_data
     }
-    console.log(comp_data);
+    // console.log(comp_data);
 
     const socket = socketIOClient(endpoint);
-    socket.emit('nn_execute', comp_data, function(response:any){
+    socket.emit('nn_execute', comp_data, function(response: any) {
       console.log(response)
     });
 
@@ -208,8 +208,10 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       graph: [json_graph],
       node_param: node_data
     }
-    console.log(data);
-    fetch('http://localhost:5000/getcode/', {
+    // console.log(data);
+    var url_ = baseURL + 'getcode/';
+    // console.log(url_)
+    fetch(url_, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -226,10 +228,11 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     console.log(data);
     this.handleClose();
 
-    fetch('http://localhost:5000/getcode/', {
+    var url_ = baseURL + 'getcode/';
+    fetch(url_, {
       method: 'POST',
       headers: {
-        'access-control-allow-origin':'*',
+        'access-control-allow-origin': '*',
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
@@ -244,8 +247,9 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     var data = {
       layerID: nodeid
     }
-    console.log(data);
-    fetch('http://localhost:5000/delete/', {
+    // console.log(data);
+    var url_ = baseURL + 'delete/';
+    fetch(url_, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -264,8 +268,9 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       layerSpec: layerSpec,
       parentNodeId: parentnode
     }
-    console.log(data);
-    fetch('http://localhost:5000/add/', {
+    // console.log(data);
+    var url_ = baseURL + 'add/';
+    fetch(url_, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -281,13 +286,14 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     this.handleSave()
     this.toggleDrawer(false, "close", false)
     var new_val = [this.state.tmp_form];
-    console.log(new_val);
+    // console.log(new_val);
     var data = {
       layerId: this.state.tmp_id,
       layerSpec: new_val,
     }
-    console.log(data);
-    fetch('http://localhost:5000/edit/', {
+    // console.log(data);
+    var url_ = baseURL + 'edit/';
+    fetch(url_, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -323,8 +329,8 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       tmp_form
     } as any)
 
-    console.log(tmp_form)
-    console.log(tmp_form.metrics)
+    // console.log(tmp_form)
+    // console.log(tmp_form.metrics)
   };
 
 
@@ -332,226 +338,215 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     return (
       <div>
 
-      <Button variant="contained" className= { 'send_btn'} onClick = {() => this.handleExecute()}> Get Code </Button>
-      <Button variant="contained" className = { 'exe_config_btn'} onClick = { this.handleClickOpen } > Change Exe Config </Button>
-      <Drawer anchor = "right" open = { this.state.drawer } onClose = {() => this.toggleDrawer(false, "close",false)}>
-
-
-        <div
-					role="presentation"
-          className={"param_drawer"}>
-        <h2>Node Parameters</h2>
-        <form noValidate autoComplete = "off" className={"drawer_form"}>
-          <TextField  id="standard-name" label = "units" value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event, false, this.state.tmp_id)} margin = "normal" >
-          </TextField>
-            <br/>
-          <TextField  id="standard-name" label = "activation" value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
-          </TextField>
-
-
-        </form>
-        <br/>
-        <Button variant="contained"  onClick={ this.handleNodeEdit } >
-          <SaveIcon className={'right_icon'}/>
-            Save
-          </Button>
-        </div>
-        </Drawer>
-
-        <Drawer anchor = "right" open = { this.state.drawerlink } onClose = {() => this.toggleDrawer(false, "close",true)}>
-
-
+        <Button variant= "contained" className = { 'send_btn'} onClick = {() => this.handleExecute}> Get Code </Button>
+        <Button variant = "contained" className = { 'exe_config_btn'} onClick = { this.handleClickOpen } > Change Exe Config </Button>
+        <Drawer anchor = "right" open = { this.state.drawer } onClose = {() => this.toggleDrawer(false, "close", false)}>
           <div
-            role="presentation"
-            className={"param_drawer"}>
-          <h2>Link Parameters</h2>
-          <form noValidate autoComplete = "off" className={"drawer_form"}>
-            <TextField  id="standard-name" label = "weight" value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event, true, this.state.tmp_id)} margin = "normal" >
-            </TextField>
-              <br/>
-            <TextField  id="standard-name" label = "activation" value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
-            </TextField>
-
-
-          </form>
-          <br/>
-          <Button variant="contained"  onClick={ this.handleNodeEdit } >
-            <SaveIcon className={'right_icon'}/>
-              Save
-            </Button>
-          </div>
+  					role="presentation"
+            className = { "param_drawer"} >
+            <h2>Node Parameters </h2>
+            <form noValidate autoComplete = "off" className = { "drawer_form"} >
+              <TextField  id="standard-name" label = "units" value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event, false, this.state.tmp_id)} margin = "normal" >
+              </TextField>
+                <br />
+              <TextField  id="standard-name" label = "activation" value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
+              </TextField>
+            </form>
+                <br />
+              <Button variant="contained"  onClick = { this.handleNodeEdit } >
+              <SaveIcon className={ 'right_icon'} />
+                  Save
+              </Button>
+            </div>
           </Drawer>
 
-        <Dialog open = { this.state.dialog } onClose = { this.handleClose } aria-labelledby="form-dialog-title" >
-        <DialogTitle id="form-dialog-title" > Execution Configuration </DialogTitle>
-        <DialogContent>
-        <TextField
-            autoFocus
-						value = { this.state.config.optimizer.slice(1,-1) }
-            margin = "dense"
-            id = "name"
-            label = "Optimizer"
-            type = "text"
-						onChange = {(e) => {
-          var tmp_form = this.state.config;
-          tmp_form["optimizer"] = "'"+e.target.value+"'"
-							this.setState({
-            tmp_form
-          } as any)
-        }}
-        fullWidth
-        />
+          <Drawer anchor = "right" open = { this.state.drawerlink } onClose = {() => this.toggleDrawer(false, "close", true)}>
+            <div
+            role="presentation"
+            className = { "param_drawer"} >
+              <h2>Link Parameters </h2>
+              <form noValidate autoComplete = "off" className = { "drawer_form"} >
+                <TextField  id="standard-name" label = "weight" value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event, true, this.state.tmp_id)} margin = "normal" >
+                </TextField>
+                  <br />
+                <TextField  id="standard-name" label = "activation" value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
+                </TextField>
+              </form>
+                <br />
+              <Button variant="contained"  onClick = { this.handleNodeEdit } >
+                <SaveIcon className={ 'right_icon'} />
+                Save
+              </Button>
+            </div>
+          </Drawer>
 
-        <TextField
-            autoFocus
-						value = { this.state.config.loss.slice(1,-1) }
-            margin = "dense"
-            id = "name"
-            label = "loss"
-            type = "text"
-						onChange = {(e) => {
-          var tmp_form = this.state.config;
-          tmp_form["loss"] = "'"+e.target.value+"'"
-							this.setState({
-            tmp_form
-          } as any)
-        }}
-        fullWidth
-        />
+          <Dialog open = { this.state.dialog } onClose = { this.handleClose } aria-labelledby="form-dialog-title" >
+            <DialogTitle id="form-dialog-title" > Execution Configuration </DialogTitle>
+            <DialogContent >
+            <TextField
+              autoFocus
+      				value = { this.state.config.optimizer.slice(1, -1) }
+              margin = "dense"
+              id = "name"
+              label = "Optimizer"
+              type = "text"
+      				onChange = {(e) => {
+                  var tmp_form = this.state.config;
+                  tmp_form["optimizer"] = "'" + e.target.value + "'"
+      					this.setState({
+                    tmp_form
+                  } as any)
+                }}
+                fullWidth
+                />
 
-        <FormControlLabel
-			        control={
-								<Checkbox
-									onChange = { this.handleCheckBoxChange("'accuracy'") }
-									value = "accuracy"
-									color = "primary"
-        />
-			        }
-        label = "Accuracy"
-        />
+            <TextField
+              autoFocus
+      				value = { this.state.config.loss.slice(1, -1) }
+              margin = "dense"
+              id = "name"
+              label = "loss"
+              type = "text"
+      				onChange = {(e) => {
+                  var tmp_form = this.state.config;
+                  tmp_form["loss"] = "'" + e.target.value + "'"
+      					this.setState({
+                    tmp_form
+                  } as any)
+                }}
+                fullWidth
+                />
 
-        <FormControlLabel
-								control={
-									<Checkbox
-										onChange = { this.handleCheckBoxChange("'neg_mean_square_error'") }
-										value = "neg_mean_square_error"
-										color = "primary"
-        />
-								}
-        label = "Neg mean square error"
-        />
+          <FormControlLabel
+    	        control={
+    						< Checkbox
+    							onChange = { this.handleCheckBoxChange("'accuracy'") }
+    							value = "accuracy"
+    							color = "primary"
+              />
+	           }
+              label = "Accuracy"
+              />
 
-        </DialogContent>
-          < DialogActions >
-          <Button onClick={ this.handleClose } color = "primary" >
-            Cancel
-          </Button>
-          <Button onClick = { this.handleExeConfig } color = "primary" >
-            Save
-          </Button>
+          <FormControlLabel
+						control={
+							< Checkbox
+								onChange = { this.handleCheckBoxChange("'neg_mean_square_error'") }
+								value = "neg_mean_square_error"
+								color = "primary"
+          />
+						}
+              label = "Neg mean square error"
+              />
+
+          </DialogContent>
+          <DialogActions >
+            <Button onClick={ this.handleClose } color = "primary" >
+              Cancel
+            </Button>
+            <Button onClick = { this.handleExeConfig } color = "primary" >
+              Save
+            </Button>
           </DialogActions>
         </Dialog>
 
 
-        <div className = "body_wf" >
-        <div className="content" >
-        <TrayWidget>
-        <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Layer" color = "rgb(192,255,0)" />
-        <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "Hidden Layer" color = "rgb(0,192,255)" />
-        <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Layer" color = "rgb(90,102,255)" />
-        </TrayWidget>
-        < div
-						className = "diagram-layer"
-						onDrop = {
-          event => {
-            var data = JSON.parse(event.dataTransfer.getData("storm-diagram-node"));
+          <div className = "body_wf" >
+            <div className="content" >
+              <TrayWidget>
+                <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Layer" color = "rgb(192,255,0)" />
+                <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "Hidden Layer" color = "rgb(0,192,255)" />
+                <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Layer" color = "rgb(90,102,255)" />
+                </TrayWidget>
+              <div
+						        className = "diagram-layer"
+						        onDrop = {
+                        event => {
+                          var data = JSON.parse(event.dataTransfer.getData("storm-diagram-node"));
+                          var node = null;
+                          if (data.name === "inp_layer") {
+                            node = new DefaultNodeModel("Input", "rgb(0,102,255)");
+                            node.addPort(new DefaultPortModel(false, "out-1", "out"));
+                            node.extras = {
+                              name: "Input Node",
+                              wight: 0.5
+                            }
+                          } else if (data.name === "out_layer") {
 
-            var add_node = this.handleNodeAdd
-
-            var node = null;
-            if (data.name === "inp_layer") {
-              node = new DefaultNodeModel("Input", "rgb(0,102,255)");
-              node.addPort(new DefaultPortModel(false, "out-1", "out"));
-              node.extras = {
-                name:"Input Node",
-                wight:0.5
-              }
-            } else if (data.name === "out_layer") {
-
-              node = new DefaultNodeModel("Output", "rgb(90,102,255)");
-              node.addPort(new DefaultPortModel(true, "in-1", "In"));
-              node.extras = {
-                name:"Output Node",
-                wight:0.5
-              }
-            }
-            else {
-              node = new DefaultNodeModel("Dense", "rgb(0,192,255)");
-              node.addPort(new DefaultPortModel(true, "in-1", "In"));
-              node.addPort(new DefaultPortModel(false, "out-1", "Out"));
-              node.extras = {
-                name:"Dense Node",
-                wight:0.5
-              }
-            }
-            var points = this.props.app.getDiagramEngine().getRelativeMousePoint(event);
-            node.x = points.x;
-            node.y = points.y;
-            this.props.app
-              .getDiagramEngine()
-              .getDiagramModel()
-              .addNode(node);
-            this.forceUpdate();
-          }
-}
+                            node = new DefaultNodeModel("Output", "rgb(90,102,255)");
+                            node.addPort(new DefaultPortModel(true, "in-1", "In"));
+                            node.extras = {
+                              name: "Output Node",
+                              wight: 0.5
+                            }
+                          }
+                          else {
+                            node = new DefaultNodeModel("Dense", "rgb(0,192,255)");
+                            node.addPort(new DefaultPortModel(true, "in-1", "In"));
+                            node.addPort(new DefaultPortModel(false, "out-1", "Out"));
+                            node.extras = {
+                              name: "Dense Node",
+                              wight: 0.5
+                            }
+                          }
+                          var points = this.props.app.getDiagramEngine().getRelativeMousePoint(event);
+                          node.x = points.x;
+                          node.y = points.y;
+                          this.props.app
+                            .getDiagramEngine()
+                            .getDiagramModel()
+                            .addNode(node);
+                          this.forceUpdate();
+                        }
+                      }
 						onDragOver = {
-		          event => {
-		            event.preventDefault();
-		          }
-}
+                event => {
+                  event.preventDefault();
+                }
+              }
 
 						onDoubleClick = {
-              event => {
-                var selected_node = document.getElementsByClassName("srd-node--selected");
-                var selected_link = document.getElementsByClassName("srd-default-link--path-selected ")
+                event => {
+                  var selected_node = document.getElementsByClassName("srd-node--selected");
+                  var selected_link = document.getElementsByClassName("srd-default-link--path-selected ")
 
-                if (selected_node.length > 0) {
-                  console.log(selected_node);
-                  console.log(selected_link);
-                  // data-nodeid
-                  var node_id = selected_node[0].getAttribute("data-nodeid");
-                  console.log(selected_node[0].getAttribute("data-nodeid"));
-                  if (node_id !== null) {
-                    this.toggleDrawer(true, node_id,false);
-                    this.setState({
-                      tmp_id: node_id,
-                    })
+                  if (selected_node.length > 0) {
+                    // console.log(selected_node);
+                    // console.log(selected_link);
+                    // data-nodeid
+                    var node_id = selected_node[0].getAttribute("data-nodeid");
+                    // console.log(selected_node[0].getAttribute("data-nodeid"));
+                    if (node_id !== null) {
+                      this.toggleDrawer(true, node_id, false);
+                      this.setState({
+                        tmp_id: node_id,
+                      })
+                    }
                   }
-                }
-                else if (selected_link.length > 0) {
-                  console.log(selected_link);
-                  var link_id = selected_link[1].getAttribute("data-linkid");
-                  console.log(selected_link[1].getAttribute("data-linkid"));
-                  if (link_id !== null) {
-                    this.setState({
-                      tmp_id: link_id,
-                    })
-                    this.toggleDrawer(true, link_id,true);
+                  else if (selected_link.length > 0) {
+                    // console.log(selected_link);
+                    var link_id = selected_link[1].getAttribute("data-linkid");
+                    // console.log(selected_link[1].getAttribute("data-linkid"));
+                    if (link_id !== null) {
+                      this.setState({
+                        tmp_id: link_id,
+                      })
+                      this.toggleDrawer(true, link_id, true);
+                    }
                   }
                 }
               }
-            }
-        >
-        <DiagramWidget
-							className="srd-demo-canvas"
-							diagramEngine = { this.props.app.getDiagramEngine() }
-							maxNumberPointsPerLink = {0}
-              deleteKeys={[27]}
-        />
+              >
+            <DiagramWidget
+						className="srd-demo-canvas"
+						diagramEngine = { this.props.app.getDiagramEngine() }
+						maxNumberPointsPerLink = { 0}
+            deleteKeys = { [27]}
+            />
+          </div>
         </div>
-        </div>
-        </div>
-        </div>
-      );
+      </div>
+    </div>
+    );
 	}
 }
