@@ -22,13 +22,7 @@ def iterate(splitAttr,index,pointInJSON,layerId,json_config):
             pointInJSON[key]= value
             break
 
-
-def makeKerasModel(json_config):
-
-    dict_list = []
-
-    for i in range(len(json_config["graph"][0]["nodes"])):
-
+def controlLogic(json_config,i):
         layerType = json_config["graph"][0]["nodes"][i]["layerType"]
         layerId = json_config["graph"][0]["nodes"][i]["id"]
 
@@ -41,10 +35,45 @@ def makeKerasModel(json_config):
             pointInJSON = layer_dict["config"]
             iterate(splitAttr,j, pointInJSON,layerId,json_config)
 
-    dict_list.append(layer_dict)
+        return layer_dict
 
-    layerCommon = {"name": "userModel", "layers":"None"}
-    layerCommon["layers"] = dict_list
+
+
+def makeKerasModel(json_config):
+
+    dict_list = []
+    hiddenNo = 0
+
+    for i in range(len(json_config["graph"][0]["nodes"])):
+
+        for k in range(len(json_config["graph"][0]["nodes"])):     
+
+            if i == 0:
+                if "Input" in json_config["graph"][0]["nodes"][k]["name"]:
+                    layer_dict = controlLogic(json_config,k)
+                    dict_list.append(layer_dict)
+                    break
+
+            elif i == len(json_config["graph"][0]["nodes"])-1:
+                if "Output" in json_config["graph"][0]["nodes"][k]["name"]:
+                    layer_dict = controlLogic(json_config,k)
+                    dict_list.append(layer_dict)
+                    break
+            
+            elif i>0 and i< (len(json_config["graph"][0]["nodes"])-1) :
+                print("insid hidden")
+                if "Hidden" in json_config["graph"][0]["nodes"][k]["name"]:
+                    name = json_config["graph"][0]["nodes"][k]["name"]
+                    splitName = name.split(" ")
+                    print(splitName)
+                    if int(splitName[1]) == hiddenNo:
+                        print ("inside split")
+                        layer_dict = controlLogic(json_config,k)
+                        dict_list.append(layer_dict)
+                        hiddenNo += 1
+                    break
+
+    layerCommon = {"name": "userModel", "layers":dict_list}
     modelCommon = {"class_name": "Sequential", "config":layerCommon, "keras_version": "2.2.4-tf", "backend": "tensorflow"}
     #Only for testing
     modelCommon["config"]["layers"][0]["batch_input_shape"] =  [None, 1000]

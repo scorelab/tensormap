@@ -4,7 +4,7 @@ from .. import db
 from .database_models.code_gen import template_copies,user_template_index,code_layers
 import os
 from flask import send_file
-from ..common import validate_model_json
+from ..common import validate_model_json,make_model_json
 import json
 from flask import jsonify
 
@@ -249,6 +249,14 @@ def editExe():
         # "loss": "'sparse_categorical_crossentropy'",
 # 	"metrics": ["'accuracy'"]
 # }
+
+@main.route('/test', methods=['POST'])
+def fu():
+        print("inside fubction")
+        content = request.get_json()
+        returbjson = make_model_json.makeKerasModel(content)
+
+        return returbjson
 
            
                 
