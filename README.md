@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/scorelab/TensorMap.svg?branch=master)](https://travis-ci.com/scorelab/TensorMap)
 # TensorMap
 
 TensorMap is a web application that will allow the users to create machine learning algorithms visually. TensorMap supports reverse engineering of the visual layout to a Tensorflow implementation in preferred languages. The goal of the project is to let the beginners play with machine learning algorithms in Tensorflow without less background knowledge about the library.
@@ -69,7 +70,7 @@ python run.py
 
 * [Reactjs](https://reactjs.org/docs/getting-started.html) : Frontend  
 * [Flask](http://flask.pocoo.org/) : Backend
-* [TensorFlow - Keras](https://www.tensorflow.org/) : Model implemetation 
+* [TensorFlow - Keras](https://www.tensorflow.org/) : Model implemetation
 
 ## Contributing
 
