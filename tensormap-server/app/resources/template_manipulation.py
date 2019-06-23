@@ -250,15 +250,7 @@ def editExe():
 # 	"metrics": ["'accuracy'"]
 # }
 
-@main.route('/test', methods=['POST'])
-def fu():
-        print("inside fubction")
-        content = request.get_json()
-        returbjson = make_model_json.makeKerasModel(content)
-
-        return returbjson
-
-           
+         
                 
 ##adding file to database when user is first created
 # file = convertToBinaryData("/home/suleka/Documents/Tensormap_GSOC/TensorMap/tensormap-server/app/resources/user_template/user_keras_temp.py")
