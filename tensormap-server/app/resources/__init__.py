@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-dl_blueprint = Blueprint('dl_blueprint', __name__)
+main = Blueprint('main', __name__)
 
-from . import dlmodel
+from . import dlmodel, template_manipulation
