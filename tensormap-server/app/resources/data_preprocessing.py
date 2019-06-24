@@ -8,7 +8,7 @@ from flask import jsonify
 
 @main.route('/addData', methods=['GET', 'POST'])
 def addData():
-	# retrieving the details of the dataset
+    # retrieving the details of the dataset
     dataset_name = request.form['dataset_name']
     dataset_type = request.form['dataset_type']
     dataset_file = request.files['dataset_csv']
@@ -28,3 +28,16 @@ def viewData():
     entries = dataset.query.all()
     entries = [entry.serialize() for entry in entries]
     return json.dumps(entries)
+
+@main.route('/updateData', methods=['GET'])
+def updateData():
+    entry = dataset.query.filter_by(id=int(request.args['id'])).one()
+    entry.name = request.args['name']
+    db.session.commit()
+    return "successfully updated!!"
+
+@main.route('/deleteData', methods=['GET'])
+def deleteData():
+    dataset.query.filter_by(id=int(request.args['id'])).delete()
+    db.session.commit()
+    return "successfully deleted!!"
