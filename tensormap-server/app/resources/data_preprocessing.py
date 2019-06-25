@@ -22,3 +22,9 @@ def addData():
     db.session.add(entry)
     db.session.commit()
     return "file saved!!!"
+
+@main.route('/viewData', methods=['GET'])
+def viewData():
+    entries = dataset.query.all()
+    entries = [entry.serialize() for entry in entries]
+    return json.dumps(entries)

@@ -11,3 +11,10 @@ class dataset(db.Model):
         self.name = name
         self.filePath = filePath
         self.fileFormat = fileFormat
+
+    def serialize(self):
+    	return  {
+    		'name': self.name,
+    		'filePath': self.filePath,
+    		'fileFormat': self.fileFormat
+    	}
