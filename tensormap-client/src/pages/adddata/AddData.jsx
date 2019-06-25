@@ -9,12 +9,14 @@ class AddData extends React.Component {
     const {classes} = this.props
 
     return (
-        <form action="localhost:5000/addData" method="post" enctype="multipart/form-data">
-        	Name: <input type="text" name="dataset_name"></input><br/>
-        	Type: <input type="text" name="dataset_type"></input><br/>
-        	Upload csv file: <input type="file" name="dataset_csv"></input><br/>
-        	<input type="submit" value="Submit"></input>
+        <div className={classes.container}>
+        <form action="/addData" method="post" enctype="multipart/form-data">
+        	Name: <input type="text" name="dataset_name" className={classes.text} placeholder="Enter dataset name"></input><br/>
+        	Type: <input type="text" name="dataset_type" className={classes.text} placeholder="Enter file format"></input><br/>
+        	Upload csv file: <br/> <input type="file" name="dataset_csv" className={classes.browse} ></input><br/>
+        	<input type="submit" value="Submit" className={classes.submit}></input>
         </form>
+        </div>
     )
   }
 
