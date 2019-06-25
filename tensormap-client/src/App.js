@@ -6,6 +6,7 @@ import styles          from './App.styles'
 import {history}       from './helpers'
 import {Dashboard}     from './pages/dashboard'
 import {AddData}       from './pages/adddata'
+import {ViewData}       from './pages/viewdata'
 
 class App extends React.Component {
 
@@ -17,6 +18,7 @@ class App extends React.Component {
           <Router history={history}>
             <div>
               <Route path="/adddata" component={AddData}/>
+              <Route path="/viewdata" component={ViewData}/>
               <Route path="/" component={Dashboard}/>
               {/*<PrivateRoute exact path="/" component={Dashboard}/>*/}
               {/*<Route path="/login" component={SignIn}/>*/}
