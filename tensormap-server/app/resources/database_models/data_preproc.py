@@ -2,8 +2,8 @@ from ... import db
 from sqlalchemy.dialects.mysql import VARCHAR, BLOB, INTEGER,TEXT, JSON
 
 class dataset(db.Model):
-    id = db.Column(VARCHAR(50),primary_key=True)
-    filePath = db.Column(VARCHAR(50))
+    id = db.Column(INTEGER, primary_key=True)
+    filePath = db.Column(VARCHAR(1000))
     name = db.Column(VARCHAR(50))
     fileFormat = db.Column(VARCHAR(50))
 

@@ -14,7 +14,7 @@ def addData():
     dataset_file = request.files['dataset_csv']
 
     # saving the csv file on server.
-    dataset_filepath = os.path.join('/root/TensorMap/tensormap-server/app/datasets/', dataset_file.filename)
+    dataset_filepath = os.path.join('/home/subramanyam/scorelab/TensorMap/tensormap-server/app/datasets', dataset_file.filename)
     dataset_file.save(dataset_filepath)
 
     # writing the file entry in the database.
