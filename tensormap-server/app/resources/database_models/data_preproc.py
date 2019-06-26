@@ -14,6 +14,7 @@ class dataset(db.Model):
 
     def serialize(self):
     	return  {
+    		'id': self.id,
     		'name': self.name,
     		'filePath': self.filePath,
     		'fileFormat': self.fileFormat
