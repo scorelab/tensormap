@@ -4,7 +4,25 @@ import * as React   from 'react'
 import styles       from './ViewData.styles'
 
 class ViewData extends React.Component {
-  
+  constructor() {
+    super();
+    this.handleClick = this.handleClick.bind(this);
+    var Httpreq = new XMLHttpRequest();
+    Httpreq.open("GET", '/viewData', false);
+    Httpreq.send(null);
+    this.state = {
+      currentPage: 1,
+      datasetsPerPage: 2,
+      data: JSON.parse(Httpreq.responseText)
+    };
+  }
+
+  handleClick(event) {
+    this.setState({
+      currentPage: Number(event.target.id)
+    });
+  }
+
   getEditHandler(idx) {
     return function() {
       document.getElementById('name_' + idx).innerHTML = '<input type="text" value="' + document.getElementById('name_' + idx).innerHTML + '"></input>';
@@ -75,18 +93,36 @@ class ViewData extends React.Component {
     const {classes} = this.props
     return <button className={classes.viewbtn}>View Dataset</button>
   }
-  renderDatasets() {
+
+  renderDatasets(data) {
     const {classes} = this.props
-    var Httpreq = new XMLHttpRequest();
-    Httpreq.open("GET", '/viewData', false);
-    Httpreq.send(null);
-    var data = JSON.parse(Httpreq.responseText);
     return data.map((ele, idx) => {
       return <tr id={'datarow_' + ele.id}><td id={'name_' + ele.id} className={classes.datatabletd} data-text={ele.name}>{ele.name}</td><td className={classes.datatabletd}>{ele.fileFormat}</td><td className={classes.datatabletd}>{this.renderEditButton(ele.id)}{this.renderSaveButton(ele.id)}{this.renderCancelButton(ele.id)}</td><td className={classes.datatabletd}>{this.renderDeleteButton(ele.id)}</td><td className={classes.datatabletd}>{this.renderViewButton(ele.id)}</td></tr>;
     });
   }
+
   render() {
     const {classes} = this.props
+    const {currentPage, datasetsPerPage, data} = this.state;
+    const pageNumbers = [];
+    for(let i = 1; i <= Math.ceil(data.length/datasetsPerPage); i++) {
+      pageNumbers.push(i);    
+    }
+    const renderPageNumbers = pageNumbers.map(number => {
+      if(number == currentPage) {
+        return (
+          <a id={number} onClick={this.handleClick} className={classes.paginationbtnactive}>{number}</a>
+        )
+      }
+      else {
+        return (
+          <a id={number} onClick={this.handleClick} className={classes.paginationbtn}>{number}</a>
+        )
+      }
+    });
+    const indexOfLast = currentPage * datasetsPerPage;
+    const indexOfFirst = indexOfLast - datasetsPerPage;
+    const currentData = data.slice(indexOfFirst, indexOfLast);
 
     return (
         <div className={classes.container}>
@@ -98,8 +134,11 @@ class ViewData extends React.Component {
               <th className={classes.datatableth}> Delete option </th>
               <th className={classes.datatableth}> View dataset </th>
             </tr>
-            {this.renderDatasets()}
-          </table>
+            {this.renderDatasets(currentData)}
+          </table><br/>
+          <div className={classes.pagination}>
+            {renderPageNumbers}
+          </div>
         </div>
     )
   }
