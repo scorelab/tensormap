@@ -115,6 +115,32 @@ const styles = theme => ({
 		margin: '4px 2px',
 		cursor: 'pointer',
 		borderRadius: '5px',
+  	},
+  	pagination: {
+  		display: 'inline-block',
+  		position: 'absolute',
+  		left: '40%',
+  	},
+  	paginationbtn: {
+		color: 'black',
+		float: 'left',
+		fontWeight: '3px',
+		padding: '8px 16px',
+		textDecoration: 'none',
+		border: '2px solid #ddd',
+		borderRadius: '5px',
+		cursor: 'pointer',
+  	},
+  	paginationbtnactive: {
+		color: 'black',
+		backgroundColor: '#4CAF50',
+		float: 'left',
+		fontWeight: '3px',
+		padding: '8px 16px',
+		textDecoration: 'none',
+		border: '2px solid #ddd',
+		borderRadius: '5px',
+		cursor: 'pointer',
   	}
 })
 
