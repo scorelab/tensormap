@@ -41,4 +41,3 @@ def deleteData():
     dataset.query.filter_by(id=int(request.args['id'])).delete()
     db.session.commit()
     return "successfully deleted!!"
-    return json.dumps(entries)
