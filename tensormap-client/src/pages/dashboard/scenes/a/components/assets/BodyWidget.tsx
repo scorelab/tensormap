@@ -31,6 +31,8 @@ export interface BodyWidgetState {
   accuracy: boolean;
   neg_mean_square_error: boolean;
   tmp_id: string;
+  dialog_group:boolean;
+  layer_name:string;
   node:
   {
     id: string;
@@ -51,9 +53,11 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       drawer: false,
       drawerlink: false,
       dialog: false,
+      dialog_group:false,
       tmp_id: "",
       accuracy: false,
       neg_mean_square_error: false,
+      layer_name:"",
       node: [
         {
           id: "",
@@ -79,6 +83,9 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this)
     this.handleClose = this.handleClose.bind(this)
     this.handleExeConfig = this.handleExeConfig.bind(this)
+    this.handleSelection = this.handleSelection.bind(this)
+    this.handleExecute = this.handleExecute.bind(this)
+    this.handleCloseGrouping = this.handleCloseGrouping.bind(this)
   };
 
   componentDidMount() {
@@ -192,12 +199,12 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       graph: [json_graph],
       node_param: node_data
     }
-    // console.log(comp_data);
+    console.log(comp_data);
 
-    const socket = socketIOClient(endpoint);
-    socket.emit('nn_execute', comp_data, function(response: any) {
-      console.log(response)
-    });
+    // const socket = socketIOClient(endpoint);
+    // socket.emit('nn_execute', comp_data, function(response: any) {
+    //   console.log(response)
+    // });
 
   }
 
@@ -319,6 +326,19 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     })
   }
 
+  handleClickOpenGrouping = () => {
+    this.setState({
+      dialog_group: true,
+      layer_name:"",
+    })
+  }
+
+  handleCloseGrouping = () => {
+    this.setState({
+      dialog_group: false
+    })
+  }
+
   handleCheckBoxChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ [name]: event.target.checked } as any);
     var joined = this.state.config.metrics.concat(name);
@@ -333,13 +353,29 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     // console.log(tmp_form.metrics)
   };
 
+  handleSelection = () => {
+    var graph = this.props.app.getDiagramEngine().getDiagramModel()
+    var selected = graph.getSelectedItems()
+
+    // console.log(selected.length)
+    for( var i = 0 ; i < selected.length ; ++i){
+      // console.log(i
+      // console.log(selected[i].constructor.name)
+      if(selected[i].constructor.name === "DefaultNodeModel"){
+        (selected[i] as DefaultNodeModel).extras.parent = "hi"
+      }
+    };
+    this.handleCloseGrouping()
+  };
+
 
   render() {
     return (
       <div>
 
-        <Button variant= "contained" className = { 'send_btn'} onClick = {() => this.handleExecute}> Get Code </Button>
+        <Button variant= "contained" className = { 'send_btn'} onClick = {this.handleExecute}> Get Code </Button>
         <Button variant = "contained" className = { 'exe_config_btn'} onClick = { this.handleClickOpen } > Change Exe Config </Button>
+        <Button variant = "contained" className = { 'group_selection_btn'} onClick = { this.handleClickOpenGrouping } > Group Selection </Button>
         <Drawer anchor = "right" open = { this.state.drawer } onClose = {() => this.toggleDrawer(false, "close", false)}>
           <div
   					role="presentation"
@@ -385,15 +421,15 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
             <DialogContent >
             <TextField
               autoFocus
-      				value = { this.state.config.optimizer.slice(1, -1) }
+              value = { this.state.config.optimizer.slice(1, -1) }
               margin = "dense"
               id = "name"
               label = "Optimizer"
               type = "text"
-      				onChange = {(e) => {
+              onChange = {(e) => {
                   var tmp_form = this.state.config;
                   tmp_form["optimizer"] = "'" + e.target.value + "'"
-      					this.setState({
+                this.setState({
                     tmp_form
                   } as any)
                 }}
@@ -402,40 +438,40 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 
             <TextField
               autoFocus
-      				value = { this.state.config.loss.slice(1, -1) }
+              value = { this.state.config.loss.slice(1, -1) }
               margin = "dense"
               id = "name"
               label = "loss"
               type = "text"
-      				onChange = {(e) => {
+              onChange = {(e) => {
                   var tmp_form = this.state.config;
                   tmp_form["loss"] = "'" + e.target.value + "'"
-      					this.setState({
-                    tmp_form
-                  } as any)
-                }}
+                  this.setState({
+                      tmp_form
+                    } as any)
+                  }}
                 fullWidth
                 />
 
           <FormControlLabel
-    	        control={
-    						< Checkbox
-    							onChange = { this.handleCheckBoxChange("'accuracy'") }
-    							value = "accuracy"
-    							color = "primary"
+              control={
+                < Checkbox
+                  onChange = { this.handleCheckBoxChange("'accuracy'") }
+                  value = "accuracy"
+                  color = "primary"
               />
-	           }
+             }
               label = "Accuracy"
               />
 
           <FormControlLabel
-						control={
-							< Checkbox
-								onChange = { this.handleCheckBoxChange("'neg_mean_square_error'") }
-								value = "neg_mean_square_error"
-								color = "primary"
+            control={
+              < Checkbox
+                onChange = { this.handleCheckBoxChange("'neg_mean_square_error'") }
+                value = "neg_mean_square_error"
+                color = "primary"
           />
-						}
+            }
               label = "Neg mean square error"
               />
 
@@ -445,6 +481,34 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
               Cancel
             </Button>
             <Button onClick = { this.handleExeConfig } color = "primary" >
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+          <Dialog open = { this.state.dialog_group } onClose = { this.handleCloseGrouping } aria-labelledby="form-dialog-title" >
+            <DialogTitle id="form-dialog-title" > Group Selected nodes </DialogTitle>
+            <DialogContent >
+            <TextField
+              autoFocus
+      				value = { this.state.layer_name }
+              margin = "dense"
+              id = "name"
+              label = "Layer Name"
+              type = "text"
+      				onChange = {(e) => {
+      					this.setState({
+                    layer_name:e.target.value
+                  })
+                }}
+                fullWidth
+                />
+          </DialogContent>
+          <DialogActions >
+            <Button onClick={ this.handleCloseGrouping } color = "primary" >
+              Cancel
+            </Button>
+            <Button onClick = { this.handleSelection } color = "primary" >
               Save
             </Button>
           </DialogActions>
@@ -540,8 +604,9 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
             <DiagramWidget
 						className="srd-demo-canvas"
 						diagramEngine = { this.props.app.getDiagramEngine() }
-						maxNumberPointsPerLink = { 0}
-            deleteKeys = { [27]}
+						maxNumberPointsPerLink = {0}
+            allowLooseLinks={false}
+            deleteKeys = {[27]}
             />
           </div>
         </div>
