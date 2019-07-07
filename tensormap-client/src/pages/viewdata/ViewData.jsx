@@ -89,6 +89,16 @@ class ViewData extends React.Component {
     return <button className={classes.delbtn} onClick={this.getDeleteHandler(idx)}>Delete</button>
   }
 
+  renderEditButton() {
+    const {classes} = this.props
+    return <button style={styles} className={classes.canbtn} id={'cancel_' + idx} onClick={this.getCancelHandler(idx)}>Cancel</button>
+  }
+
+  renderDeleteButton(idx) {
+    const {classes} = this.props
+    return <button className={classes.delbtn} onClick={this.getDeleteHandler(idx)}>Delete</button>
+  }
+
   renderViewButton(idx) {
     const {classes} = this.props
     return <button className={classes.viewbtn}>View Dataset</button>
