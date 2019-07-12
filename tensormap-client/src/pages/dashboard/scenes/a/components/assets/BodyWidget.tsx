@@ -2,6 +2,8 @@ import * as React from "react";
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./Application";
 import { TrayItemWidget } from "./TrayItemWidget";
+import { Properties } from "./Properties";
+import SimpleTabs from "./Log";
 import { DefaultNodeModel, DiagramWidget, DefaultPortModel, DefaultLinkModel, DefaultLabelModel } from "storm-react-diagrams";
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
@@ -521,7 +523,11 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
                 <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Layer" color = "rgb(192,255,0)" />
                 <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "Hidden Layer" color = "rgb(0,192,255)" />
                 <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Layer" color = "rgb(90,102,255)" />
-                </TrayWidget>
+              </TrayWidget>
+
+              <Properties/>
+
+
               <div
 						        className = "diagram-layer"
 						        onDrop = {
@@ -608,9 +614,11 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
             allowLooseLinks={false}
             deleteKeys = {[27]}
             />
+
           </div>
         </div>
       </div>
+      <div className="log_main"><SimpleTabs /></div>
     </div>
     );
 	}
