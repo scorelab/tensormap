@@ -17,10 +17,26 @@
     .tray{
       min-width: 200px;
       background: #e3e3e3;
+      min-height:calc(75vh - 64px);
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+    .properties{
+      background: #e3e3e3;
+      min-width: 200px;
+      position: absolute;
+      right:0px;
+      min-height:calc(75vh - 64px);
+      z-index: 1000;
       flex-grow: 0;
       flex-shrink: 0;
     }
   }
+}
+
+.log_main{
+  min-height: 25vh;
+  background: #e3e3e3;
 }
 
 .srd-demo-workspace{
@@ -38,14 +54,13 @@
 
     button{
       background: #ccc;
-      font-size: 14px;
+      font-size: 10px;
       padding: 5px 10px;
       border: none;
       color: white;
       outline: none;
       cursor: pointer;
       margin: 2px;
-      border-radius: 3px;
 
       &:hover{
         background: rgb(0,192,255);
@@ -60,8 +75,7 @@
 }
 
 .srd-demo-canvas{
-  height: calc(100vh - 64px);
-  min-height:100%;
+  height: calc(75vh - 115px);
   background-color: #ccc !important;
   $color: rgba(white, .5);
   background-image:
@@ -111,21 +125,36 @@
 
 .send_btn {
   position: absolute !important;
-  z-index: 10000;
-  right: 20px;
-  bottom: 0px;
+  z-index: 1000;
+  right: 220px;
+  bottom: 25vh;
+  margin-bottom: 4px !important;
+  padding: 2px 8px !important;
+  border-radius: 0px !important;
+  box-shadow: 0px !important;
+  text-transform: none !important;
 }
 .exe_config_btn {
   position: absolute !important;
-  z-index: 10000;
-  right: 140px;
-  bottom: 0px;
+  z-index: 1000;
+  right: 320px;
+  bottom: 25vh;
+  margin-bottom: 4px !important;
+  padding: 2px 8px !important;
+  border-radius: 0px !important;
+  box-shadow: 0px !important;
+  text-transform: none !important;
 }
 .group_selection_btn {
   position: absolute !important;
-  z-index: 10000;
-  right: 340px;
-  bottom: 0px;
+  z-index: 1000;
+  right: 490px;
+  bottom: 25vh;
+  margin-bottom: 4px !important;
+  padding: 2px 8px !important;
+  border-radius: 0px !important;
+  box-shadow: 0px !important;
+  text-transform: none !important;
 }
 .param_drawer{
   padding:20px;

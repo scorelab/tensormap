@@ -6,40 +6,32 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
-export interface TrayItemWidgetProps {
-	model: any;
-	color?: string;
-	name: string;
+export interface PropertiesProps {
+
 }
 
-export interface TrayItemWidgetState {}
+export interface PropertiesState {}
 
-export class TrayItemWidget extends React.Component<TrayItemWidgetProps, TrayItemWidgetState> {
-	constructor(props: TrayItemWidgetProps) {
+export class Properties extends React.Component<PropertiesProps, PropertiesState> {
+	constructor(props: PropertiesProps) {
 		super(props);
 		this.state = {};
 	}
 
 	render() {
 		return (
-			<div
-					style={{ borderColor: '#fff' }}
-					draggable={true}
-					onDragStart={event => {
-						event.dataTransfer.setData("storm-diagram-node", JSON.stringify(this.props.model));
-					}}
-					className="tray-item">
+			<div className="properties">
 	      <ExpansionPanel square>
 	        <ExpansionPanelSummary
 	          expandIcon={<ExpandMoreIcon />}
 	          aria-controls="panel1a-content"
 	          id="panel1a-header"
 	        >
-	          <Typography>{this.props.name}</Typography>
+	          <Typography>Properties</Typography>
 	        </ExpansionPanelSummary>
 	        <ExpansionPanelDetails>
 	          <Typography>
-							This is a {this.props.name}, drag it...
+							This is a properties of...
 	          </Typography>
 	        </ExpansionPanelDetails>
 	      </ExpansionPanel>
