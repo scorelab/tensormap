@@ -94,7 +94,16 @@ def validate_json(content):
                         experiment_validation = False
                     elif content["experiment_info"]["multiclass"] == "True" and content["layer_param"][i]["param"][0]["units"] == 1:
                         errorString += " Invalid number of output units for multi-class classification."
-                        experiment_validation = False                 
+                        experiment_validation = False 
+                    elif not (content["experiment_info"]["loss"] == "\'binary_crossentropy\'" or content["experiment_info"]["loss"] == "\'categorical_crossentropy\'"):
+                        errorString += " Invalid loss function classification."
+                        experiment_validation = False   
+                    elif content["experiment_info"]["multiclass"] == "True" and content["experiment_info"]["loss"] == "\'binary_crossentropy\'":
+                        errorString += " Invalid loss function for multi-class classification."
+                        experiment_validation = False   
+                    elif content["experiment_info"]["multiclass"] == "False" and content["experiment_info"]["loss"] == "\'categorical_crossentropy\'":
+                        errorString += " Invalid loss function for binary classification."
+                        experiment_validation = False         
                 elif content["experiment_info"]["type"] == "regression":
                     if content["layer_param"][i]["param"][0]["activation"] == "sigmoid" or content["layer_param"][i]["param"][0]["activation"]=="softmax":
                         errorString += " Invalid output Activation for regression."
@@ -104,6 +113,9 @@ def validate_json(content):
                         errorString += " Invalid number of output units for regression."
                         experiment_validation = False
                         break
+                    elif not(content["experiment_info"]["loss"] == "\'mean_squared_error\'":
+                        errorString += " Invalid loss function for regression."
+                        experiment_validation = False                 
 
     if content["experiment_info"]["batch_size"] >= content["experiment_info"]["dataset_length"]:
         errorString += " Batch size should be less than dataset length."
