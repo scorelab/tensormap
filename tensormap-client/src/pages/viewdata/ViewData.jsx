@@ -7,6 +7,7 @@ class ViewData extends React.Component {
   constructor() {
     super();
     this.handleClick = this.handleClick.bind(this);
+    this.getDeleteHandler = this.getDeleteHandler.bind(this);
     var Httpreq = new XMLHttpRequest();
     Httpreq.open("GET", '/viewData', false);
     Httpreq.send(null);
@@ -87,16 +88,6 @@ class ViewData extends React.Component {
   renderDeleteButton(idx) {
     const {classes} = this.props
     return <button className={classes.delbtn} onClick={this.getDeleteHandler(idx)}>Delete</button>
-  }
-
-  renderEditButton() {
-    const {classes} = this.props
-    return <button className={classes.editbtn}>Edit</button>
-  }
-
-  renderDeleteButton() {
-    const {classes} = this.props
-    return <button className={classes.delbtn}>Delete</button>
   }
 
   renderViewButton() {

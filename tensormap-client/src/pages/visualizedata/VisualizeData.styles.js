@@ -1,9 +1,9 @@
 const styles = theme => ({
 	container: {
 	    position: 'absolute',
-	    left: '50%',
-	    top: '10%'
-  	},
+	    left: '40%',
+	    top: '20%'
+  	}
 })
 
 export default styles
