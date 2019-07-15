@@ -2,13 +2,14 @@ import {withStyles} from '@material-ui/core'
 import PropTypes    from 'prop-types'
 import * as React   from 'react'
 import styles       from './VisualizeData.styles'
-import { CsvToHtmlTable } from 'react-csv-to-table';
 
 class VisualizeData extends React.Component {
   constructor() {
     super();
     this.addNewRow = this.addNewRow.bind(this);
     this.addNewCol = this.addNewCol.bind(this);
+    this.delRow = this.delRow.bind(this);
+    this.highlightRow = this.highlightRow.bind(this);
     var response = `Model,mpg,cyl,disp,hp,drat,wt,qsec,vs,am,gear,carb
 Mazda RX4,21,6,160,110,3.9,2.62,16.46,0,1,4,4
 Mazda RX4 Wag,21,6,160,110,3.9,2.875,17.02,0,1,4,4
@@ -39,9 +40,11 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
     var cols = sampleData[0].split(",").length;
     var str = "";
     for(var i=0;i<cols;i++) {
-      str += "0";
-      if(i != cols-1) {
-        str += ",";
+      if(i == 0) {
+        str += "Row" + rows.toString();
+      }
+      else {
+        str += ",0";
       }
     }
     sampleData.push(str);
@@ -52,24 +55,62 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
 
   addNewCol() {
     const {sampleData} = this.state;
+    var cols = sampleData[0].split(",").length;
     for(var i=0;i<sampleData.length;i++) {
-      sampleData[i] += ",0";
+      if(i == 0) {
+        sampleData[i] += ",Col" + cols.toString();
+      }
+      else {
+        sampleData[i] += ",0";
+      }
     }
     this.setState({
       sampleData: sampleData
     });
   }
 
-  renderCols(data) {
+  highlightRow(event) {
+    this.setState({
+      selectRow: Number(event.target.id)
+    })
+  }
+
+  renderCols(data, row) {
     return data.map((ele, idx) => {
-      return <td>{ele}</td>
-    });
+      if(idx == 0) {
+        return <td id={row} onClick={this.highlightRow}>{ele}</td>
+      }
+      else {
+        return <td>{ele}</td>
+      }
+    }, this);
   }
 
   renderRows(data) {
+    const {classes} = this.props
     return data.map((ele, idx) => {
-      return <tr>{this.renderCols(ele.split(","))}</tr>;
+      if(this.state.selectRow != null && this.state.selectRow == idx) {
+        return <tr className={classes.highlightRow} >{this.renderCols(ele.split(","), idx)}</tr>;
+      }
+      else {
+        return <tr>{this.renderCols(ele.split(","), idx)}</tr>;
+      }
     });
+  }
+
+  delRow() {
+    if(this.state.selectRow != null) {
+      const {sampleData} = this.state;
+      sampleData = sampleData.splice(this.state.selectRow, 1);
+      this.setState({
+        sampleData: sampleData,
+        selectRow: null
+      })
+    }
+  }
+
+  renderDelRow() {
+    return <button onClick={this.delRow}>Delete row</button>
   }
 
   renderAddRow() {
@@ -78,6 +119,10 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
 
   renderAddCol() {
     return <button onClick={this.addNewCol}>Add col</button>
+  }
+
+  renderDelBtn() {
+    return <button onClick={this.delRow}>Del row</button>
   }
 
   render() {
@@ -96,8 +141,9 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
             </td>
             <td>
               Operations<br/>
-              {this.renderAddRow()}<br/><br/>
-              {this.renderAddCol()}
+              {this.renderAddRow()}<br/>
+              {this.renderAddCol()}<br/>
+              {this.renderDelRow()}
             </td>
           </tr>
         </table>
