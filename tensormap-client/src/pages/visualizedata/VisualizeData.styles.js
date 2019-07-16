@@ -6,6 +6,9 @@ const styles = theme => ({
   	},
   	highlightRow: {
   		backgroundColor: 'red'
+  	},
+  	highlightCol: {
+  		backgroundColor: 'green'
   	}
 })
 
