@@ -20,6 +20,8 @@ import { baseURL } from '../../../../../../config';
 
 import socketIOClient from "socket.io-client";
 
+var _ = require('lodash')
+
 const endpoint = "ws://localhost:5000/nn";
 
 export interface BodyWidgetProps {
@@ -88,6 +90,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     this.handleSelection = this.handleSelection.bind(this)
     this.handleExecute = this.handleExecute.bind(this)
     this.handleCloseGrouping = this.handleCloseGrouping.bind(this)
+    this.handledelete = this.handledelete.bind(this)
   };
 
   componentDidMount() {
@@ -370,11 +373,22 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     this.handleCloseGrouping()
   };
 
+  handledelete = () => {
+			_.forEach(this.props.app.getDiagramEngine().getDiagramModel().getSelectedItems(), (element : any) => {
+				//only delete items which are not locked
+				if (!this.props.app.getDiagramEngine().isModelLocked(element)) {
+					element.remove();
+				}
+			});
+			this.forceUpdate();
+  }
+
 
   render() {
     return (
       <div>
 
+        <Button variant= "contained" className = { 'delete_btn'} onClick = {this.handledelete}> Delete </Button>
         <Button variant= "contained" className = { 'send_btn'} onClick = {this.handleExecute}> Get Code </Button>
         <Button variant = "contained" className = { 'exe_config_btn'} onClick = { this.handleClickOpen } > Change Exe Config </Button>
         <Button variant = "contained" className = { 'group_selection_btn'} onClick = { this.handleClickOpenGrouping } > Group Selection </Button>
