@@ -122,7 +122,16 @@
       left: 0;
       right: 0;
   }
-
+.delete_btn {
+  z-index: 1000;
+  position:absolute !important;
+  bottom:25vh;
+  margin-bottom: 4px !important;
+  padding: 2px 8px !important;
+  border-radius: 0px !important;
+  box-shadow: 0px !important;
+  text-transform: none !important;
+}
 .send_btn {
   position: absolute !important;
   z-index: 1000;
@@ -166,4 +175,12 @@
 
 .right_icon {
   margin-right:10px;
+}
+
+.avatar{
+  margin-right:5px;
+  transform:scale(0.5);
+}
+.gray{
+  background: red !important;
 }
