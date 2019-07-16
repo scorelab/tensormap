@@ -12,9 +12,18 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import SaveIcon from '@material-ui/icons/Save';
+import DeleteIcon from '@material-ui/icons/Delete';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Avatar from '@material-ui/core/Avatar';
+
+
 
 import { baseURL } from '../../../../../../config';
 
@@ -388,7 +397,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     return (
       <div>
 
-        <Button variant= "contained" className = { 'delete_btn'} onClick = {this.handledelete}> Delete </Button>
+        <Button variant= "contained" className = { 'delete_btn'} onClick = {this.handledelete}> <DeleteIcon /> Delete</Button>
         <Button variant= "contained" className = { 'send_btn'} onClick = {this.handleExecute}> Get Code </Button>
         <Button variant = "contained" className = { 'exe_config_btn'} onClick = { this.handleClickOpen } > Change Exe Config </Button>
         <Button variant = "contained" className = { 'group_selection_btn'} onClick = { this.handleClickOpenGrouping } > Group Selection </Button>
@@ -505,12 +514,12 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
           <Dialog open = { this.state.dialog_group } onClose = { this.handleCloseGrouping } aria-labelledby="form-dialog-title" >
             <DialogTitle id="form-dialog-title" > Group Selected nodes </DialogTitle>
             <DialogContent >
+            Layer Name:
             <TextField
               autoFocus
       				value = { this.state.layer_name }
               margin = "dense"
               id = "name"
-              label = "Layer Name"
               type = "text"
       				onChange = {(e) => {
       					this.setState({
@@ -519,6 +528,23 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
                 }}
                 fullWidth
                 />
+                Choose color:
+              <Select
+                value={"hi"}
+                fullWidth
+              >
+                <MenuItem value="" >
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value={10}>
+                  <Avatar className='avatar gray'>
+
+                  </Avatar>
+                  Gray
+                </MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
           </DialogContent>
           <DialogActions >
             <Button onClick={ this.handleCloseGrouping } color = "primary" >
@@ -626,7 +652,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 						diagramEngine = { this.props.app.getDiagramEngine() }
 						maxNumberPointsPerLink = {0}
             allowLooseLinks={false}
-            deleteKeys = {[27]}
+            deleteKeys = {[]}
             />
 
           </div>
