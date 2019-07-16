@@ -9,7 +9,9 @@ class VisualizeData extends React.Component {
     this.addNewRow = this.addNewRow.bind(this);
     this.addNewCol = this.addNewCol.bind(this);
     this.delRow = this.delRow.bind(this);
+    this.delCol = this.delCol.bind(this);
     this.highlightRow = this.highlightRow.bind(this);
+    this.highlightCol = this.highlightCol.bind(this);
     var response = `Model,mpg,cyl,disp,hp,drat,wt,qsec,vs,am,gear,carb
 Mazda RX4,21,6,160,110,3.9,2.62,16.46,0,1,4,4
 Mazda RX4 Wag,21,6,160,110,3.9,2.875,17.02,0,1,4,4
@@ -39,9 +41,16 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
     var rows = sampleData.length;
     var cols = sampleData[0].split(",").length;
     var str = "";
+    var array = null;
+    if(this.state.selectRow != null) {
+      var array = sampleData[this.state.selectRow].split(",");
+    }
     for(var i=0;i<cols;i++) {
       if(i == 0) {
         str += "Row" + rows.toString();
+      }
+      else if(array != null) {
+        str += "," + array[i];
       }
       else {
         str += ",0";
@@ -56,9 +65,18 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
   addNewCol() {
     const {sampleData} = this.state;
     var cols = sampleData[0].split(",").length;
+    var array = [];
+    if(this.state.selectCol != null) {
+      for(var i = 0;i<sampleData.length;i++) {
+        array.push(sampleData[i].split(",")[this.state.selectCol]);
+      }
+    }
     for(var i=0;i<sampleData.length;i++) {
       if(i == 0) {
         sampleData[i] += ",Col" + cols.toString();
+      }
+      else if(array != null) {
+        sampleData[i] += "," + array[i];
       }
       else {
         sampleData[i] += ",0";
@@ -70,18 +88,57 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
   }
 
   highlightRow(event) {
-    this.setState({
-      selectRow: Number(event.target.id)
-    })
+    if(this.state.selectRow != Number(event.target.id)) {
+      this.setState({
+        selectRow: Number(event.target.id)
+      })
+    }
+    else {
+      this.setState({
+        selectRow: null
+      })
+    }
+  }
+
+  highlightCol(event) {
+    if(this.state.selectCol != Number(event.target.id)) {
+      this.setState({
+        selectCol: Number(event.target.id)
+      })
+    }
+    else {
+      this.setState({
+        selectCol: null
+      })
+    } 
   }
 
   renderCols(data, row) {
+    const {classes} = this.props
     return data.map((ele, idx) => {
       if(idx == 0) {
-        return <td id={row} onClick={this.highlightRow}>{ele}</td>
+        if(this.state.selectCol != null && this.state.selectCol == idx) {
+          return <td id={row} onClick={this.highlightRow} className={classes.highlightCol}>{ele}</td>
+        }
+        else {
+          return <td id={row} onClick={this.highlightRow}>{ele}</td>
+        }
+      }
+      else if(row == 0 && idx != 0) {
+        if(this.state.selectCol != null && this.state.selectCol == idx) {
+          return <td id={idx} onClick={this.highlightCol} className={classes.highlightCol}>{ele}</td>
+        }
+        else {
+          return <td id={idx} onClick={this.highlightCol}>{ele}</td>
+        }
       }
       else {
-        return <td>{ele}</td>
+        if(this.state.selectCol != null && this.state.selectCol == idx) {
+          return <td className={classes.highlightCol}>{ele}</td>
+        }
+        else {        
+          return <td>{ele}</td>
+        }
       }
     }, this);
   }
@@ -100,8 +157,8 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
 
   delRow() {
     if(this.state.selectRow != null) {
-      const {sampleData} = this.state;
-      sampleData = sampleData.splice(this.state.selectRow, 1);
+      var {sampleData} = this.state;
+      sampleData.splice(this.state.selectRow, 1);
       this.setState({
         sampleData: sampleData,
         selectRow: null
@@ -109,8 +166,26 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
     }
   }
 
+  delCol() {
+    if(this.state.selectCol != null) {
+      var {sampleData} = this.state;
+      for(var i=0;i<sampleData.length;i++) {
+        sampleData[i] = sampleData[i].split(",");
+        sampleData[i].splice(this.state.selectCol, 1);
+        sampleData[i] = sampleData[i].join(",");
+      }
+      this.setState({
+        sampleData: sampleData,
+        selectCol: null
+      })
+    }
+  }
   renderDelRow() {
     return <button onClick={this.delRow}>Delete row</button>
+  }
+
+  renderDelCol() {
+    return <button onClick={this.delCol}>Delete col</button>
   }
 
   renderAddRow() {
@@ -143,7 +218,8 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
               Operations<br/>
               {this.renderAddRow()}<br/>
               {this.renderAddCol()}<br/>
-              {this.renderDelRow()}
+              {this.renderDelRow()}<br/>
+              {this.renderDelCol()}
             </td>
           </tr>
         </table>
