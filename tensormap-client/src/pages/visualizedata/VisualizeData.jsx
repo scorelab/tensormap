@@ -16,6 +16,10 @@ class VisualizeData extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.savVal = this.savVal.bind(this);
     this.canVal = this.canVal.bind(this);
+    //var Httpreq = new XMLHttpRequest();
+    //Httpreq.open("GET", '/visualizeData?' + 'name=IMAGENET', false);
+    //Httpreq.send(null);
+    //var response = Httpreq.responseText.split("\n");
     var response = `Model,mpg,cyl,disp,hp,drat,wt,qsec,vs,am,gear,carb
 Mazda RX4,21,6,160,110,3.9,2.62,16.46,0,1,4,4
 Mazda RX4 Wag,21,6,160,110,3.9,2.875,17.02,0,1,4,4
@@ -79,7 +83,7 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
       if(i == 0) {
         sampleData[i] += ",Col" + cols.toString();
       }
-      else if(array != null) {
+      else if(array != null && array.length > 0) {
         sampleData[i] += "," + array[i];
       }
       else {
@@ -122,35 +126,35 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
     return data.map((ele, idx) => {
       if(idx == 0) {
         if(this.state.selectCol != null && this.state.selectCol == idx) {
-          return <td id={row} onClick={this.highlightRow} className={classes.highlightCol}>{ele}</td>
+          return <td className={classes.tabletd} id={row} onClick={this.highlightRow} className={classes.highlightCol}>{ele}</td>
         }
         else {
-          return <td id={row} onClick={this.highlightRow}>{ele}</td>
+          return <td className={classes.tabletd} id={row} onClick={this.highlightRow}>{ele}</td>
         }
       }
       else if(row == 0 && idx != 0) {
         if(this.state.selectCol != null && this.state.selectCol == idx) {
-          return <td id={idx} onClick={this.highlightCol} className={classes.highlightCol}>{ele}</td>
+          return <td className={classes.tabletd} id={idx} onClick={this.highlightCol} className={classes.highlightCol}>{ele}</td>
         }
         else {
-          return <td id={idx} onClick={this.highlightCol}>{ele}</td>
+          return <td className={classes.tabletd} id={idx} onClick={this.highlightCol}>{ele}</td>
         }
       }
       else {
         if(this.state.selectCol != null && this.state.selectCol == idx) {
           if(this.state.editRow != null && this.state.editCol != null && this.state.editRow == row && this.state.editCol == idx) {
-            return <td id={row + ',' + idx} onDoubleClick={this.makeEditable} className={classes.highlightCol}><input type="text" defaultValue={ele}/></td>
+            return <td className={classes.tabletd} id={row + ',' + idx} onDoubleClick={this.makeEditable} className={classes.highlightCol}><input className={classes.inputdata} type="text" defaultValue={ele}/></td>
           }
           else {
-            return <td id={row + ',' + idx} onDoubleClick={this.makeEditable} className={classes.highlightCol}>{ele}</td>
+            return <td className={classes.tabletd} id={row + ',' + idx} onDoubleClick={this.makeEditable} className={classes.highlightCol} className={classes.input}>{ele}</td>
           }
         }
         else {  
           if(this.state.editRow != null && this.state.editCol != null && this.state.editRow == row && this.state.editCol == idx) {    
-            return <td id={row + ',' + idx} onDoubleClick={this.makeEditable}><input type="text" defaultValue={ele} onChange={this.handleInputChange}/></td>
+            return <td className={classes.tabletd} id={row + ',' + idx} onDoubleClick={this.makeEditable}><input className={classes.inputdata} type="text" defaultValue={ele} onChange={this.handleInputChange}/></td>
           }
           else {
-            return <td id={row + ',' + idx} onDoubleClick={this.makeEditable}>{ele}</td>
+            return <td className={classes.tabletd} id={row + ',' + idx} onDoubleClick={this.makeEditable}>{ele}</td>
           }
         }
       }
@@ -209,31 +213,38 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
     }
   }
   renderDelRow() {
-    return <button onClick={this.delRow}>Delete row</button>
+  const {classes} = this.props;
+    return <button className={classes.viewbtn} onClick={this.delRow}>Delete row</button>
   }
 
   renderDelCol() {
-    return <button onClick={this.delCol}>Delete col</button>
+  const {classes} = this.props;
+    return <button className={classes.viewbtn} onClick={this.delCol}>Delete col</button>
   }
 
   renderAddRow() {
-    return <button onClick={this.addNewRow}>Add row</button>
+  const {classes} = this.props;
+    return <button className={classes.viewbtn} onClick={this.addNewRow}>Add row</button>
   }
 
   renderAddCol() {
-    return <button onClick={this.addNewCol}>Add col</button>
+  const {classes} = this.props;
+    return <button className={classes.viewbtn} onClick={this.addNewCol}>Add col</button>
   }
 
   renderDelBtn() {
-    return <button onClick={this.delRow}>Del row</button>
+  const {classes} = this.props;
+    return <button className={classes.viewbtn} onClick={this.delRow}>Del row</button>
   }
 
   renderSavVal() {
-    return <button onClick={this.savVal}>Save value</button>
+  const {classes} = this.props;
+    return <button className={classes.viewbtn} onClick={this.savVal}>Save value</button>
   }
 
   renderCanVal() {
-    return <button onClick={this.canVal}>Cancel</button>
+  const {classes} = this.props;
+    return <button className={classes.viewbtn} onClick={this.canVal}>Cancel</button>
   }
 
   savVal() {
@@ -261,26 +272,30 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
 
   render() {
     const {sampleData} = this.state;
-    const {classes} = this.props
-    const {match} = this.props
+    const {classes} = this.props;
+    const {match} = this.props;
+
     return (
       <div className={classes.container}>
-        <table>
+        <table className={classes.table}>
           <tr>
-            <td>
-              Hello {match.params.name}
-              <table>
+            <td className={classes.tabletd}>Welcome to {match.params.name}</td>
+            <td className={classes.tabletd}>Operations</td>
+          </tr>
+          <tr>
+            <td className={classes.tabletd}>
+              <table className={classes.table}>
                 {this.renderRows(sampleData)}
               </table>
             </td>
-            <td>
-              Operations<br/>
+            <td className={classes.tabletd}>
               {this.renderAddRow()}<br/>
               {this.renderAddCol()}<br/>
               {this.renderDelRow()}<br/>
               {this.renderDelCol()}<br/>
               {this.renderSavVal()}<br/>
-              {this.renderCanVal()}
+              {this.renderCanVal()}<br/>
+              <button className={classes.viewbtn}>Pass to network</button>
             </td>
           </tr>
         </table>
