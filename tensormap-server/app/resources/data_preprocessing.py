@@ -41,3 +41,16 @@ def deleteData():
     dataset.query.filter_by(id=int(request.args['id'])).delete()
     db.session.commit()
     return "successfully deleted!!"
+
+@main.route('/visualizeData', methods=['GET'])
+def visualizeData():
+    entry = dataset.query.filter_by(name=request.args['name']).one_or_none()
+    print(entry.filePath)
+    if entry:
+        with open(entry.filePath, 'r') as f:
+            data = f.readlines()
+            str = ""
+            data = str.join(data)
+            return data
+    else:
+        return 'None'
