@@ -12,6 +12,10 @@ class VisualizeData extends React.Component {
     this.delCol = this.delCol.bind(this);
     this.highlightRow = this.highlightRow.bind(this);
     this.highlightCol = this.highlightCol.bind(this);
+    this.makeEditable = this.makeEditable.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.savVal = this.savVal.bind(this);
+    this.canVal = this.canVal.bind(this);
     var response = `Model,mpg,cyl,disp,hp,drat,wt,qsec,vs,am,gear,carb
 Mazda RX4,21,6,160,110,3.9,2.62,16.46,0,1,4,4
 Mazda RX4 Wag,21,6,160,110,3.9,2.875,17.02,0,1,4,4
@@ -134,13 +138,37 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
       }
       else {
         if(this.state.selectCol != null && this.state.selectCol == idx) {
-          return <td className={classes.highlightCol}>{ele}</td>
+          if(this.state.editRow != null && this.state.editCol != null && this.state.editRow == row && this.state.editCol == idx) {
+            return <td id={row + ',' + idx} onDoubleClick={this.makeEditable} className={classes.highlightCol}><input type="text" defaultValue={ele}/></td>
+          }
+          else {
+            return <td id={row + ',' + idx} onDoubleClick={this.makeEditable} className={classes.highlightCol}>{ele}</td>
+          }
         }
-        else {        
-          return <td>{ele}</td>
+        else {  
+          if(this.state.editRow != null && this.state.editCol != null && this.state.editRow == row && this.state.editCol == idx) {    
+            return <td id={row + ',' + idx} onDoubleClick={this.makeEditable}><input type="text" defaultValue={ele} onChange={this.handleInputChange}/></td>
+          }
+          else {
+            return <td id={row + ',' + idx} onDoubleClick={this.makeEditable}>{ele}</td>
+          }
         }
       }
     }, this);
+  }
+
+  handleInputChange(event) {
+    this.newValue = event.target.value;
+  }
+  makeEditable(event) {
+    var id = event.target.id;
+    var row = Number(id.split(",")[0]);
+    var col = Number(id.split(",")[1]);
+    console.log(row, col);
+    this.setState({
+      editRow: row,
+      editCol: col
+    })
   }
 
   renderRows(data) {
@@ -200,6 +228,37 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
     return <button onClick={this.delRow}>Del row</button>
   }
 
+  renderSavVal() {
+    return <button onClick={this.savVal}>Save value</button>
+  }
+
+  renderCanVal() {
+    return <button onClick={this.canVal}>Cancel</button>
+  }
+
+  savVal() {
+    if(this.state.editCol != null && this.state.editRow != null) {
+      const {sampleData} = this.state;
+      var editRow = this.state.editRow;
+      var editCol = this.state.editCol;
+      sampleData[editRow] = sampleData[editRow].split(",")
+      sampleData[editRow][editCol] = this.newValue;
+      sampleData[editRow] = sampleData[editRow].join(",");
+      this.setState({
+        sampleData: sampleData,
+        editRow: null,
+        editCol: null
+      })
+    }
+  }
+
+  canVal() {
+    this.setState({
+      editRow: null,
+      editCol: null
+    })
+  }
+
   render() {
     const {sampleData} = this.state;
     const {classes} = this.props
@@ -219,7 +278,9 @@ Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
               {this.renderAddRow()}<br/>
               {this.renderAddCol()}<br/>
               {this.renderDelRow()}<br/>
-              {this.renderDelCol()}
+              {this.renderDelCol()}<br/>
+              {this.renderSavVal()}<br/>
+              {this.renderCanVal()}
             </td>
           </tr>
         </table>
