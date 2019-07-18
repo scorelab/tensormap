@@ -46,6 +46,7 @@ export interface BodyWidgetState {
   tmp_id: string;
   dialog_group:boolean;
   layer_name:string;
+  layer_color:string;
   node:
   {
     id: string;
@@ -71,6 +72,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       accuracy: false,
       neg_mean_square_error: false,
       layer_name:"",
+      layer_color:"",
       node: [
         {
           id: "",
@@ -344,6 +346,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     this.setState({
       dialog_group: true,
       layer_name:"",
+      layer_color:"",
     })
   }
 
@@ -376,8 +379,14 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       // console.log(i
       // console.log(selected[i].constructor.name)
       if(selected[i].constructor.name === "DefaultNodeModel"){
-        (selected[i] as DefaultNodeModel).extras.parent = "hi"
-      }
+        (selected[i] as DefaultNodeModel).extras.layer = this.state.layer_name;
+        (selected[i] as DefaultNodeModel).extras.layer_color = this.state.layer_color;
+
+        (selected[i] as DefaultNodeModel).color = this.state.layer_color;
+
+
+      };
+      console.log(graph);
     };
     this.handleCloseGrouping()
   };
@@ -390,7 +399,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 				}
 			});
 			this.forceUpdate();
-  }
+  };
 
 
   render() {
@@ -530,20 +539,29 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
                 />
                 Choose color:
               <Select
-                value={"hi"}
                 fullWidth
+                onChange={(e) => {this.setState({layer_color:e.target.value})}}
+                value={this.state.layer_color}
               >
                 <MenuItem value="" >
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={10}>
-                  <Avatar className='avatar gray'>
-
+                <MenuItem value={"rgb(255,0,0)"}>
+                  <Avatar className='avatar red'>
                   </Avatar>
-                  Gray
                 </MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value={"rgb(100,128,155)"}>
+                  <Avatar className='avatar gray'>
+                  </Avatar>
+                </MenuItem>
+                <MenuItem value={"rgb(0,255,0)"}>
+                  <Avatar className='avatar green'>
+                  </Avatar>
+                </MenuItem>
+                <MenuItem value={"rgb(0,128,255)"}>
+                  <Avatar className='avatar blue'>
+                  </Avatar>
+                </MenuItem>
               </Select>
           </DialogContent>
           <DialogActions >
