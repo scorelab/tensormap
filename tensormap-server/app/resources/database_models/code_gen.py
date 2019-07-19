@@ -12,6 +12,7 @@ class template_copies(db.Model):
         self.data = data
         
 class user_template_index(db.Model):
+    __tablename__ = 'user_template_index'
     layerId = db.Column(VARCHAR(50),primary_key=True)
     lineNo = db.Column(INTEGER) 
     

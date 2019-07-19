@@ -6,6 +6,7 @@ import os
 from flask import send_file
 from ..common import validate_model_json,make_model_json
 import json
+import shutil, os
 from flask import jsonify
 
 
@@ -210,23 +211,37 @@ def editExe():
         filename = getFile()   
 
         layerInfo = user_template_index.query.filter_by(layerId="network.compile").one()
-        lineToReplace = layerInfo.lineNo
+        lineToReplaceCompile = layerInfo.lineNo
 
-        layerInfo = code_layers.query.filter_by(name="compile").one()
+        layerInfo = user_template_index.query.filter_by(layerId="network.fit").one()
+        lineToReplaceFit = layerInfo.lineNo
 
-        tempCode = layerInfo.code
-        codeAttributes = layerInfo.attributes
-        splitAttr = codeAttributes.split(",")
-        tempString = tempCode
-        tempString += splitAttr[0] + " = " + content["optimizer"]+","+splitAttr[1] + " = "+content["loss"]+")"                                              
+        layerInfoCompile = code_layers.query.filter_by(name="compile").one()
+        layerInfoFit = code_layers.query.filter_by(name="fit").one()
 
-        tempString += "\n"
+        tempCodeComile = layerInfoCompile.code
+        codeAttributesCompile = layerInfoCompile.attributes
+        splitAttrCompile = codeAttributesCompile.split(",")
+        tempStringCompile = tempCodeComile
+        tempStringCompile += splitAttrCompile[0] + " = " + content["optimizer"]+","+splitAttrCompile[1] + " = "+content["loss"]+")"                                              
+
+        tempStringCompile += "\n"
+
+        tempCodeFit = layerInfoFit.code
+        codeAttributesFit = layerInfoFit.attributes
+        splitAttrFit = codeAttributesFit.split(",")
+        tempStringFit = tempCodeFit
+        tempStringFit += splitAttrFit[0] + " = " + content["epochs"]+","+splitAttrFit[1] + " = "+"1"+","+splitAttrFit[2] + " = "+content["batch_size"]+")"                                              
+
+        tempStringFit += "\n"
+
 
         f = open(filename, "r")
         fileContents = f.readlines()
         f.close()
 
-        fileContents[lineToReplace] = tempString
+        fileContents[lineToReplaceCompile] = tempStringCompile
+        fileContents[lineToReplaceFit] = tempStringFit
 
         f = open(filename, "w")
         f.writelines(fileContents)
@@ -238,16 +253,83 @@ def editExe():
 
 #         sample json: {
         # "optimizer":"'adam'",
-        # "loss": "'sparse_categorical_crossentropy'"
+        # "loss": "'sparse_categorical_crossentropy'",
+        #"batch_size":100,
+        #"epochs":3
+        #}
+# }
+
+@main.route('/experimentType', methods=['POST'])
+def chooseExperiment():
+
+        content = request.get_json()
+
+        dirPath = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', 'model_templates'))
+        
+        if content["experimet_type"] == "regression":
+                filename = '{}{}{}'.format(dirPath, "/", "keras_temp_regression.py")
+        elif content["experimet_type"] == "binary_classification":
+                filename = '{}{}{}'.format(dirPath, "/", "keras_temp_bi_classification.py")
+        elif content["experimet_type"] == "multiclass_classification":
+                filename = '{}{}{}'.format(dirPath, "/", "keras_temp_multi_classification.py") 
+
+        destination_path = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', 'user_template'))
+        file_copy_name = '{}{}{}'.format(destination_path, "/", "user_keras_temp.py")
+        shutil.copy(filename, file_copy_name)
+
+        userId = str(content["user_id"])
+
+        data = template_copies(userId,"user_keras_temp.py",file_copy_name)
+        db.session.add(data)
+        db.session.commit()
+
+        #entries for table to index lines in file
+        data = user_template_index(8,"userModel")
+        db.session.add(data)
+        db.session.commit()
+
+        data = user_template_index(10,"network.compile")
+        db.session.add(data)
+        db.session.commit()
+
+        data = user_template_index(12,"network.fit")
+        db.session.add(data)
+        db.session.commit()
+
+        return "done"
+
+#         sample json: {
+        #"user_id": "1"
+        # "experimet_type":"regression"
+# }
+
+@main.route('/deleteExperiment', methods=['POST'])
+def deleteExperiment():
+
+        content = request.get_json()
+
+        user_template_index.__table__.drop()
+
+        userId = content["user_id"]
+        template_copies.query.filter_by(id="1").delete()
+        db.session.commit()
+
+        tempCopy_path = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', 'user_template'))
+        tempCopy_name = '{}{}{}'.format(destination_path, "/", "user_keras_temp.py")
+        
+        if os.path.exists(tempCopy_name):
+                os.remove(tempCopy_name)
+        else:
+                print("The file does not exist")
+
+        return "done"
+
+#         sample json: {
+        #"user_id": "1"
 # }
 
          
-                
-##adding file to database when user is first created
-# file = convertToBinaryData("/home/suleka/Documents/Tensormap_GSOC/TensorMap/tensormap-server/app/resources/user_template/user_keras_temp.py")
-# data = template_copies("1","user_keras_temp.py",file)
-# db.session.add(data)
-# db.session.commit()
+
 
 from flask_restful import Resource
 from flask import request
@@ -407,6 +489,66 @@ def nn_execute():
 
 
 
+# {
+# 	"graph": [{
+# 		"graphid": "e0d57cd7-00ba-4c27-9007-6914eeba4995",
+# 		"num_unassigned_nodes": 0,
+# 		"layers": [{
+# 				"id": "9825cd47-20e0-44ae-bb76-aa92af5f321d",
+# 				"parentNode": "userModel",
+# 				"name": "Input",
+# 				"layerType": "dense"
+# 			},
+# 			{
+# 				"id": "9825cd47-20e0-44ae-bb76-aa92af5f321b",
+# 				"parentNode": "9825cd47-20e0-44ae-bb76-aa92af5f321c",
+# 				"name": "Output",
+# 				"layerType": "dense"
+# 			},
+# 			{
+# 				"id": "9825cd47-20e0-44ae-bb76-aa92af5f321c",
+# 				"parentNode": "9825cd47-20e0-44ae-bb76-aa92af5f321d",
+# 				"name": "Hidden 0",
+# 				"layerType": "dense"
+# 			}
+# 		]
+# 	}],
+# 	"layer_param": [{
+# 			"id": "9825cd47-20e0-44ae-bb76-aa92af5f321d",
+# 			"param": [{
+# 				"units": "18",
+# 				"activation": "relu",
+# 				"name": "9825cd47-20e0-44ae-bb76-aa92af5f321d"
+# 			}]
+# 		},
+# 		{
+# 			"id": "9825cd47-20e0-44ae-bb76-aa92af5f321c",
+# 			"param": [{
+# 				"units": "16",
+# 				"activation": "relu",
+# 				"name": "9825cd47-20e0-44ae-bb76-aa92af5f321c"
+# 			}]
+# 		},
+# 		{
+# 			"id": "9825cd47-20e0-44ae-bb76-aa92af5f321b",
+# 			"param": [{
+# 				"units": "1",
+# 				"activation": "sigmoid",
+# 				"name": "9825cd47-20e0-44ae-bb76-aa92af5f321b"
+# 			}]
+# 		}
+# 	],
+# 	  "experiment_info":{
+# 		"type": "classification",
+# 		"multiclass": "False",
+# 		"dataset_length": 150000,
+# 		"epoch":3,
+# 		"batch_size":100,
+# 		"loss": "binary_crossentropy",
+# 		"optimizer":"rmsprop" 
+        
+# 	  }
+# }
 
 
 
