@@ -118,8 +118,8 @@ def validate_json(content):
         errorString += " Batch size should be less than dataset length."
         experiment_validation = False
 
-    if content["experiment_info"]["loss"] == "None" or content["experiment_info"]["optimizer"] == "None":
-        errorString += " Undefined Optimizer or Loss."
+    if content["experiment_info"]["loss"] == "None" or content["experiment_info"]["optimizer"] == "None" or content["experiment_info"]["batch_size"] == "None" or content["experiment_info"]["epoch"] == "None" or content["experiment_info"]["type"] == "None":
+        errorString += " Not enough information to execute experiment."
         experiment_validation = False       
 
     if content["graph"][0]["num_unassigned_nodes"]  != 0:

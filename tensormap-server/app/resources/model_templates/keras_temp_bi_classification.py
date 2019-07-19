@@ -10,7 +10,7 @@ network = tf.keras.models.Sequential(name='userModel')
 
 network.compile (optimizer = ,loss = )
 
-mod_history = network.fit(x_train, y_train, epochs=, verbose=1, batch_size=, validation_data=(x_val, y_val))
+mod_history = network.fit (x_train, y_train, epochs=, verbose=1, batch_size=)
 
 test_loss, = network.evaluate(x_test, y_test)
 
