@@ -76,7 +76,7 @@ def validate_json(content):
                 break
             if content["layer_param"][i]["id"] == Outputid:
                 if content["experiment_info"]["type"] == "classification":
-                    if content["layer_param"][i]["param"][0]["activation"] == "relu" or content["layer_param"][i]["param"][0]["activation"]=="tanh":
+                    if not(content["layer_param"][i]["param"][0]["activation"] == "sigmoid" or content["layer_param"][i]["param"][0]["activation"]=="softmax"):
                         errorString += " Invalid output Activation for classification."
                         experiment_validation = False
                         break
@@ -102,7 +102,7 @@ def validate_json(content):
                         errorString += " Invalid loss function for binary classification."
                         experiment_validation = False         
                 elif content["experiment_info"]["type"] == "regression":
-                    if content["layer_param"][i]["param"][0]["activation"] == "sigmoid" or content["layer_param"][i]["param"][0]["activation"]=="softmax":
+                    if not(content["layer_param"][i]["param"][0]["activation"] == "tanh" or content["layer_param"][i]["param"][0]["activation"]=="relu"):
                         errorString += " Invalid output Activation for regression."
                         experiment_validation = False
                         break
