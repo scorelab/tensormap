@@ -95,7 +95,7 @@
     display: flex;
     cursor: move;
     overflow: hidden;
-    height: 75vh;
+    height: 65vh;
   }
 
   .srd-link-layer {
@@ -138,4 +138,7 @@
 
 .right_icon {
   margin-right:10px;
+}
+.log_main{
+  height:100% !important;
 }

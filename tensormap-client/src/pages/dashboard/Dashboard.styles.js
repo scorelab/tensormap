@@ -8,7 +8,6 @@ const styles = theme => ({
 
   content: {
     flexGrow: 1,
-    height:'100vh',
   },
 });
 
