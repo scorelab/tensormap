@@ -27,11 +27,7 @@ export class TrayWidget extends React.Component<TrayWidgetProps, TrayWidgetState
 	}
 
 	render() {
-		console.log(this.props.children);
-		return (
-			<div>
-				{// {this.props.children}
-			}
+		return(
 				<ExpansionPanel square>
 	        <ExpansionPanelSummary
 	          expandIcon={<ExpandMoreIcon />}
@@ -47,7 +43,7 @@ export class TrayWidget extends React.Component<TrayWidgetProps, TrayWidgetState
 								</List>
 							</Typography>
 	        </ExpansionPanelDetails>
-	      </ExpansionPanel>
-			</div>);
+	      </ExpansionPanel>);
+
 	}
 }

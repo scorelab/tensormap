@@ -14,16 +14,23 @@ class Dashboard extends React.Component {
 
   render() {
     const {classes} = this.props
-
+    console.log(window.location.href);
+    var url_ = new URL(window.location.href);
+    console.log(url_);
     return (
+
         <div className={classes.root}>
           <CssBaseline/>
-          <Header/>
+          {url_.pathname !== '/neuralnet' &&
+              <Header/>
+          }
           <Sidebar/>
           <main className={classes.content}>
-            <div className={classes.toolbar}/>
+            {url_.pathname !== '/neuralnet' &&
+                <div className={classes.toolbar}/>
+            }
             <Route exact path='/home' component={Home}/>
-            <Route exact path='/a' component={A}/>
+            <Route exact path='/neuralnet' component={A}/>
             <Route exact path='/b' component={B}/>
           </main>
         </div>

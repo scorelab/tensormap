@@ -29,17 +29,15 @@ export class TrayItemWidget extends React.Component<TrayItemWidgetProps, TrayIte
 
 	render() {
 		return (
-			<div
-					style={{ borderColor: '#fff' }}
-					draggable={true}
-					onDragStart={event => {
-						event.dataTransfer.setData("storm-diagram-node", JSON.stringify(this.props.model));
-					}}
-					className="tray-item">
-			<ListItem button>
+			<ListItem
+						button style={{ borderColor: '#fff' }}
+						draggable={true}
+						onDragStart={event => {
+							event.dataTransfer.setData("storm-diagram-node", JSON.stringify(this.props.model));
+						}}
+						className="tray-item">
 				<ListItemText primary={this.props.name} />
 			</ListItem>
-    </div>
 		);
 	}
 }
