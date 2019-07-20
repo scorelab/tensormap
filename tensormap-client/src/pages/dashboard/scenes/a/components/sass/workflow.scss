@@ -17,26 +17,10 @@
     .tray{
       min-width: 200px;
       background: #e3e3e3;
-      min-height:calc(75vh - 64px);
-      flex-grow: 0;
-      flex-shrink: 0;
-    }
-    .properties{
-      background: #e3e3e3;
-      min-width: 200px;
-      position: absolute;
-      right:0px;
-      min-height:calc(75vh - 64px);
-      z-index: 1000;
       flex-grow: 0;
       flex-shrink: 0;
     }
   }
-}
-
-.log_main{
-  min-height: 25vh;
-  background: #e3e3e3;
 }
 
 .srd-demo-workspace{
@@ -54,13 +38,14 @@
 
     button{
       background: #ccc;
-      font-size: 10px;
+      font-size: 14px;
       padding: 5px 10px;
       border: none;
       color: white;
       outline: none;
       cursor: pointer;
       margin: 2px;
+      border-radius: 3px;
 
       &:hover{
         background: rgb(0,192,255);
@@ -75,7 +60,8 @@
 }
 
 .srd-demo-canvas{
-  height: calc(75vh - 115px);
+  height: calc(100vh);
+  min-height:100%;
   background-color: #ccc !important;
   $color: rgba(white, .5);
   background-image:
@@ -109,6 +95,7 @@
     display: flex;
     cursor: move;
     overflow: hidden;
+    height: 75vh;
   }
 
   .srd-link-layer {
@@ -122,48 +109,24 @@
       left: 0;
       right: 0;
   }
-.delete_btn {
-  z-index: 1000;
-  position:absolute !important;
-  bottom:25vh;
-  margin-bottom: 4px !important;
-  padding: 2px 8px !important;
-  border-radius: 0px !important;
-  box-shadow: 0px !important;
-  text-transform: none !important;
-}
+
 .send_btn {
   position: absolute !important;
-  z-index: 1000;
-  right: 220px;
-  bottom: 25vh;
-  margin-bottom: 4px !important;
-  padding: 2px 8px !important;
-  border-radius: 0px !important;
-  box-shadow: 0px !important;
-  text-transform: none !important;
+  z-index: 10000;
+  right: 20px;
+  bottom: 0px;
 }
 .exe_config_btn {
   position: absolute !important;
-  z-index: 1000;
-  right: 320px;
-  bottom: 25vh;
-  margin-bottom: 4px !important;
-  padding: 2px 8px !important;
-  border-radius: 0px !important;
-  box-shadow: 0px !important;
-  text-transform: none !important;
+  z-index: 10000;
+  right: 140px;
+  bottom: 0px;
 }
 .group_selection_btn {
   position: absolute !important;
-  z-index: 1000;
-  right: 490px;
-  bottom: 25vh;
-  margin-bottom: 4px !important;
-  padding: 2px 8px !important;
-  border-radius: 0px !important;
-  box-shadow: 0px !important;
-  text-transform: none !important;
+  z-index: 10000;
+  right: 340px;
+  bottom: 0px;
 }
 .param_drawer{
   padding:20px;
@@ -175,24 +138,4 @@
 
 .right_icon {
   margin-right:10px;
-}
-
-.avatar{
-  margin-right:5px;
-  transform:scale(0.5);
-}
-.red{
-  background: red !important;
-}
-
-.blue{
-  background: blue !important;
-}
-
-.gray{
-  background: #ccc !important;
-}
-
-.green{
-  background: green !important;
 }

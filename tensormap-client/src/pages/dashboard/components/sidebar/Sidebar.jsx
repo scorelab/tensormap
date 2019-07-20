@@ -29,6 +29,7 @@ class Sidebar extends React.Component {
   render() {
     const {classes, theme} = this.props
 
+
     const drawer = (
         <div>
           <List
@@ -42,7 +43,7 @@ class Sidebar extends React.Component {
               <ListItemText inset primary="Home"/>
             </ListItem>
             <Divider/>
-            <ListItem button component={Link} to="/a">
+            <ListItem button component={Link} to="/neuralnet">
               <ListItemIcon>
                 <LibraryBooksIcon/>
               </ListItemIcon>

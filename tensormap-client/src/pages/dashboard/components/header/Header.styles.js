@@ -1,6 +1,5 @@
 const styles = (theme) => ({
   appBar    : {
-
     marginLeft                  : 240,
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - 240px)`,
