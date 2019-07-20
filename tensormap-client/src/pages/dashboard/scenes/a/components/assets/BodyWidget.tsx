@@ -2,6 +2,7 @@ import * as React from "react";
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "./Application";
 import { TrayItemWidget } from "./TrayItemWidget";
+import { SidebarWidget } from "./SidebarWidget";
 import { Properties } from "./Properties";
 import SimpleTabs from "./Log";
 import { DefaultNodeModel, DiagramWidget, DefaultPortModel, DefaultLinkModel, DefaultLabelModel } from "storm-react-diagrams";
@@ -577,11 +578,23 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 
           <div className = "body_wf" >
             <div className="content" >
-              <TrayWidget>
-                <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Layer" color = "rgb(192,255,0)" />
-                <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "Hidden Layer" color = "rgb(0,192,255)" />
-                <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Layer" color = "rgb(90,102,255)" />
-              </TrayWidget>
+            <SidebarWidget>
+                <TrayWidget nntype="FDN">
+                  <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Node" color = "rgb(192,255,0)" />
+                  <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "Hidden Node" color = "rgb(0,192,255)" />
+                  <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Node" color = "rgb(90,102,255)" />
+                </TrayWidget>
+                <TrayWidget nntype="RNN">
+                  <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Node" color = "rgb(192,255,0)" />
+                  <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "Recurrent Node" color = "rgb(0,192,255)" />
+                  <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Node" color = "rgb(90,102,255)" />
+                </TrayWidget>
+                <TrayWidget nntype="LSTM">
+                  <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Node" color = "rgb(192,255,0)" />
+                  <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "Memory Node" color = "rgb(0,192,255)" />
+                  <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Node" color = "rgb(90,102,255)" />
+                </TrayWidget>
+              </SidebarWidget>
 
               <Properties/>
 
