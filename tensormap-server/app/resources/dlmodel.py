@@ -39,7 +39,23 @@ def nn_execute(nnmodelconfig):
     if resultString == True:
 
         modelJSON=make_model_json.makeKerasModel(nnmodelconfig)
-    
+
+        np.random.seed(0)
+
+        number_of_features = 1000
+
+        np_load_old = np.load
+
+        np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
+
+        (train_data, train_labels), (test_data, test_labels) = imdb.load_data(num_words=number_of_features)
+
+        np.load = np_load_old
+
+        tokenizer = Tokenizer(num_words=number_of_features)
+        train_features = tokenizer.sequences_to_matrix(train_data, mode='binary')
+        test_features = tokenizer.sequences_to_matrix(test_data, mode='binary')
+
         model = keras.models.model_from_json(modelJSON)
 
         loss = str(nnmodelconfig["experiment_info"]["loss"])
@@ -58,6 +74,9 @@ def nn_execute(nnmodelconfig):
         test_loss = model.evaluate(test_features, test_labels)
 
         prediction = model.predict(test_features, verbose=1)
+
+        print(len(prediction[0]))
+        print(prediction[0])
 
         if nnmodelconfig["experiment_info"]["type"] == "regression":
             mse = mean_squared_error(test_labels, prediction)
@@ -97,8 +116,8 @@ def nn_execute(nnmodelconfig):
                 recall = recall_score(y_true=argmax_true_array, y_pred=argmax_pred_array, average='macro')
                 precision = precision_score(argmax_true_array, argmax_pred_array, average='macro')
 
-            elif nnmodelconfig["experiment_info"]["multiclass"]  == "False" :    
-                prediction = prediction.astype(int)
+            elif nnmodelconfig["experiment_info"]["multiclass"]  == "False" : 
+                prediction = prediction.astype(int)   
                 accuracy = accuracy_score(test_labels, prediction)
                 f1 = f1_score(test_labels, prediction, average="macro")
                 recall = recall_score(y_true=test_labels, y_pred=prediction, average='macro')
@@ -116,9 +135,7 @@ def nn_execute(nnmodelconfig):
             metrics = json.dumps(metrics)  
 
         #TO_DO - change according to frontend
-        print(metrics)
-        return(metrics)
-        # emit('sample_response', metrics, namespace='/samplenamespace')
+        emit('sample_response', metrics, namespace='/samplenamespace')
     
     else:
         results = {}
@@ -126,7 +143,5 @@ def nn_execute(nnmodelconfig):
         results = json.dumps(results)
 
         #TO_DO - change according to frontend
-        print("done in error path")
-        return(results)
-        # emit('sample_response', results, namespace='/samplenamespace')
+        emit('sample_response', results, namespace='/samplenamespace')
 
