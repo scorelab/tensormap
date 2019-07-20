@@ -5,11 +5,7 @@ import { TrayItemWidget } from "./TrayItemWidget";
 import { SidebarWidget } from "./SidebarWidget";
 import { Properties } from "./Properties";
 import SimpleTabs from "./Log";
-import WorkflowLayout from './WorkflowLayout'
 import { DefaultNodeModel, DiagramWidget, DefaultPortModel, DefaultLinkModel, DefaultLabelModel } from "storm-react-diagrams";
-import {Theme} from "@material-ui/core/styles";
-import { makeStyles, createStyles} from '@material-ui/styles';
-import PropTypes        from 'prop-types'
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
@@ -19,14 +15,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Avatar from '@material-ui/core/Avatar';
 
@@ -69,20 +62,6 @@ export interface BodyWidgetState {
     [key: string]: any;
   }
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: 2,
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-  }),
-);
-
 
 
 export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
@@ -427,11 +406,10 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 
   render() {
     return (
-      <div style={{flexGrow:1}}>
-          <Grid spacing={8} direction="column" >
-            <Grid container spacing={8}>
+      <div>
+            <Grid container spacing={8} style={{width:"100%",margin:"0px"}}>
               <Grid item xs className={"tray_"}>
-                <Paper>
+                <Paper square>
                   <SidebarWidget>
                     <TrayWidget nntype="FDN">
                       <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Node" color = "rgb(192,255,0)" />
@@ -451,120 +429,130 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
                   </SidebarWidget>
                 </Paper>
               </Grid>
-              <Grid item xs={8}>
-                <Paper>
-                  <div
-        						        className = "diagram-layer"
-        						        onDrop = {
-                                event => {
-                                  var data = JSON.parse(event.dataTransfer.getData("storm-diagram-node"));
-                                  var node = null;
-                                  if (data.name === "inp_layer") {
-                                    node = new DefaultNodeModel("Input", "rgb(0,102,255)");
-                                    node.addPort(new DefaultPortModel(false, "out-1", "out"));
-                                    node.extras = {
-                                      name: "Input Node",
-                                      wight: 0.5
-                                    }
-                                  } else if (data.name === "out_layer") {
-
-                                    node = new DefaultNodeModel("Output", "rgb(90,102,255)");
-                                    node.addPort(new DefaultPortModel(true, "in-1", "In"));
-                                    node.extras = {
-                                      name: "Output Node",
-                                      wight: 0.5
-                                    }
-                                  }
-                                  else {
-                                    node = new DefaultNodeModel("Dense", "rgb(0,192,255)");
-                                    node.addPort(new DefaultPortModel(true, "in-1", "In"));
-                                    node.addPort(new DefaultPortModel(false, "out-1", "Out"));
-                                    node.extras = {
-                                      name: "Dense Node",
-                                      wight: 0.5
-                                    }
-                                  }
-                                  var points = this.props.app.getDiagramEngine().getRelativeMousePoint(event);
-                                  node.x = points.x;
-                                  node.y = points.y;
-                                  this.props.app
-                                    .getDiagramEngine()
-                                    .getDiagramModel()
-                                    .addNode(node);
-                                  this.forceUpdate();
-                                }
-                              }
-        						onDragOver = {
-                        event => {
-                          event.preventDefault();
-                        }
-                      }
-
-        						onDoubleClick = {
-                        event => {
-                          var selected_node = document.getElementsByClassName("srd-node--selected");
-                          var selected_link = document.getElementsByClassName("srd-default-link--path-selected ")
-
-                          if (selected_node.length > 0) {
-                            // console.log(selected_node);
-                            // console.log(selected_link);
-                            // data-nodeid
-                            var node_id = selected_node[0].getAttribute("data-nodeid");
-                            // console.log(selected_node[0].getAttribute("data-nodeid"));
-                            if (node_id !== null) {
-                              this.toggleDrawer(true, node_id, false);
-                              this.setState({
-                                tmp_id: node_id,
-                              })
-                            }
-                          }
-                          else if (selected_link.length > 0) {
-                            // console.log(selected_link);
-                            var link_id = selected_link[1].getAttribute("data-linkid");
-                            // console.log(selected_link[1].getAttribute("data-linkid"));
-                            if (link_id !== null) {
-                              this.setState({
-                                tmp_id: link_id,
-                              })
-                              this.toggleDrawer(true, link_id, true);
-                            }
-                          }
-                        }
-                      }
-                      >
-                    <DiagramWidget
-        						className="srd-demo-canvas"
-        						diagramEngine = { this.props.app.getDiagramEngine() }
-        						maxNumberPointsPerLink = {0}
-                    allowLooseLinks={false}
-                    deleteKeys = {[]}
-                    />
-                  </div>
+              <Grid item xs={8} spacing={8}>
+              <Grid item xs style={{paddingBottom:10}}>
+                <Paper square>
+                  <Button variant= "contained" onClick = {this.handledelete} style={{backgroundColor:"#fff",boxShadow:"none"}}> <DeleteIcon /></Button>
                 </Paper>
               </Grid>
-              <Grid item xs>
-                <Paper>
+                <Grid item >
+                  <Paper square>
+                    <div
+          						        className = "diagram-layer"
+          						        onDrop = {
+                                  event => {
+                                    var data = JSON.parse(event.dataTransfer.getData("storm-diagram-node"));
+                                    var node = null;
+                                    if (data.name === "inp_layer") {
+                                      node = new DefaultNodeModel("Input", "rgb(0,102,255)");
+                                      node.addPort(new DefaultPortModel(false, "out-1", "out"));
+                                      node.extras = {
+                                        name: "Input Node",
+                                        wight: 0.5
+                                      }
+                                    } else if (data.name === "out_layer") {
+
+                                      node = new DefaultNodeModel("Output", "rgb(90,102,255)");
+                                      node.addPort(new DefaultPortModel(true, "in-1", "In"));
+                                      node.extras = {
+                                        name: "Output Node",
+                                        wight: 0.5
+                                      }
+                                    }
+                                    else {
+                                      node = new DefaultNodeModel("Dense", "rgb(0,192,255)");
+                                      node.addPort(new DefaultPortModel(true, "in-1", "In"));
+                                      node.addPort(new DefaultPortModel(false, "out-1", "Out"));
+                                      node.extras = {
+                                        name: "Dense Node",
+                                        wight: 0.5
+                                      }
+                                    }
+                                    var points = this.props.app.getDiagramEngine().getRelativeMousePoint(event);
+                                    node.x = points.x;
+                                    node.y = points.y;
+                                    this.props.app
+                                      .getDiagramEngine()
+                                      .getDiagramModel()
+                                      .addNode(node);
+                                    this.forceUpdate();
+                                  }
+                                }
+          						onDragOver = {
+                          event => {
+                            event.preventDefault();
+                          }
+                        }
+
+          						onDoubleClick = {
+                          event => {
+                            var selected_node = document.getElementsByClassName("srd-node--selected");
+                            var selected_link = document.getElementsByClassName("srd-default-link--path-selected ")
+
+                            if (selected_node.length > 0) {
+                              // console.log(selected_node);
+                              // console.log(selected_link);
+                              // data-nodeid
+                              var node_id = selected_node[0].getAttribute("data-nodeid");
+                              // console.log(selected_node[0].getAttribute("data-nodeid"));
+                              if (node_id !== null) {
+                                this.toggleDrawer(true, node_id, false);
+                                this.setState({
+                                  tmp_id: node_id,
+                                })
+                              }
+                            }
+                            else if (selected_link.length > 0) {
+                              // console.log(selected_link);
+                              var link_id = selected_link[1].getAttribute("data-linkid");
+                              // console.log(selected_link[1].getAttribute("data-linkid"));
+                              if (link_id !== null) {
+                                this.setState({
+                                  tmp_id: link_id,
+                                })
+                                this.toggleDrawer(true, link_id, true);
+                              }
+                            }
+                          }
+                        }
+                        >
+                      <DiagramWidget
+          						className="srd-demo-canvas"
+          						diagramEngine = { this.props.app.getDiagramEngine() }
+          						maxNumberPointsPerLink = {0}
+                      allowLooseLinks={false}
+                      deleteKeys = {[]}
+                      />
+                    </div>
+                  </Paper>
+                  </Grid>
+                  <Grid item xs style={{paddingTop:10, textAlign:"right"}}>
+                    <Paper style={{padding:5}} square>
+                      <Button variant= "contained"  onClick = {this.handleExecute}> Get Code </Button>
+                      <Button variant = "contained"  onClick = { this.handleClickOpen } > Change Exe Config </Button>
+                      <Button variant = "contained"  onClick = { this.handleClickOpenGrouping } > Group Selection </Button>
+                      </Paper>
+                  </Grid>
+              </Grid>
+              <Grid item xs >
+                <Paper square>
                   <Properties/>
                 </Paper>
               </Grid>
             </Grid>
             <Grid container spacing={8}>
               <Grid item xs>
-                <Paper>
+                <Paper square>
                   <SimpleTabs />
                 </Paper>
               </Grid>
             </Grid>
-          </Grid>
 
 
 
       <div>
 
-        <Button variant= "contained" className = { 'delete_btn'} onClick = {this.handledelete}> <DeleteIcon /> Delete</Button>
-        <Button variant= "contained" className = { 'send_btn'} onClick = {this.handleExecute}> Get Code </Button>
-        <Button variant = "contained" className = { 'exe_config_btn'} onClick = { this.handleClickOpen } > Change Exe Config </Button>
-        <Button variant = "contained" className = { 'group_selection_btn'} onClick = { this.handleClickOpenGrouping } > Group Selection </Button>
+
         <Drawer anchor = "right" open = { this.state.drawer } onClose = {() => this.toggleDrawer(false, "close", false)}>
           <div
   					role="presentation"
