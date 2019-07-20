@@ -13,33 +13,23 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 
 
-export interface TrayItemWidgetProps {
-	model: any;
-	color?: string;
-	name: string;
+export interface SidebarWidgetProps {
 }
 
-export interface TrayItemWidgetState {}
+export interface SidebarWidgetState {}
 
-export class TrayItemWidget extends React.Component<TrayItemWidgetProps, TrayItemWidgetState> {
-	constructor(props: TrayItemWidgetProps) {
+export class SidebarWidget extends React.Component<SidebarWidgetProps, SidebarWidgetState> {
+
+	constructor(props: SidebarWidgetProps) {
 		super(props);
 		this.state = {};
 	}
 
 	render() {
+		console.log(this.props.children);
 		return (
-			<div
-					style={{ borderColor: '#fff' }}
-					draggable={true}
-					onDragStart={event => {
-						event.dataTransfer.setData("storm-diagram-node", JSON.stringify(this.props.model));
-					}}
-					className="tray-item">
-			<ListItem button>
-				<ListItemText primary={this.props.name} />
-			</ListItem>
-    </div>
-		);
+			<div className="tray">
+				{this.props.children}
+			</div>);
 	}
 }

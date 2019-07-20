@@ -46,7 +46,7 @@ class Sidebar extends React.Component {
               <ListItemIcon>
                 <LibraryBooksIcon/>
               </ListItemIcon>
-              <ListItemText inset primary="A"/>
+              <ListItemText inset primary="Neural Networks"/>
             </ListItem>
             <ListItem button component={Link} to="/b">
               <ListItemIcon>
