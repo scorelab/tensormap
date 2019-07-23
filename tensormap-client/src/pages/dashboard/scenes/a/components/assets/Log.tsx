@@ -9,6 +9,11 @@ interface TabContainerProps {
   children?: React.ReactNode;
 }
 
+interface SimpleTabsProps {
+  code:string;
+  runtimeData:string;
+}
+
 function TabContainer(props: TabContainerProps) {
   return (
     <Typography component="div" style={{ padding: 8 * 3 }}>
@@ -21,12 +26,16 @@ TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default function SimpleTabs() {
+export default function SimpleTabs(props: SimpleTabsProps) {
   const [value, setValue] = React.useState(0);
 
   function handleChange(event: React.ChangeEvent<{}>, newValue: number) {
     setValue(newValue);
   }
+
+  let newText = props.code.split('\n').map((item, i) => {
+    return <p key={i}>{item}</p>;
+  });
 
   return (
     <div className="log_main">
@@ -37,9 +46,15 @@ export default function SimpleTabs() {
             <Tab label="Code" />
           </Tabs>
         </AppBar>
-        {value === 0 && <TabContainer>Logs</TabContainer>}
-        {value === 1 && <TabContainer>Code</TabContainer>}
+        {value === 0 && <TabContainer>{props.runtimeData}</TabContainer>}
+        {value === 1 && <TabContainer>{newText}
+        </TabContainer>}
       </div>
     </div>
   );
 }
+
+SimpleTabs.propTypes = {
+  code: PropTypes.string.isRequired,
+  runtimeData: PropTypes.string.isRequired,
+};

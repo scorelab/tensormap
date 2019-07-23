@@ -50,6 +50,8 @@ export interface BodyWidgetState {
   dialog_group:boolean;
   layer_name:string;
   layer_color:string;
+  runtime_data:string;
+  code:string;
   node:
   {
     id: string;
@@ -77,6 +79,8 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       neg_mean_square_error: false,
       layer_name:"",
       layer_color:"",
+      runtime_data:"Epoch Number: 25, Val Acc: 87.3623%, Train Acc: 90.821% ",
+      code:"from keras.datasets import mnist\nfrom keras.layers import Dense, Conv2D, Flatten\nmodel = Sequential()\nmodel.add(Conv2D(64, kernel_size=3, activation=’relu’, input_shape=(28,28,1)))\nmodel.add(Flatten())\nmodel.add(Dense(10, activation=’softmax’))\nmodel.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3)",
       node: [
         {
           id: "",
@@ -225,6 +229,9 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     // const socket = socketIOClient(endpoint);
     // socket.emit('nn_execute', comp_data, function(response: any) {
     //   console.log(response)
+    //   this.setState({
+    //     runtime_data:response.json()
+    //   })
     // });
 
   }
@@ -248,6 +255,9 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       body: JSON.stringify(data),
     })
       .then(response => response.json())
+      .then(response => this.setState({
+        code:response
+      }))
       .catch(response => console.log(response));
   }
 
@@ -543,7 +553,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
             <Grid container spacing={8}>
               <Grid item xs>
                 <Paper square>
-                  <SimpleTabs />
+                  <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data}/>
                 </Paper>
               </Grid>
             </Grid>
