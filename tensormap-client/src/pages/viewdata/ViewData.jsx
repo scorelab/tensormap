@@ -107,7 +107,7 @@ class ViewData extends React.Component {
     const {currentPage, datasetsPerPage, data} = this.state;
     const pageNumbers = [];
     for(let i = 1; i <= Math.ceil(data.length/datasetsPerPage); i++) {
-      pageNumbers.push(i);    
+      pageNumbers.push(i);
     }
     const renderPageNumbers = pageNumbers.map(number => {
       if(number == currentPage) {
