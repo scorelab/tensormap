@@ -6,11 +6,11 @@ socketio = SocketIO()
 db = SQLAlchemy()
 
 def create_app(debug=False):
-    
+
     app = Flask(__name__)
     app.debug = debug
     app.config['SECRET_KEY'] = 'secret'#test key
-    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:pass@localhost/tensormap"
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://orionpax:1111@localhost/tensormap"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     from .resources import main
