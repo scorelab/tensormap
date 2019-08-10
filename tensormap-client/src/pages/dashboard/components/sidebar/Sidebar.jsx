@@ -49,11 +49,11 @@ class Sidebar extends React.Component {
               </ListItemIcon>
               <ListItemText inset primary="Neural Networks"/>
             </ListItem>
-            <ListItem button component={Link} to="/b">
+            <ListItem button component={Link} to="/data">
               <ListItemIcon>
                 <FindInPageIcon/>
               </ListItemIcon>
-              <ListItemText inset primary="B"/>
+              <ListItemText inset primary="Data"/>
             </ListItem>
             <Divider/>
           </List>

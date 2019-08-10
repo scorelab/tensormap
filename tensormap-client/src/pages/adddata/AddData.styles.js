@@ -2,7 +2,7 @@ const styles = theme => ({
 	container: {
 	    position: 'absolute',
 	    left: '50%',
-	    top: '10%'
+	    top: '30%'
   	},
   	text: {
 		width: '100%',
