@@ -279,7 +279,7 @@ class VisualizeData extends React.Component {
       <div className={classes.container}>
         <table className={classes.table}>
           <tr>
-            <td className={classes.tabletd}>Welcome to {match.params.name}</td>
+            <td className={classes.tabletd}>Welcome to ....</td>
             <td className={classes.tabletd}>Operations</td>
           </tr>
           <tr>

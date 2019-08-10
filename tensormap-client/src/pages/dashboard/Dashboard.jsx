@@ -31,7 +31,7 @@ class Dashboard extends React.Component {
             }
             <Route exact path='/home' component={Home}/>
             <Route exact path='/neuralnet' component={A}/>
-            <Route exact path='/b' component={B}/>
+            <Route exact path='/data' component={B}/>
           </main>
         </div>
     )

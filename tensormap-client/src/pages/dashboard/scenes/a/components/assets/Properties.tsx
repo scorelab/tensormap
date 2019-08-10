@@ -20,7 +20,7 @@ export class Properties extends React.Component<PropertiesProps, PropertiesState
 
 	render() {
 		return (
-			<div className="properties">
+			<section className="properties">
 	      <ExpansionPanel square>
 	        <ExpansionPanelSummary
 	          expandIcon={<ExpandMoreIcon />}
@@ -35,7 +35,7 @@ export class Properties extends React.Component<PropertiesProps, PropertiesState
 	          </Typography>
 	        </ExpansionPanelDetails>
 	      </ExpansionPanel>
-    </div>
+    </section>
 		);
 	}
 }
