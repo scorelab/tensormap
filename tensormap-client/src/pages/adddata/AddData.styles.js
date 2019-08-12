@@ -38,8 +38,6 @@ const styles = theme => ({
   	},
   	browse: {
 		width: '100%',
-		color: 'white',
-		backgroundColor: 'white',
 		padding: '14px 20px',
 		margin: '8px 0',
 		border: 'none',
