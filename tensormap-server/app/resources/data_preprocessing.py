@@ -5,27 +5,32 @@ from .database_models.data_preproc import dataset
 import os
 import json
 from flask import jsonify
+import json
 
 
-BASE_DIR = os.getcwd()
-
-@main.route('/addData', methods=['GET', 'POST'])
+@main.route('/addData', methods=['POST'])
 def addData():
-    # retrieving the details of the dataset
-    dataset_name = request.form['dataset_name']
-    dataset_type = request.form['dataset_type']
-    dataset_file = request.files['dataset_csv']
 
-    # saving the csv file on server.
-    data_loc = os.path.join(BASE_DIR, "app/datasets")
-    dataset_filepath = os.path.join(data_loc, dataset_file.filename)
-    dataset_file.save(dataset_filepath)
+    file = request.files['file']
+    datasetFile = file.filename
+
+    dirPath = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', 'dataset'))
+    path = '{}{}{}'.format(dirPath, "/", datasetFile)
+    file.save(path)
+
+    splitFileInfo = datasetFile.split(".")
+    fileName = splitFileInfo[0]
+    fileFormat = splitFileInfo[1]
+    print(fileName)
+    print(fileFormat)
+    print(path)
 
     # writing the file entry in the database.
-    entry = dataset(name=dataset_name, filePath=dataset_filepath, fileFormat=dataset_type)
-    db.session.add(entry)
+    data = dataset(fileName, path, fileFormat)
+    db.session.add(data)
     db.session.commit()
-    return "file saved!!!"
+
+    return "file uploaded successfully"
 
 @main.route('/viewData', methods=['GET'])
 def viewData():
@@ -53,8 +58,8 @@ def visualizeData():
     if entry:
         with open(entry.filePath, 'r') as f:
             data = f.readlines()
-            str = ""
-            data = str.join(data)
+            default = ""
+            data = default.join(data)
             return data
     else:
         return 'None'
