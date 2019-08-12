@@ -15,13 +15,13 @@ class AddData extends React.Component {
     };
 
   }
-
+  
   validateFileType(e)
   {
     var name = null
     let filepath= e.target.value;
     var ext = filepath.substring(filepath.lastIndexOf('.') + 1);
-    this.setState({fileData:e.target.files[0]})
+    this.setState({fileData:e.target.files[0]}) 
     if(this.state.fileType == "null"){
       e.target.value = ""
       alert("Select File Type");
@@ -30,13 +30,13 @@ class AddData extends React.Component {
       if(ext != this.state.fileType ) {
         e.target.value = ""
         alert("Unsupported File Type");
-      }
+      }    
     }
   }
 
   updateFileType(e)
   {
-    this.setState({fileType: e.target.value});
+    this.setState({fileType: e.target.value});    
   }
 
   handleSubmit(e)
@@ -56,10 +56,9 @@ class AddData extends React.Component {
         body: data,
       }).then((response) => {
         console.log(response.body);
-        //   let path = "/visualize/";
-        //   path = path.concat(this.state.fileName)
-        //   this.props.history.push(path);
-
+          let path = "/visualize";
+          this.props.history.push(path);
+        
       }).catch(function (error) {
           console.log(error);
       });
@@ -70,16 +69,16 @@ class AddData extends React.Component {
   render() {
 
     const {classes} = this.props
-
+  
     return (
         <div className={classes.container}>
         <form onSubmit={this.handleSubmit.bind(this)}>
-        	<label>File Type:</label>
+        	<label>File Type:</label>  
           <select name="data_format" className={classes.text} onChange={this.updateFileType.bind(this)}>
             <option value="null">Select Type of File</option>
             <option value="csv">csv</option>
           </select><br/>
-          <label>Select file: </label>
+          <label>Select file: </label>        	
           <input type="file" name="dataset_csv" className={classes.browse} accept=".csv" onChange={this.validateFileType.bind(this)}></input><br/>
         	<input type="submit" value="Upload" className={classes.submit}></input>
         </form>
