@@ -8,6 +8,9 @@ import {A}        from './scenes/a'
 import {B}        from './scenes/b'
 import {Header}     from './components/header'
 import {Sidebar}    from './components/sidebar'
+import {AddData}       from '../adddata'
+import {ViewData}      from '../viewdata'
+import {VisualizeData} from '../visualizedata'
 import styles       from './Dashboard.styles'
 
 class Dashboard extends React.Component {
@@ -33,6 +36,9 @@ class Dashboard extends React.Component {
             <Route exact path='/home' component={Home}/>
             <Route exact path='/neuralnet' component={A}/>
             <Route exact path='/data' component={B}/>
+            <Route exact path="/adddata" component={AddData}/>
+            <Route exact path="/visualize/:id" component={VisualizeData}/>
+            <Route exact path="/viewdata" component={ViewData}/>
           </main>
         </div>
     )
