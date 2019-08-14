@@ -2,7 +2,6 @@ import {withStyles} from '@material-ui/core'
 import PropTypes    from 'prop-types'
 import * as React   from 'react'
 import styles       from './ViewData.styles'
-import Table from './assets/Table'
 
 class ViewData extends React.Component {
   constructor() {
@@ -18,8 +17,6 @@ class ViewData extends React.Component {
       data: JSON.parse(Httpreq.responseText)
     };
   }
-
-
 
   handleClick(event) {
     this.setState({
@@ -106,7 +103,6 @@ class ViewData extends React.Component {
   }
 
   render() {
-    console.log(this.state.data);
     const {classes} = this.props
     const {currentPage, datasetsPerPage, data} = this.state;
     const pageNumbers = [];
@@ -130,7 +126,21 @@ class ViewData extends React.Component {
     const currentData = data.slice(indexOfFirst, indexOfLast);
 
     return (
-        <Table />
+        <div className={classes.container}>
+          <table id="dataTable" className={classes.datatable} border="1">
+            <tr>
+              <th className={classes.datatableth}> Dataset Name </th>
+              <th className={classes.datatableth}> Dataset Type </th>
+              <th className={classes.datatableth}> Edit option </th>
+              <th className={classes.datatableth}> Delete option </th>
+              <th className={classes.datatableth}> View dataset </th>
+            </tr>
+            {this.renderDatasets(currentData)}
+          </table><br/>
+          <div className={classes.pagination}>
+            {renderPageNumbers}
+          </div>
+        </div>
     )
   }
 
