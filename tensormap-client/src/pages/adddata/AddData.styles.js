@@ -1,9 +1,23 @@
 const styles = theme => ({
+	main_container:{
+		marginTop:20,
+	},
 	container: {
-	    position: 'absolute',
-	    left: '50%',
-	    top: '30%'
-  	},
+		padding:40,
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+	formControl: {
+    margin: theme.spacing.unit,
+    minWidth: "calc(100% - 16px)",
+		textAlign:"center",
+  },
+	buttonControl:{
+		margin: theme.spacing.unit,
+    minWidth: "calc(100% - 16px)",
+		textAlign:"center",
+		marginTop:20
+	},
   	text: {
 		width: '100%',
 		padding: '12px 20px',
