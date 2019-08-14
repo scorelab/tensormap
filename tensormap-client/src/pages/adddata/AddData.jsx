@@ -10,6 +10,7 @@ class AddData extends React.Component {
     super(props);
 
     this.state = {
+      fileName: "null",
       fileType : "null",
       fileData : "null"
     };
@@ -55,13 +56,23 @@ class AddData extends React.Component {
         method: 'POST',
         body: data,
       }).then((response) => {
-        console.log(response.body);
-          let path = "/visualize";
-          this.props.history.push(path);
-        
-      }).catch(function (error) {
-          console.log(error);
-      });
+        return response.text();
+      }).then((responseText) => {
+        if(responseText == "error"){
+          alert ("Dataset with identical name already exists");
+        }
+        else{
+          this.props.history.push(
+            '/visualize',
+            {
+              fileName: responseText,
+            }
+          )
+        }       
+     }).catch(function (error) {
+      console.log(error);
+    });
+      
   }
 
   }

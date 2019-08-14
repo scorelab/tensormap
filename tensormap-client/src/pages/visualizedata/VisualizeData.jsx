@@ -2,6 +2,8 @@ import {withStyles} from '@material-ui/core'
 import PropTypes    from 'prop-types'
 import * as React   from 'react'
 import styles       from './VisualizeData.styles'
+// import * as qs from 'query-string';
+
 
 class VisualizeData extends React.Component {
   constructor() {
@@ -39,9 +41,34 @@ Cadillac Fleetwood,10.4,8,472,205,2.93,5.25,17.98,0,0,3,4
 Lincoln Continental,10.4,8,460,215,3,5.424,17.82,0,0,3,4
 Chrysler Imperial,14.7,8,440,230,3.23,5.345,17.42,0,0,3,4
 Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1`.split("\n");
+  
     this.state = {
+      fileName: "null",
       sampleData: response
     };
+}
+
+  componentDidMount() { 
+    console.log("printing")
+    console.log(this.props.location.state.fileName)
+    // this.setState({fileName: this.props.location.state.fileName })
+
+    let url = "http://127.0.0.1:5000/visualizeData?fileName="
+    url = url.concat(this.props.location.state.fileName)
+    console.log(url)
+
+    fetch(url, {
+      method: 'GET'
+    }).then((response) => {
+      return response.text();
+    }).then((responseText) => {
+      console.log(responseText.split("\n"))  
+      // this.setState({sampleData: responseText.split("\n")})    
+   }).catch(function (error) {
+      console.log(error);
+  });
+    
+    
   }
 
   addNewRow() {
