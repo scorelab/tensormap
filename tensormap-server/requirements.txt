@@ -8,6 +8,7 @@ eventlet
 numpy
 scipy
 scikit-learn
+Flask-Session
 mysqlclient 
 Flask-SQLAlchemy
 itsdangerous==1.1.0

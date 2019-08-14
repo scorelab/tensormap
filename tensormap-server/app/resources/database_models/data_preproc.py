@@ -2,20 +2,18 @@ from ... import db
 from sqlalchemy.dialects.mysql import VARCHAR, BLOB, INTEGER,TEXT, JSON
 
 class dataset(db.Model):
-    id = db.Column(INTEGER, primary_key=True)
-    filename = db.Column(VARCHAR(50))
+    fileName = db.Column(VARCHAR(50), primary_key=True)
     filePath = db.Column(VARCHAR(1000))
     fileFormat = db.Column(VARCHAR(50))
 
-    def __init__(self, filename, filePath, fileFormat):
-        self.filename = filename
+    def __init__(self, fileName, filePath, fileFormat):
+        self.fileName = fileName
         self.filePath = filePath
         self.fileFormat = fileFormat
 
     def serialize(self):
         return  {
-            'id': self.id,
-            'filename': self.filename,
+            'fileName': self.fileName,
             'filePath': self.filePath,
             'fileFormat': self.fileFormat
         }
