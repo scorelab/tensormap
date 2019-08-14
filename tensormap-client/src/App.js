@@ -19,7 +19,7 @@ class App extends React.Component {
           <Router history={history}>
             <div>
               <Route path="/adddata" component={AddData}/>
-              <Route path="/visualize/:name" component={VisualizeData}/>
+              <Route path="/visualize/:id" component={VisualizeData}/>
               <Route path="/viewdata" component={ViewData}/>
               <Route path="/" component={Dashboard}/>
               {/*<PrivateRoute exact path="/" component={Dashboard}/>*/}

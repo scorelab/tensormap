@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -17,19 +18,30 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
+import OpenInNew from '@material-ui/icons/OpenInNew';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 
 let counter = 0;
-function createData(name, dtype) {
+function createData(id, name, dtype) {
   counter += 1;
-  return { id: counter, name, dtype};
+  return { id: id, name, dtype};
 }
+
+function getDeleteHandler(idx) {
+    var Httpreq = new XMLHttpRequest();
+    Httpreq.open("GET", 'http://localhost:5000/deleteData?id=' + idx, true);
+    Httpreq.send(null);
+    console.log("completed")
+}
+
 
 const rows = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Dataset Name' },
   { id: 'dtype', numeric: true, disablePadding: false, label: 'Data Type' },
+  { id: 'icons', numeric: true, disablePadding: false, label: 'operations' },
 ];
+
 
 class EnhancedTableHead extends React.Component {
   createSortHandler = property => event => {
@@ -115,7 +127,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
+  const { numSelected, classes, handledelete, selected } = props;
 
   return (
     <Toolbar
@@ -130,7 +142,7 @@ let EnhancedTableToolbar = props => {
           </Typography>
         ) : (
           <Typography variant="h6" id="tableTitle">
-            Nutrition
+            Datasets
           </Typography>
         )}
       </div>
@@ -138,7 +150,7 @@ let EnhancedTableToolbar = props => {
       <div className={classes.actions}>
         {numSelected > 0 ? (
           <Tooltip title="Delete">
-            <IconButton aria-label="Delete">
+            <IconButton aria-label="Delete" onClick={event => handledelete(event, selected)} >
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -157,6 +169,7 @@ let EnhancedTableToolbar = props => {
 EnhancedTableToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
+  handledelete: PropTypes.func.isRequired,
 };
 
 EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
@@ -177,24 +190,47 @@ const styles = theme => ({
 class EnhancedTable extends React.Component {
   state = {
     selected: [],
+    data_:[],
     data: [
-      createData('Cupcake', 305),
-      createData('Donut', 452),
-      createData('Eclair', 262),
-      createData('Frozen yoghurt', 159),
-      createData('Gingerbread', 356),
-      createData('Honeycomb', 408),
-      createData('Ice cream sandwich', 237),
-      createData('Jelly Bean', 375),
-      createData('KitKat', 518),
-      createData('Lollipop', 392),
-      createData('Marshmallow', 318),
-      createData('Nougat', 360),
-      createData('Oreo', 437),
     ],
     page: 0,
     rowsPerPage: 5,
   };
+
+  componentDidMount(){
+    this.setState({
+      data_:this.props.data
+    });
+
+    var data__ = [];
+    this.props.data.forEach((x) => {
+      data__.push(createData(x.id,x.name,x.fileFormat))
+    })
+
+    this.setState({
+      data :data__
+    })
+  }
+
+  handleDelete = (event, id) => {
+    var tmp_data = [];
+    id.forEach((x) =>{
+        getDeleteHandler(x);
+        this.state.data.forEach((y) => {
+          if(y.id == x){
+            console.log(x, "deleted")
+          }
+          else{
+            tmp_data.push(y)
+          }
+        })
+      }
+    );
+
+    this.setState({
+      data:tmp_data
+    })
+  }
 
   handleRequestSort = (event, property) => {
     const orderBy = property;
@@ -246,10 +282,13 @@ class EnhancedTable extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+
   render() {
     const { classes } = this.props;
     const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+
+
 
     return (
       <Grid container spacing={24}>
@@ -258,7 +297,7 @@ class EnhancedTable extends React.Component {
         <Grid item xs={8}>
 
           <Paper className={classes.root}>
-            <EnhancedTableToolbar numSelected={selected.length} />
+            <EnhancedTableToolbar numSelected={selected.length} handledelete={this.handleDelete} selected = {selected}/>
             <div className={classes.tableWrapper}>
               <Table className={classes.table} aria-labelledby="tableTitle">
                 <EnhancedTableHead
@@ -277,7 +316,6 @@ class EnhancedTable extends React.Component {
                       return (
                         <TableRow
                           hover
-                          onClick={event => this.handleClick(event, n.id)}
                           role="checkbox"
                           aria-checked={isSelected}
                           tabIndex={-1}
@@ -285,12 +323,19 @@ class EnhancedTable extends React.Component {
                           selected={isSelected}
                         >
                           <TableCell padding="checkbox">
-                            <Checkbox checked={isSelected} />
+                            <Checkbox checked={isSelected} onClick={event => this.handleClick(event, n.id)}/>
                           </TableCell>
                           <TableCell component="th" scope="row" padding="none">
                             {n.name}
                           </TableCell>
                           <TableCell align="right">{n.dtype}</TableCell>
+                          <TableCell align="right">
+                            <Link to={"/visualize/" + n.id} >
+                              <IconButton aria-label="View">
+                                <OpenInNew />
+                              </IconButton>
+                            </Link>
+                          </TableCell>
                         </TableRow>
                       );
                     })}

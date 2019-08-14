@@ -51,12 +51,10 @@ export default function SimpleTabs(props: SimpleTabsProps) {
                 aria-label="disabled tabs example">
               <Tab label="Upload Data" />
               <Tab label="Uploaded Data" />
-              <Tab label="Visualize Data" />
             </Tabs>
         </AppBar>
           {value === 0 && <AddData/>}
           {value === 1 && <ViewData/>}
-          {value === 2 && <VisualizeData/>}
     </div>
   );
 }
