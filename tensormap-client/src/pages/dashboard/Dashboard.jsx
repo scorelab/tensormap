@@ -29,6 +29,7 @@ class Dashboard extends React.Component {
             {url_.pathname !== '/neuralnet' &&
                 <div className={classes.toolbar}/>
             }
+
             <Route exact path='/home' component={Home}/>
             <Route exact path='/neuralnet' component={A}/>
             <Route exact path='/data' component={B}/>
