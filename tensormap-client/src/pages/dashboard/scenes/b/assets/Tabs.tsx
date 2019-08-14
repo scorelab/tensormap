@@ -7,7 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import AddData from '../../../../adddata/AddData';
 import ViewData from '../../../../viewdata/ViewData';
-import VisualizeData from '../../../../visualizedata/assets/Table';
+import VisualizeData from '../../../../visualizedata/VisualizeData';
 
 
 
