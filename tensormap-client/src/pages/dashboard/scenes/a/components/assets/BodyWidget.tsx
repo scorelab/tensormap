@@ -691,7 +691,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
                 fullWidth
                 />
                 Choose color:
-              <Select
+                <Select
                 fullWidth
                 onChange={(e) => {this.setState({layer_color:e.target.value})}}
                 value={this.state.layer_color}
