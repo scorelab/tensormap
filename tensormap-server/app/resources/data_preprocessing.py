@@ -4,6 +4,7 @@ from .. import db
 from .database_models.data_preproc import dataset
 import os
 import json
+import csv
 
 @main.route('/addData', methods=['POST'])
 def addData():
@@ -23,26 +24,48 @@ def addData():
 
     else:
 
-        file.save(path)
+        file.save(path)   
 
         # writing the file entry in the database.
         data = dataset(fileName, path, fileFormat)
         db.session.add(data)
-        db.session.commit()
+        db.session.commit()           
         return splitFileInfo[0]
 
 @main.route('/visualizeData', methods=['GET'])
 def visualizeData():
-    entry = dataset.query.filter_by(fileName=request.args['fileName']).one()
+    allData = ""
+
+    # ******************************************change
+    # entry = dataset.query.filter_by(fileName=request.args['fileName']).one()
+
+    entry = dataset.query.filter_by(fileName="store").one()
+
     print(entry.filePath)
+
+    i= 0
+
     if entry:
         with open(entry.filePath, 'r') as f:
-            data = f.readlines()
-            default = ""
-            data = default.join(data)
-            return data
+            for line in f:
+                allData = allData + line
+                if i == 0 or i == 1:
+                    print(line)
+                i+=1
+            return allData
     else:
         return 'None'
+
+#         with open(filename, 'r') as f:
+#   for line in f:
+#     print(line)
+
+
+# with open ('Book8.csv','r') as csv_file:
+#     reader =csv.reader(csv_file)
+#     next(reader) # skip first row
+#     for row in reader:
+#         print(row)
 
 
 @main.route('/viewData', methods=['GET'])
