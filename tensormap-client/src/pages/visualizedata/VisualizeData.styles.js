@@ -46,7 +46,15 @@ const styles = theme => ({
   	inputdata: {
   		display: 'inline-block',
   		width: '50px'
-  	}
+	  },
+
+	visualizeHeader: {
+		padding: '60px',
+		// textAlign: 'center',
+		background: '#1abc9c',
+		color: 'white',
+		fontSize: '15px'
+	  }
 })
 
 export default styles

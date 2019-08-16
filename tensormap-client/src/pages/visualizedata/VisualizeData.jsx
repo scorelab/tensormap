@@ -18,8 +18,11 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import TabBar from './assets/TabBar'
+// import Checkbox from './Checkbox';
+
+// import ScrollableTabsButtonAuto from './assets/ScrollableTabsButtonAuto'
 import { forwardRef } from 'react';
+import { template } from '@babel/core';
 
 
 const tableIcons = {
@@ -47,12 +50,9 @@ class VisualizeData extends React.Component {
   constructor() {
     super();
 
-    var response = `loading data,loading data
-    loading data,loading data`.split("\n");
-
     this.state = {
       fileName: "null",
-      sampleData: response,
+      columnCheckBoxes : [],
       columns: [
         { title: 'Name', field: 'name' },
         { title: 'Surname', field: 'surname' },
@@ -72,10 +72,13 @@ class VisualizeData extends React.Component {
           birthCity: 34,
         },
       ],
-      
+
+           
     }
     
-
+    this.createCheckboxes = this.createCheckboxes.bind(this);
+    this.populateCheckBox = this.populateCheckBox.bind(this);
+    this.toggleCheckboxChange =this.toggleCheckboxChange.bind(this);
     // this.addNewRow = this.addNewRow.bind(this);
     // this.addNewCol = this.addNewCol.bind(this);
     // this.delRow = this.delRow.bind(this);
@@ -109,7 +112,152 @@ class VisualizeData extends React.Component {
    }).catch(function (error) {
       console.log(error);
   }); 
+
+
+  this.populateCheckBox()
+
+  // this.state.columns.map((column) => (
+
+  //   
+
+  //   // <label>
+  //   //   {column.title}
+  //   //  <input
+  //   // type="checkbox"
+  //   // value={column.title}
+  //   // // checked={isChecked}
+  //   // // onChange={this.toggleCheckboxChange}
+  //   // />        
+  //   //   <br/>
+  //   // </label>
+    
+    
+  // ));
+
   }
+
+  populateCheckBox(){
+    for (var column in this.state.columns) {
+      var tempData = this.state.columnCheckBoxes
+      var obj = { title: this.state.columns[column].title, isChecked: "false" }
+      tempData.push(obj);
+      this.setState({columnCheckBoxes:tempData});      
+  }
+  }
+
+  toggleCheckboxChange(e){
+    console.log(e.target.value);
+    for (var column in this.state.columns) {
+      var tempData = this.state.columnCheckBoxes
+      var obj = { title: this.state.columns[column].title, isChecked: "false" }
+      tempData.push(obj);
+      this.setState({columnCheckBoxes:tempData});      
+  }
+  }
+
+  createCheckboxes(){
+
+    return this.state.columnCheckBoxes.map((column) => (
+
+      <label>
+        {column.title}
+       <input
+      type="checkbox"
+      value={column.title}
+      // checked={column.isChecked}
+      onChange={this.toggleCheckboxChange}
+      />        
+        <br/>
+      </label>
+      
+      
+    ));
+    
+  }
+
+
+
+
+  render() {
+    const {sampleData} = this.state;
+    const {classes} = this.props;
+    const {match} = this.props;
+
+    
+
+    return (
+      <div className={classes.container}>
+      <div className={classes.visualizeHeader}>
+        {/* <ScrollableTabsButtonAuto/> */}
+        <div>
+          <label>Choose colums to delete:</label>
+          <br/>
+            {this.createCheckboxes()}
+          
+        </div>
+        </div>
+        <div style={{ maxWidth: "100%" }}>
+        <MaterialTable
+        icons={tableIcons}
+      title="Editable Example"
+      columns={this.state.columns}
+      data={this.state.data}
+      options={{
+        filtering: true
+      }}
+      editable={{
+        onRowAdd: newData =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              const tempdata = [...this.state.data];
+              tempdata.push(newData);
+              this.setState({data:tempdata});
+            }, 600);
+          }),
+        onRowDelete: oldData =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              console.log(oldData)
+              const tempdata = [...this.state.data];
+              tempdata.splice(tempdata.indexOf(oldData), 1);
+              this.setState({data:tempdata});
+            }, 600);
+          }),
+          onRowUpdate: (newData, oldData) =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              const tempdata = [...this.state.data];
+              tempdata[tempdata.indexOf(oldData)] = newData;
+              this.setState({data:tempdata});
+            }, 600);
+          }),
+      }}
+    />
+        </div>
+
+        
+{/*         
+
+        // <table className={classes.table}>
+        //   {this.renderRows(sampleData)}
+        // </table>     */}
+      </div>
+    )
+  }
+
+
+}
+
+VisualizeData.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme  : PropTypes.object.isRequired,
+}
+
+export default withStyles(styles, {withTheme: true})(VisualizeData)
+
 
 
 
@@ -341,85 +489,3 @@ class VisualizeData extends React.Component {
   //     editCol: null
   //   })
   // }
-
-  render() {
-    const {sampleData} = this.state;
-    const {classes} = this.props;
-    const {match} = this.props;
-
-    
-
-    return (
-      <div className={classes.container}>
-      <div>
-        <TabBar/>
-        </div>
-        <div style={{ maxWidth: "100%" }}>
-        <MaterialTable
-        icons={tableIcons}
-      title="Editable Example"
-      columns={this.state.columns}
-      data={this.state.data}
-      options={{
-        filtering: true
-      }}
-      editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              const tempdata = [...this.state.data];
-              tempdata.push(newData);
-              this.setState({data:tempdata});
-            }, 600);
-          }),
-        onRowDelete: oldData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              console.log(oldData)
-              const tempdata = [...this.state.data];
-              tempdata.splice(tempdata.indexOf(oldData), 1);
-              this.setState({data:tempdata});
-            }, 600);
-          }),
-          onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              const tempdata = [...this.state.data];
-              tempdata[tempdata.indexOf(oldData)] = newData;
-              this.setState({data:tempdata});
-            }, 600);
-          }),
-      }}
-    />
-        </div>
-
-        
-        {/* <div className={classes.visalizeHeader}>
-          {this.renderAddRow()}
-          {this.renderAddCol()}
-          {this.renderDelRow()}
-          {this.renderDelCol()}
-          {this.renderSavVal()}
-          {this.renderCanVal()}
-          <button className={classes.viewbtn}>Pass to network</button>
-        </div>
-
-        <table className={classes.table}>
-          {this.renderRows(sampleData)}
-        </table>     */}
-      </div>
-    )
-  }
-
-
-}
-
-VisualizeData.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme  : PropTypes.object.isRequired,
-}
-
-export default withStyles(styles, {withTheme: true})(VisualizeData)
