@@ -18,6 +18,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import { saveAs } from 'file-saver';
 // import Checkbox from './Checkbox';
 
 // import ScrollableTabsButtonAuto from './assets/ScrollableTabsButtonAuto'
@@ -53,6 +54,8 @@ class VisualizeData extends React.Component {
     this.state = {
       fileName: "null",
       columnCheckBoxes : [],
+      features : [],
+      labels :  [],
       columns: [
         { title: 'Name', field: 'name' },
         { title: 'Surname', field: 'surname' },
@@ -79,22 +82,27 @@ class VisualizeData extends React.Component {
     this.createCheckboxes = this.createCheckboxes.bind(this);
     this.populateCheckBox = this.populateCheckBox.bind(this);
     this.toggleCheckboxChange =this.toggleCheckboxChange.bind(this);
-    // this.addNewRow = this.addNewRow.bind(this);
-    // this.addNewCol = this.addNewCol.bind(this);
-    // this.delRow = this.delRow.bind(this);
-    // this.delCol = this.delCol.bind(this);
-    // this.highlightRow = this.highlightRow.bind(this);
-    // this.highlightCol = this.highlightCol.bind(this);
-    // this.makeEditable = this.makeEditable.bind(this);
-    // this.handleInputChange = this.handleInputChange.bind(this);
-    // this.savVal = this.savVal.bind(this);
-    // this.canVal = this.canVal.bind(this);
+    this.deleteCol = this.deleteCol.bind(this);
+    this.sendAddRequest = this.sendAddRequest.bind(this);
+    this.sendDeleteRequest = this.sendDeleteRequest.bind(this);
+    this.sendEditRequest = this.sendEditRequest.bind(this);
+    this.downloadCSV = this.downloadCSV.bind(this);
+    this.selectFeatures = this.selectFeatures.bind(this);
+    this.selectLabels = this.selectLabels.bind(this);
+    this.createFeatureCheckboxes = this.createFeatureCheckboxes.bind(this);
+    this.createLabelCheckboxes = this.createLabelCheckboxes.bind(this);
+    this.toggleLabelCheckboxChange = this.toggleLabelCheckboxChange.bind(this);
+    this.toggleFeatureCheckboxChange = this.toggleFeatureCheckboxChange.bind(this);
+
+
 
 }
 
   componentDidMount() { 
 
     // this.setState({fileName: this.props.location.state.fileName })
+    this.setState({fileName: "store" })
+
 
     let url = "http://127.0.0.1:5000/visualizeData?fileName="
     // url = url.concat(this.props.location.state.fileName)
@@ -113,52 +121,227 @@ class VisualizeData extends React.Component {
       console.log(error);
   }); 
 
-
   this.populateCheckBox()
+  }
 
-  // this.state.columns.map((column) => (
 
-  //   
 
-  //   // <label>
-  //   //   {column.title}
-  //   //  <input
-  //   // type="checkbox"
-  //   // value={column.title}
-  //   // // checked={isChecked}
-  //   // // onChange={this.toggleCheckboxChange}
-  //   // />        
-  //   //   <br/>
-  //   // </label>
-    
-    
-  // ));
+
+  selectFeatures(){
+    alert("Features Saved for Experiment")
+
+  }
+
+  selectLabels(){
+    alert("Labels Saved for Experiment")
+  }
+
+
+
+
+  sendAddRequest(newData){
+    var data = JSON.stringify(newData)
+    console.log(data) 
+
+    fetch("http://127.0.0.1:5000/addRow", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: data
+    }).then((response) => {
+      return response.text();
+    }).then((response) => {
+      console.log(response)  
+   }).catch(function (error) {
+      console.log(error);
+  }); 
+}
+
+  sendDeleteRequest(oldData){
+    var data = JSON.stringify(oldData)
+    console.log(data) 
+
+    fetch("http://127.0.0.1:5000/deleteRow", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: data
+    }).then((response) => {
+      return response.text();
+    }).then((response) => {
+      console.log(response)  
+   }).catch(function (error) {
+      console.log(error);
+  }); 
+
+  }
+
+  sendEditRequest(newData,oldData){
+
+    var obj = {newRowData: newData, oldRowData: oldData}
+    var data = JSON.stringify(obj)
+    console.log(data) 
+
+    fetch("http://127.0.0.1:5000/editRow", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: data
+    }).then((response) => {
+      return response.text();
+    }).then((response) => {
+      console.log(response)  
+   }).catch(function (error) {
+      console.log(error);
+  }); 
+
+  }
+
+  downloadCSV(){
+    var obj = {fileName: this.state.fileName}
+    var data = JSON.stringify(obj)
+    console.log(data) 
+
+    fetch("http://127.0.0.1:5000/downloadCSV", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      responseType: 'blob',
+      body: data
+    }).then((response) => {
+      return response.blob();
+    }).then((blob) => {
+      var filename = this.state.fileName
+      filename = filename.concat(".csv")
+      saveAs(blob,filename)  
+   }).catch(function (error) {
+      console.log(error);
+  }); 
+
+
+  }
+
+
+
+
+  deleteCol(){    
+    var data = JSON.stringify(this.state.columnCheckBoxes)
+    console.log(data) 
+
+    fetch("http://127.0.0.1:5000/deleteCol", {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: data
+    }).then((response) => {
+      return response.json();
+    }).then((response) => {
+      console.log(response)  
+      var parserData = JSON.parse(response)
+      console.log(parserData)
+      var oldColumnData = [...this.state.columns]
+      var oldRowData = [...this.state.data]    
+      // this.setState({columns: parserData.columns })
+      // this.setState({data: parserData.data})  
+
+   }).catch(function (error) {
+      console.log(error);
+  }); 
 
   }
 
   populateCheckBox(){
     for (var column in this.state.columns) {
-      var tempData = this.state.columnCheckBoxes
-      var obj = { title: this.state.columns[column].title, isChecked: "false" }
-      tempData.push(obj);
-      this.setState({columnCheckBoxes:tempData});      
+      var tempColumnData = this.state.columnCheckBoxes
+      var tempFeatureData = this.state.features
+      var tempLabels = this.state.labels
+      var obj = { title: this.state.columns[column].title, isChecked: false }
+      tempColumnData.push(obj);
+      tempFeatureData.push(obj);
+      tempLabels.push(obj);
+      this.setState({columnCheckBoxes:tempColumnData});     
+      this.setState({features:tempFeatureData});
+      this.setState({labels:tempLabels}); 
   }
+
   }
 
   toggleCheckboxChange(e){
     console.log(e.target.value);
-    for (var column in this.state.columns) {
-      var tempData = this.state.columnCheckBoxes
-      var obj = { title: this.state.columns[column].title, isChecked: "false" }
-      tempData.push(obj);
-      this.setState({columnCheckBoxes:tempData});      
+    var tempData = [...this.state.columnCheckBoxes]
+    for (var column in tempData) {
+      if (e.target.value == tempData[column].title){
+        tempData[column].isChecked = !(tempData[column].isChecked)
+        break;
+      }
+    }
+    this.setState({columnCheckBoxes:tempData});
+    console.log(tempData)      
   }
+
+  toggleLabelCheckboxChange(e){
+    console.log(e.target.value);
+    var tempData = [...this.state.labels]
+    for (var column in tempData) {
+      if (e.target.value == tempData[column].title){
+        tempData[column].isChecked = !(tempData[column].isChecked)
+        break;
+      }
+    }
+    this.setState({labels:tempData});
+    console.log(tempData)
   }
+
+
+  toggleFeatureCheckboxChange(e){
+    console.log(e.target.value);
+    var tempData = [...this.state.features]
+    for (var column in tempData) {
+      console.log("**********")
+      console.log(tempData[column].title)
+      if (e.target.value == tempData[column].title){
+        
+        tempData[column].isChecked = !(tempData[column].isChecked)
+        console.log(tempData[column].isChecked)
+        var currentLabels = [...this.state.labels]
+        if(tempData[column].isChecked == true){
+          console.log("y")          
+          for(var labeldata in currentLabels){
+            if (e.target.value == currentLabels[labeldata].title){
+              currentLabels.splice(currentLabels.indexOf(currentLabels[labeldata]), 1);
+              this.setState({labels:currentLabels});
+              break;
+            }
+          }          
+        }
+        else if(tempData[column].isChecked == false){  
+          console.log("else")      
+            var labelCheckBoxAlter = tempData[column]
+            labelCheckBoxAlter.isChecked = false
+            currentLabels.splice(tempData.indexOf(tempData[column]), 0,labelCheckBoxAlter);
+            this.setState({labels:currentLabels});
+          }
+        console.log(currentLabels)
+        break;       
+        }
+        
+        
+        
+      }
+    this.setState({features:tempData});
+    console.log(tempData)
+
+    }
+    
 
   createCheckboxes(){
-
     return this.state.columnCheckBoxes.map((column) => (
-
       <label>
         {column.title}
        <input
@@ -169,12 +352,38 @@ class VisualizeData extends React.Component {
       />        
         <br/>
       </label>
-      
-      
-    ));
-    
+    ));    
   }
 
+  createFeatureCheckboxes(){
+    return this.state.features.map((column) => (
+      <label>
+        {column.title}
+       <input
+      type="checkbox"
+      value={column.title}
+      // checked={column.isChecked}
+      onChange={this.toggleFeatureCheckboxChange}
+      />        
+        <br/>
+      </label>
+    ));
+  }
+
+  createLabelCheckboxes(){
+    return this.state.labels.map((column) => (
+      <label>
+        {column.title}
+       <input
+      type="checkbox"
+      value={column.title}
+      // checked={column.isChecked}
+      onChange={this.toggleLabelCheckboxChange}
+      />        
+        <br/>
+      </label>
+    ));
+  }
 
 
 
@@ -193,13 +402,27 @@ class VisualizeData extends React.Component {
           <label>Choose colums to delete:</label>
           <br/>
             {this.createCheckboxes()}
-          
+            <button type="button"  onClick={this.deleteCol}>Delete</button>          
         </div>
+        <div><button type="button"  onClick={this.downloadCSV}>Download CSV</button> </div>
+        <div>
+          <label>Choose Features:</label>
+          <br/>
+            {this.createFeatureCheckboxes()}
+            <button type="button"  onClick={this.selectFeatures}>Save Features</button>          
+        </div>
+        <div>
+          <label>Choose Label:</label>
+          <br/>
+            {this.createLabelCheckboxes()}
+            <button type="button"  onClick={this.selectLabels}>Save Label</button>          
+        </div>
+
         </div>
         <div style={{ maxWidth: "100%" }}>
         <MaterialTable
         icons={tableIcons}
-      title="Editable Example"
+      title={this.state.fileName}
       columns={this.state.columns}
       data={this.state.data}
       options={{
@@ -213,6 +436,8 @@ class VisualizeData extends React.Component {
               const tempdata = [...this.state.data];
               tempdata.push(newData);
               this.setState({data:tempdata});
+              console.log(newData);
+              this.sendAddRequest(newData);
             }, 600);
           }),
         onRowDelete: oldData =>
@@ -223,6 +448,8 @@ class VisualizeData extends React.Component {
               const tempdata = [...this.state.data];
               tempdata.splice(tempdata.indexOf(oldData), 1);
               this.setState({data:tempdata});
+              console.log(oldData);
+              this.sendDeleteRequest(oldData);
             }, 600);
           }),
           onRowUpdate: (newData, oldData) =>
@@ -232,18 +459,14 @@ class VisualizeData extends React.Component {
               const tempdata = [...this.state.data];
               tempdata[tempdata.indexOf(oldData)] = newData;
               this.setState({data:tempdata});
+              console.log(oldData);
+              console.log(newData);
+              this.sendEditRequest(newData,oldData);
             }, 600);
           }),
       }}
     />
         </div>
-
-        
-{/*         
-
-        // <table className={classes.table}>
-        //   {this.renderRows(sampleData)}
-        // </table>     */}
       </div>
     )
   }
