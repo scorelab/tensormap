@@ -90,8 +90,7 @@ class VisualizeData extends React.Component {
     this.sendDeleteRequest = this.sendDeleteRequest.bind(this);
     this.sendEditRequest = this.sendEditRequest.bind(this);
     this.downloadCSV = this.downloadCSV.bind(this);
-    this.selectFeatures = this.selectFeatures.bind(this);
-    this.selectLabels = this.selectLabels.bind(this);
+    this.saveConfig = this.saveConfig.bind(this);
     this.createFeatureCheckboxes = this.createFeatureCheckboxes.bind(this);
     this.createLabelCheckboxes = this.createLabelCheckboxes.bind(this);
     this.toggleLabelCheckboxChange = this.toggleLabelCheckboxChange.bind(this);
@@ -131,14 +130,13 @@ class VisualizeData extends React.Component {
 
 
 
-  selectFeatures(){
-    alert("Features Saved for Experiment")
+  saveConfig(){
+    alert("Configurations Saved for Experiment")
+    console.log(this.props.trainPercentageDashboard)
 
   }
 
-  selectLabels(){
-    alert("Labels Saved for Experiment")
-  }
+
 
 
 
@@ -420,20 +418,22 @@ class VisualizeData extends React.Component {
         </div>
         <div><button type="button"  onClick={this.downloadCSV}>Download CSV</button> </div>
         <div>
+          Experiment Configurations:
+        <div>
           <label>Choose Features:</label>
           <br/>
-            {this.createFeatureCheckboxes()}
-            <button type="button"  onClick={this.selectFeatures}>Save Features</button>          
+            {this.createFeatureCheckboxes()}                      
         </div>
         <div>
           <label>Choose Label:</label>
           <br/>
             {this.createLabelCheckboxes()}
-            <button type="button"  onClick={this.selectLabels}>Save Label</button>          
         </div>
         <div>
         <label>Select Test Data Percentage</label><br/>
-        <input type="range" min="1" max="90" className={classes.slider} onInput={this.getSliderValue} />        
+        <input type="range" min="1" max="90" className={classes.slider} onInput={this.getSliderValue} />  
+        <button type="button"  onClick={this.saveConfig}>Save Configurations</button>      
+        </div>
         </div>
         </div>
         <div style={{ maxWidth: "100%" }}>

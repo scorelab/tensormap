@@ -5,8 +5,11 @@ import rootReducer                    from '../reducers'
 
 const loggerMiddleware = createLogger()
 
+const initialState = {}
+
 export const store = createStore(
     rootReducer,
+    initialState,
     applyMiddleware(
         thunkMiddleware,
         loggerMiddleware
