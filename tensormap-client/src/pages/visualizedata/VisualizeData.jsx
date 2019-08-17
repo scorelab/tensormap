@@ -19,6 +19,8 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import { saveAs } from 'file-saver';
+// import DiscreteSlider from './assets/slider'
+
 // import Checkbox from './Checkbox';
 
 // import ScrollableTabsButtonAuto from './assets/ScrollableTabsButtonAuto'
@@ -53,6 +55,7 @@ class VisualizeData extends React.Component {
 
     this.state = {
       fileName: "null",
+      trainPercentage : "null",
       columnCheckBoxes : [],
       features : [],
       labels :  [],
@@ -93,6 +96,7 @@ class VisualizeData extends React.Component {
     this.createLabelCheckboxes = this.createLabelCheckboxes.bind(this);
     this.toggleLabelCheckboxChange = this.toggleLabelCheckboxChange.bind(this);
     this.toggleFeatureCheckboxChange = this.toggleFeatureCheckboxChange.bind(this);
+    this.getSliderValue = this.getSliderValue.bind(this);
 
 
 
@@ -261,10 +265,12 @@ class VisualizeData extends React.Component {
       var tempColumnData = this.state.columnCheckBoxes
       var tempFeatureData = this.state.features
       var tempLabels = this.state.labels
-      var obj = { title: this.state.columns[column].title, isChecked: false }
-      tempColumnData.push(obj);
-      tempFeatureData.push(obj);
-      tempLabels.push(obj);
+      var obj1 = { title: this.state.columns[column].title, checked: false }
+      var obj2 = { title: this.state.columns[column].title, checked: false }
+      var obj3 = { title: this.state.columns[column].title, checked: false }
+      tempColumnData.push(obj1);
+      tempFeatureData.push(obj2);
+      tempLabels.push(obj3);
       this.setState({columnCheckBoxes:tempColumnData});     
       this.setState({features:tempFeatureData});
       this.setState({labels:tempLabels}); 
@@ -277,7 +283,7 @@ class VisualizeData extends React.Component {
     var tempData = [...this.state.columnCheckBoxes]
     for (var column in tempData) {
       if (e.target.value == tempData[column].title){
-        tempData[column].isChecked = !(tempData[column].isChecked)
+        tempData[column].checked = !(tempData[column].checked)
         break;
       }
     }
@@ -290,52 +296,57 @@ class VisualizeData extends React.Component {
     var tempData = [...this.state.labels]
     for (var column in tempData) {
       if (e.target.value == tempData[column].title){
-        tempData[column].isChecked = !(tempData[column].isChecked)
+        tempData[column].checked = !(tempData[column].checked)
         break;
       }
     }
     this.setState({labels:tempData});
     console.log(tempData)
+    console.log(this.state.features)
+    console.log(this.state.columnCheckBoxes)
+
   }
 
 
   toggleFeatureCheckboxChange(e){
+    
     console.log(e.target.value);
-    var tempData = [...this.state.features]
-    for (var column in tempData) {
-      console.log("**********")
-      console.log(tempData[column].title)
-      if (e.target.value == tempData[column].title){
-        
-        tempData[column].isChecked = !(tempData[column].isChecked)
-        console.log(tempData[column].isChecked)
-        var currentLabels = [...this.state.labels]
-        if(tempData[column].isChecked == true){
-          console.log("y")          
-          for(var labeldata in currentLabels){
-            if (e.target.value == currentLabels[labeldata].title){
-              currentLabels.splice(currentLabels.indexOf(currentLabels[labeldata]), 1);
-              this.setState({labels:currentLabels});
-              break;
-            }
-          }          
-        }
-        else if(tempData[column].isChecked == false){  
-          console.log("else")      
-            var labelCheckBoxAlter = tempData[column]
-            labelCheckBoxAlter.isChecked = false
-            currentLabels.splice(tempData.indexOf(tempData[column]), 0,labelCheckBoxAlter);
-            this.setState({labels:currentLabels});
-          }
-        console.log(currentLabels)
+    var tempFeatureData = [...this.state.features]
+    var featureColumn = null
+    for (var column in tempFeatureData) {   
+      console.log(tempFeatureData[column].title)       
+      if (e.target.value == tempFeatureData[column].title){
+        tempFeatureData[column].checked = !(tempFeatureData[column].checked) 
+        featureColumn = tempFeatureData[column]
+        console.log(featureColumn)
         break;       
-        }
-        
-        
-        
+        }    
       }
-    this.setState({features:tempData});
-    console.log(tempData)
+
+    this.setState({features:tempFeatureData});
+    console.log(tempFeatureData)
+
+    console.log(featureColumn.checked)
+    var currentLabels = [...this.state.labels]
+
+    if(featureColumn.checked == true){
+      console.log("y")          
+      for(var labeldata in currentLabels){
+        if (e.target.value == currentLabels[labeldata].title){
+          currentLabels.splice(currentLabels.indexOf(currentLabels[labeldata]), 1);
+          this.setState({labels:currentLabels});
+          break;
+        }
+      }          
+    }
+    else if(featureColumn.checked == false){  
+      console.log("else")      
+        var labelCheckBoxAlter = featureColumn
+        labelCheckBoxAlter.checked = false
+        currentLabels.splice(tempFeatureData.indexOf(featureColumn), 0,labelCheckBoxAlter);
+        this.setState({labels:currentLabels});
+      }
+    console.log(currentLabels)
 
     }
     
@@ -347,7 +358,7 @@ class VisualizeData extends React.Component {
        <input
       type="checkbox"
       value={column.title}
-      // checked={column.isChecked}
+      // checked={column.checked}
       onChange={this.toggleCheckboxChange}
       />        
         <br/>
@@ -362,8 +373,8 @@ class VisualizeData extends React.Component {
        <input
       type="checkbox"
       value={column.title}
-      // checked={column.isChecked}
-      onChange={this.toggleFeatureCheckboxChange}
+      // checked={column.checked}
+      onClick={this.toggleFeatureCheckboxChange}
       />        
         <br/>
       </label>
@@ -377,7 +388,7 @@ class VisualizeData extends React.Component {
        <input
       type="checkbox"
       value={column.title}
-      // checked={column.isChecked}
+      // checked={column.checked}
       onChange={this.toggleLabelCheckboxChange}
       />        
         <br/>
@@ -385,6 +396,9 @@ class VisualizeData extends React.Component {
     ));
   }
 
+  getSliderValue(e){
+    this.setState({trainPercentage: e.target.value})
+  }
 
 
   render() {
@@ -417,7 +431,10 @@ class VisualizeData extends React.Component {
             {this.createLabelCheckboxes()}
             <button type="button"  onClick={this.selectLabels}>Save Label</button>          
         </div>
-
+        <div>
+        <label>Select Test Data Percentage</label><br/>
+        <input type="range" min="1" max="90" className={classes.slider} onInput={this.getSliderValue} />        
+        </div>
         </div>
         <div style={{ maxWidth: "100%" }}>
         <MaterialTable
@@ -484,231 +501,4 @@ export default withStyles(styles, {withTheme: true})(VisualizeData)
 
 
 
-  // addNewRow() {
-  //   const {sampleData} = this.state;
-  //   var rows = sampleData.length;
-  //   var cols = sampleData[0].split(",").length;
-  //   var str = "";
-  //   var array = null;
-  //   if(this.state.selectRow != null) {
-  //     var array = sampleData[this.state.selectRow].split(",");
-  //   }
-  //   for(var i=0;i<cols;i++) {
-  //     if(i == 0) {
-  //       str += "Row" + rows.toString();
-  //     }
-  //     else if(array != null) {
-  //       str += "," + array[i];
-  //     }
-  //     else {
-  //       str += ",0";
-  //     }
-  //   }
-  //   sampleData.push(str);
-  //   this.setState({
-  //     sampleData: sampleData
-  //   });
-  // }
-
-  // addNewCol() {
-  //   const {sampleData} = this.state;
-  //   var cols = sampleData[0].split(",").length;
-  //   var array = [];
-  //   if(this.state.selectCol != null) {
-  //     for(var i = 0;i<sampleData.length;i++) {
-  //       array.push(sampleData[i].split(",")[this.state.selectCol]);
-  //     }
-  //   }
-  //   for(var i=0;i<sampleData.length;i++) {
-  //     if(i == 0) {
-  //       sampleData[i] += ",Col" + cols.toString();
-  //     }
-  //     else if(array != null && array.length > 0) {
-  //       sampleData[i] += "," + array[i];
-  //     }
-  //     else {
-  //       sampleData[i] += ",0";
-  //     }
-  //   }
-  //   this.setState({
-  //     sampleData: sampleData
-  //   });
-  // }
-
-  // highlightRow(event) {
-  //   if(this.state.selectRow != Number(event.target.id)) {
-  //     this.setState({
-  //       selectRow: Number(event.target.id)
-  //     })
-  //   }
-  //   else {
-  //     this.setState({
-  //       selectRow: null
-  //     })
-  //   }
-  // }
-
-  // highlightCol(event) {
-  //   if(this.state.selectCol != Number(event.target.id)) {
-  //     this.setState({
-  //       selectCol: Number(event.target.id)
-  //     })
-  //   }
-  //   else {
-  //     this.setState({
-  //       selectCol: null
-  //     })
-  //   } 
-  // }
-
-  // renderCols(data, row) {
-  //   const {classes} = this.props
-  //   return data.map((ele, idx) => {
-  //     if(idx == 0) {
-  //       if(this.state.selectCol != null && this.state.selectCol == idx) {
-  //         return <td className={classes.tabletd} id={row} onClick={this.highlightRow} className={classes.highlightCol}>{ele}</td>
-  //       }
-  //       else {
-  //         return <td className={classes.tabletd} id={row} onClick={this.highlightRow}>{ele}</td>
-  //       }
-  //     }
-  //     else if(row == 0 && idx != 0) {
-  //       if(this.state.selectCol != null && this.state.selecCol == idx) {
-  //         return <td className={classes.tabletd} id={idx} onClick={this.highlightCol} className={classes.highlightCol}>{ele}</td>
-  //       }
-  //       else {
-  //         return <td className={classes.tabletd} id={idx} onClick={this.highlightCol}>{ele}</td>
-  //       }
-  //     }
-  //     else {
-  //       if(this.state.selectCol != null && this.state.selectCol == idx) {
-  //         if(this.state.editRow != null && this.state.editCol != null && this.state.editRow == row && this.state.editCol == idx) {
-  //           return <td className={classes.tabletd} id={row + ',' + idx} onDoubleClick={this.makeEditable} className={classes.highlightCol}><input className={classes.inputdata} type="text" defaultValue={ele}/></td>
-  //         }
-  //         else {
-  //           return <td className={classes.tabletd} id={row + ',' + idx} onDoubleClick={this.makeEditable} className={classes.highlightCol} className={classes.input}>{ele}</td>
-  //         }
-  //       }
-  //       else {  
-  //         if(this.state.editRow != null && this.state.editCol != null && this.state.editRow == row && this.state.editCol == idx) {    
-  //           return <td className={classes.tabletd} id={row + ',' + idx} onDoubleClick={this.makeEditable}><input className={classes.inputdata} type="text" defaultValue={ele} onChange={this.handleInputChange}/></td>
-  //         }
-  //         else {
-  //           return <td className={classes.tabletd} id={row + ',' + idx} onDoubleClick={this.makeEditable}>{ele}</td>
-  //         }
-  //       }
-  //     }
-  //   }, this);
-  // }
-
-  // handleInputChange(event) {
-  //   this.newValue = event.target.value;
-  // }
-  // makeEditable(event) {
-  //   var id = event.target.id;
-  //   var row = Number(id.split(",")[0]);
-  //   var col = Number(id.split(",")[1]);
-  //   console.log(row, col);
-  //   this.setState({
-  //     editRow: row,
-  //     editCol: col
-  //   })
-  // }
-
-  // renderRows(data) {
-  //   const {classes} = this.props
-  //   if(this.state.selectRow == null){
-        
-  //   }
-  //   return data.map((ele, idx) => {
-  //     if(this.state.selectRow != null && this.state.selectRow == idx) {
-  //       return <tr className={classes.highlightRow} >{this.renderCols(ele.split(","), idx)}</tr>;
-  //     }
-  //     else {
-  //       return <tr>{this.renderCols(ele.split(","), idx)}</tr>;
-  //     }
-  //   });
-  // }
-
-  // delRow() {
-  //   if(this.state.selectRow != null) {
-  //     var {sampleData} = this.state;
-  //     sampleData.splice(this.state.selectRow, 1);
-  //     this.setState({
-  //       sampleData: sampleData,
-  //       selectRow: null
-  //     })
-  //   }
-  // }
-
-  // delCol() {
-  //   if(this.state.selectCol != null) {
-  //     var {sampleData} = this.state;
-  //     for(var i=0;i<sampleData.length;i++) {
-  //       sampleData[i] = sampleData[i].split(",");
-  //       sampleData[i].splice(this.state.selectCol, 1);
-  //       sampleData[i] = sampleData[i].join(",");
-  //     }
-  //     this.setState({
-  //       sampleData: sampleData,
-  //       selectCol: null
-  //     })
-  //   }
-  // }
-  // renderDelRow() {
-  // const {classes} = this.props;
-  //   return <button className={classes.viewbtn} onClick={this.delRow}>Delete row</button>
-  // }
-
-  // renderDelCol() {
-  // const {classes} = this.props;
-  //   return <button className={classes.viewbtn} onClick={this.delCol}>Delete col</button>
-  // }
-
-  // renderAddRow() {
-  // const {classes} = this.props;
-  //   return <button className={classes.viewbtn} onClick={this.addNewRow}>Add row</button>
-  // }
-
-  // renderAddCol() {
-  // const {classes} = this.props;
-  //   return <button className={classes.viewbtn} onClick={this.addNewCol}>Add col</button>
-  // }
-
-  // renderDelBtn() {
-  // const {classes} = this.props;
-  //   return <button className={classes.viewbtn} onClick={this.delRow}>Del row</button>
-  // }
-
-  // renderSavVal() {
-  // const {classes} = this.props;
-  //   return <button className={classes.viewbtn} onClick={this.savVal}>Save value</button>
-  // }
-
-  // renderCanVal() {
-  // const {classes} = this.props;
-  //   return <button className={classes.viewbtn} onClick={this.canVal}>Cancel</button>
-  // }
-
-  // savVal() {
-  //   if(this.state.editCol != null && this.state.editRow != null) {
-  //     const {sampleData} = this.state;
-  //     var editRow = this.state.editRow;
-  //     var editCol = this.state.editCol;
-  //     sampleData[editRow] = sampleData[editRow].split(",")
-  //     sampleData[editRow][editCol] = this.newValue;
-  //     sampleData[editRow] = sampleData[editRow].join(",");
-  //     this.setState({
-  //       sampleData: sampleData,
-  //       editRow: null,
-  //       editCol: null
-  //     })
-  //   }
-  // }
-
-  // canVal() {
-  //   this.setState({
-  //     editRow: null,
-  //     editCol: null
-  //   })
-  // }
+ 
