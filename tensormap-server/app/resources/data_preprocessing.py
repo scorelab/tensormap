@@ -5,6 +5,59 @@ from .database_models.data_preproc import dataset
 import os
 import json
 import csv
+import pandas as pd
+
+def createJsonData(entry):
+    i= 0
+    columns = []
+    data = []
+    splitLine = None
+    allData = {}
+
+    if entry:
+        with open(entry.filePath, 'r') as f:
+            index = 0
+            for line in f:
+                if index == 0:
+                    print(line)
+                    newLine = line.replace('\n', '').replace('"','')
+                    splitLine = newLine.split(",")
+                    print(splitLine)
+                    for column in splitLine:
+                        temColumn = {}
+                        temColumn["title"] = column
+                        temColumn["field"] = column
+                        columns.append(temColumn)
+                    print(columns)
+                else:
+
+                    newRowLine = line.replace('\n', '').replace('"','')
+                    splitData = newRowLine.split(",")
+                    if index==1:
+                        print(line)
+                        print(newRowLine)
+                        print(splitData)
+                        print(splitLine)
+
+                    temRow = {}
+                    for i in range(len(splitData)):
+                        temRow[splitLine[i]] = splitData[i]
+                    data.append(temRow)
+                index += 1
+
+        allData["columns"]=columns
+        allData["data"]=data
+        allData["error"]="None"
+        responseData = json.dumps(allData)
+        return responseData
+
+    else:
+        allData["columns"]="None"
+        allData["data"]="None"
+        allData["error"]="Dataset Not Found"
+        responseData = json.dumps(allData)
+        return responseData
+
 
 @main.route('/addData', methods=['POST'])
 def addData():
@@ -32,40 +85,82 @@ def addData():
         db.session.commit()           
         return splitFileInfo[0]
 
+
 @main.route('/visualizeData', methods=['GET'])
 def visualizeData():
-    allData = ""
 
     # ******************************************change
     # entry = dataset.query.filter_by(fileName=request.args['fileName']).one()
 
     entry = dataset.query.filter_by(fileName="store").one()
+    print(entry.filePath)
+    responseData = createJsonData(entry)
+    return responseData
+
+
+@main.route('/addRow', methods=['POST'])
+def addDataRow():
+    content = request.get_json()
+
+    entry = dataset.query.filter_by(fileName=content['fileName']).one()
 
     print(entry.filePath)
 
-    i= 0
+    row = []
+    dataCsv = pd.read_csv(entry.filePath)
 
-    if entry:
-        with open(entry.filePath, 'r') as f:
-            for line in f:
-                allData = allData + line
-                if i == 0 or i == 1:
-                    print(line)
-                i+=1
-            return allData
-    else:
-        return 'None'
+    for column in content["columnData"]:
+        if column["title"] in  content["rowdata"]:
+            row.append(content["rowdata"][column["title"]])
+        else:
+            row.append("None")
+    print(row)
 
-#         with open(filename, 'r') as f:
-#   for line in f:
-#     print(line)
+    dataCsv.loc[len(dataCsv)] = row
+    dataCsv.to_csv(entry.filePath, index=False)
 
+    return "Done"
 
-# with open ('Book8.csv','r') as csv_file:
-#     reader =csv.reader(csv_file)
-#     next(reader) # skip first row
-#     for row in reader:
-#         print(row)
+@main.route('/editRow', methods=['POST'])
+def editDataRow():
+
+    content = request.get_json()
+
+    entry = dataset.query.filter_by(fileName=content['fileName']).one()
+
+    print(entry.filePath)
+
+    row = []
+    dataCsv = pd.read_csv(entry.filePath)
+
+    for column in content["columnData"]:
+        if column["title"] in  content["newRowData"]:
+            row.append(content["newRowData"][column["title"]])
+        else:
+            row.append("None")
+    print(row)
+
+    dataCsv.loc[content["newRowData"]["tableData"]["id"]] = row
+    dataCsv.to_csv(entry.filePath, index=False)
+
+    return "Done"
+
+@main.route('/deleteRow', methods=['POST'])
+def deleteDataRow():
+
+    content = request.get_json()
+
+    entry = dataset.query.filter_by(fileName=content['fileName']).one()
+
+    print(entry.filePath)
+
+    dataCsv = pd.read_csv(entry.filePath)
+
+    dataCsv.drop(dataCsv.index[content["oldRowData"]["tableData"]["id"]], inplace = True)
+    dataCsv.to_csv(entry.filePath, index=False)
+
+    return "Done"
+
 
 
 @main.route('/viewData', methods=['GET'])
@@ -74,16 +169,16 @@ def viewData():
     entries = [entry.serialize() for entry in entries]
     return json.dumps(entries)
 
-@main.route('/updateData', methods=['GET'])
-def updateData():
-    entry = dataset.query.filter_by(id=int(request.args['id'])).one()
-    entry.name = request.args['name']
-    db.session.commit()
-    return "successfully updated!!"
+# @main.route('/updateData', methods=['GET'])
+# def updateData():
+#     entry = dataset.query.filter_by(id=int(request.args['id'])).one()
+#     entry.name = request.args['name']
+#     db.session.commit()
+#     return "successfully updated!!"
 
-@main.route('/deleteData', methods=['GET'])
-def deleteData():
-    dataset.query.filter_by(id=int(request.args['id'])).delete()
-    db.session.commit()
-    return "successfully deleted!!"
+# @main.route('/deleteData', methods=['GET'])
+# def deleteData():
+#     dataset.query.filter_by(id=int(request.args['id'])).delete()
+#     db.session.commit()
+#     return "successfully deleted!!"
 

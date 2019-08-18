@@ -8,6 +8,7 @@ eventlet
 numpy
 scipy
 scikit-learn
+pandas
 Flask-Session
 mysqlclient 
 Flask-SQLAlchemy
