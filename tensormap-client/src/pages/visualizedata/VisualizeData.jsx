@@ -59,25 +59,8 @@ class VisualizeData extends React.Component {
       columnCheckBoxes : [],
       features : [],
       labels :  [],
-      columns: [
-        { title: 'Name', field: 'name' },
-        { title: 'Surname', field: 'surname' },
-        { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
-        {
-          title: 'Birth Place',
-          field: 'birthCity',
-          lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
-        },
-      ],
-      data: [
-        { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-        {
-          name: 'Zerya Betül',
-          surname: 'Baran',
-          birthYear: 2017,
-          birthCity: 34,
-        },
-      ],
+      columns: [],
+      data: [],
 
            
     }
@@ -101,7 +84,7 @@ class VisualizeData extends React.Component {
 
 }
 
-  componentDidMount() { 
+  componentWillMount() { 
 
     // this.setState({fileName: this.props.location.state.fileName })
     this.setState({fileName: "store" })
@@ -115,34 +98,41 @@ class VisualizeData extends React.Component {
     fetch(url, {
       method: 'GET'
     }).then((response) => {
-      return response.text();
-    }).then((responseText) => {
-         let splitText =responseText.split("\n")
-      console.log(splitText[0])  
-      this.setState({sampleData: responseText.split("\n")})    
+      return response.json();
+    }).then((response) => {
+      
+      var tempcols = [...this.state.columns] 
+      for (var column in response.columns) {               
+        tempcols.push(response.columns[column]);          
+      }
+      this.setState({columns:tempcols})
+      
+      var tempdata = [...this.state.data]
+      for (var row in response.data) {       
+        tempdata.push(response.data[row]); 
+      }   
+      this.setState({data:tempdata}); 
+      this.populateCheckBox()
+
    }).catch(function (error) {
       console.log(error);
   }); 
 
-  this.populateCheckBox()
+  
   }
 
-
-
-
+  
   saveConfig(){
     alert("Configurations Saved for Experiment")
     console.log(this.props.trainPercentageDashboard)
 
   }
 
-
-
-
-
-
   sendAddRequest(newData){
-    var data = JSON.stringify(newData)
+    console.log(newData)
+    // ********************************************************************
+    var obj = {rowdata: newData, fileName: "store", columnData:this.state.columns}
+    var data = JSON.stringify(obj)
     console.log(data) 
 
     fetch("http://127.0.0.1:5000/addRow", {
@@ -161,7 +151,9 @@ class VisualizeData extends React.Component {
 }
 
   sendDeleteRequest(oldData){
-    var data = JSON.stringify(oldData)
+    // ********************************************************************
+    var obj = {oldRowData: oldData, fileName: "store"}
+    var data = JSON.stringify(obj)
     console.log(data) 
 
     fetch("http://127.0.0.1:5000/deleteRow", {
@@ -180,9 +172,10 @@ class VisualizeData extends React.Component {
 
   }
 
-  sendEditRequest(newData,oldData){
+  sendEditRequest(newData){
 
-    var obj = {newRowData: newData, oldRowData: oldData}
+    // ********************************************************************
+    var obj = {newRowData: newData, fileName: "store", columnData:this.state.columns}
     var data = JSON.stringify(obj)
     console.log(data) 
 
@@ -224,13 +217,11 @@ class VisualizeData extends React.Component {
       console.log(error);
   }); 
 
-
   }
 
 
-
-
   deleteCol(){    
+    
     var data = JSON.stringify(this.state.columnCheckBoxes)
     console.log(data) 
 
@@ -260,9 +251,9 @@ class VisualizeData extends React.Component {
 
   populateCheckBox(){
     for (var column in this.state.columns) {
-      var tempColumnData = this.state.columnCheckBoxes
-      var tempFeatureData = this.state.features
-      var tempLabels = this.state.labels
+      var tempColumnData = [...this.state.columnCheckBoxes]
+      var tempFeatureData = [...this.state.features]
+      var tempLabels = [...this.state.labels]
       var obj1 = { title: this.state.columns[column].title, checked: false }
       var obj2 = { title: this.state.columns[column].title, checked: false }
       var obj3 = { title: this.state.columns[column].title, checked: false }
@@ -478,7 +469,7 @@ class VisualizeData extends React.Component {
               this.setState({data:tempdata});
               console.log(oldData);
               console.log(newData);
-              this.sendEditRequest(newData,oldData);
+              this.sendEditRequest(newData);
             }, 600);
           }),
       }}
