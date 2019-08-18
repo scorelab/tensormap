@@ -184,7 +184,6 @@ def deleteLine():
 @main.route('/getCode', methods=['GET'])
 def sendFile():
         content = request.get_json()
-        print("aesxfcgvhbj")
         print(content)
             
         filename = getFile()       

@@ -196,7 +196,8 @@ class VisualizeData extends React.Component {
   }
 
   downloadCSV(){
-    var obj = {fileName: this.state.fileName}
+    // ********************************************************************
+    var obj = {fileName: "store"}
     var data = JSON.stringify(obj)
     console.log(data) 
 
@@ -222,10 +223,12 @@ class VisualizeData extends React.Component {
 
   deleteCol(){    
     
-    var data = JSON.stringify(this.state.columnCheckBoxes)
+    // ********************************************************************
+    var obj = {columnData: this.state.columnCheckBoxes, fileName: "store"}
+    var data = JSON.stringify(obj)
     console.log(data) 
 
-    fetch("http://127.0.0.1:5000/deleteCol", {
+    fetch("http://127.0.0.1:5000/deleteColumn", {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -235,13 +238,21 @@ class VisualizeData extends React.Component {
     }).then((response) => {
       return response.json();
     }).then((response) => {
-      console.log(response)  
-      var parserData = JSON.parse(response)
-      console.log(parserData)
-      var oldColumnData = [...this.state.columns]
-      var oldRowData = [...this.state.data]    
-      // this.setState({columns: parserData.columns })
-      // this.setState({data: parserData.data})  
+
+      // var oldCols = [...this.state.columns] 
+      var tempcols = []
+      for (var column in response.columns) {               
+        tempcols.push(response.columns[column]);          
+      }
+      this.setState({columns:tempcols})
+      
+      // var oldRows = [...this.state.data]
+      var tempdata = []
+      for (var row in response.data) {       
+        tempdata.push(response.data[row]); 
+      }   
+      this.setState({data:tempdata}); 
+      this.populateCheckBox()
 
    }).catch(function (error) {
       console.log(error);
@@ -250,16 +261,19 @@ class VisualizeData extends React.Component {
   }
 
   populateCheckBox(){
+    console.log("IN POPULATE")
+    console.log(this.state.columns)
+    var tempColumnData = []
+    var tempFeatureData = []
+    var tempLabels = []
     for (var column in this.state.columns) {
-      var tempColumnData = [...this.state.columnCheckBoxes]
-      var tempFeatureData = [...this.state.features]
-      var tempLabels = [...this.state.labels]
       var obj1 = { title: this.state.columns[column].title, checked: false }
       var obj2 = { title: this.state.columns[column].title, checked: false }
       var obj3 = { title: this.state.columns[column].title, checked: false }
       tempColumnData.push(obj1);
       tempFeatureData.push(obj2);
       tempLabels.push(obj3);
+      console.log(tempColumnData)
       this.setState({columnCheckBoxes:tempColumnData});     
       this.setState({features:tempFeatureData});
       this.setState({labels:tempLabels}); 
