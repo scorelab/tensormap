@@ -21,7 +21,7 @@ git clone https://github.com/scorelab/TensorMap.git
 * Npm
 
 ```bash
-cd Tensormap
+cd TensorMap
 yarn install
 npm start
 ```
@@ -32,7 +32,7 @@ First make sure you have MySQL server and Python 3.x installed in your system.
 Then, go into 'tensormap-server' folder
 
 ```bash
-cd Tensormap
+cd TensorMap
 cd tensormap-server
 ```
 
