@@ -2,6 +2,7 @@ from flask import session, redirect, url_for, render_template, request
 from . import main
 from .. import db
 from .database_models.code_gen import template_copies,user_template_index,code_layers
+from .database_models.data_preproc import dataset
 import os
 from flask import send_file
 from ..common import validate_model_json,make_model_json
@@ -304,11 +305,13 @@ def deleteExperiment():
 
         content = request.get_json()
 
+        dataset.query.filter_by(fileName=content['fileName']).delete()
+        db.session.commit()
+
         db.session.query(user_template_index).delete()
         db.session.commit()
 
-        userId = content["user_id"]
-        template_copies.query.filter_by(id="1").delete()
+        template_copies.query.filter_by(id=content["user_id"]).delete()
         db.session.commit()
 
         tempCopy_path = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', 'user_template'))
@@ -321,7 +324,8 @@ def deleteExperiment():
         return "done"
 
 #         sample json: {
-        #"user_id": "1"
+        #"user_id": "1",
+        #"fileName": "store"
 # }
 
  

@@ -82,7 +82,7 @@ def addData():
         file.save(path)   
 
         # writing the file entry in the database.
-        data = dataset(fileName, path, fileFormat)
+        data = dataset(fileName, path, fileFormat, "None","None",0)
         db.session.add(data)
         db.session.commit()           
         return splitFileInfo[0]
@@ -180,6 +180,11 @@ def deleteDataColumn():
 
     dataCsv.to_csv(entry.filePath, index=False)
 
+    entry.features = "None"
+    entry.labels = "None"
+    entry.testPercentage = 0
+    db.session.commit()
+
     responseData = createJsonData(entry)
 
     return responseData
@@ -198,6 +203,47 @@ def download():
     except Exception as e:
         return str(e)
 
+
+
+@main.route('/saveConfig', methods=['POST'])
+def saveConfig():
+
+    content = request.get_json()
+
+    featureString = ""
+    labelString = ""
+    index = 0
+
+    entry = dataset.query.filter_by(fileName=content['fileName']).one()
+    
+    for feature in content["features"]:
+        if feature["checked"] :
+            print(feature["title"])
+            if index == 0:
+                featureString = '{}{}'.format(featureString, feature["title"])
+            else:                
+                featureString = '{}{}{}'.format(featureString, ",", feature["title"])
+            index += 1     
+    
+    index = 0
+
+    for label in content["labels"]:
+        if label["checked"] :
+            print(label["title"])
+            if index == 0:
+                labelString = '{}{}'.format(labelString, label["title"])
+            else:                
+                labelString = '{}{}{}'.format(labelString, ",", label["title"])
+            index += 1     
+    
+    print(labelString)
+
+    entry.features = featureString
+    entry.labels = labelString
+    entry.testPercentage = content['trainPercentage']
+    db.session.commit()
+
+    return "done"
 
 @main.route('/viewData', methods=['GET'])
 def viewData():

@@ -123,8 +123,24 @@ class VisualizeData extends React.Component {
 
   
   saveConfig(){
-    alert("Configurations Saved for Experiment")
-    console.log(this.props.trainPercentageDashboard)
+    // ********************************************************************
+    var obj = {trainPercentage: this.state.trainPercentage, fileName: "store", features:this.state.features, labels:this.state.labels}
+    var data = JSON.stringify(obj)
+    console.log(data)
+    fetch("http://127.0.0.1:5000/saveConfig", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: data
+    }).then((response) => {
+      return response.text();
+    }).then((response) => {
+      console.log(response)
+      alert("Configurations Saved for Experiment")  
+   }).catch(function (error) {
+      console.log(error);
+  }); 
 
   }
 
