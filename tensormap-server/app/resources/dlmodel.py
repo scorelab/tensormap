@@ -7,11 +7,14 @@ from tensorflow.keras.datasets import imdb
 from tensorflow.keras.preprocessing.text import Tokenizer
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.metrics import f1_score, recall_score, precision_score, accuracy_score
+from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import json
 from .. import socketio
 from flask_socketio import emit
 from ..common import validate_model_json, make_model_json
+from .database_models.data_preproc import dataset
+import pandas as pd
 import numpy as np
 
 class ShowProgress(keras.callbacks.Callback):
@@ -42,19 +45,23 @@ def nn_execute(nnmodelconfig):
 
         np.random.seed(0)
 
-        number_of_features = 1000
+        entry = dataset.query.filter_by(fileName=nnmodelconfig["experiment_info"]["fileName"]).one()
 
-        np_load_old = np.load
+        dataCsv = pd.read_csv(entry.filePath)
 
-        np.load = lambda *a,**k: np_load_old(*a, allow_pickle=True, **k)
+        featureString = entry.features
+        labelString = entry.labels
 
-        (train_data, train_labels), (test_data, test_labels) = imdb.load_data(num_words=number_of_features)
+        splitFeatures = featureString.split(",")
+        splitLabels = labelString.split(",")
 
-        np.load = np_load_old
+        testPercentage = (entry.testPercentage)/100
 
-        tokenizer = Tokenizer(num_words=number_of_features)
-        train_features = tokenizer.sequences_to_matrix(train_data, mode='binary')
-        test_features = tokenizer.sequences_to_matrix(test_data, mode='binary')
+        _X = dataCsv[splitFeatures]
+        _y = dataCsv[splitLabels]
+
+        train_features, train_labels, test_features, test_labels = train_test_split(_X, _y, random_state=42, shuffle=True, test_size=testPercentage)
+
 
         model = keras.models.model_from_json(modelJSON)
 
