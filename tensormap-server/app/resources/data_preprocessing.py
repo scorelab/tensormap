@@ -7,6 +7,7 @@ import json
 import csv
 import pandas as pd
 from flask import send_file
+from .template_manipulation import editExperimentConfigurations
 
 
 def createJsonData(entry):
@@ -243,6 +244,8 @@ def saveConfig():
     entry.testPercentage = content['trainPercentage']
     db.session.commit()
 
+    editExperimentConfigurations(featureString,labelString,content['trainPercentage'],entry)
+
     return "done"
 
 
@@ -252,24 +255,6 @@ def viewData():
     entries = [entry.serialize() for entry in entries]
     return json.dumps(entries)
 
-# @main.route('/test', methods=['POST'])
-# def test():
 
-#             entry = dataset.query.filter_by(fileName="store").one()
-
-#             dataCsv = pd.read_csv(entry.filePath)
-
-#             featureString = entry.features
-#             labelString = entry.labels
-
-#             splitFeatures = featureString.split(",")
-#             splitLabels = labelString.split(",")
-
-#             _X = dataCsv[splitFeatures]
-#             _y = dataCsv[splitLabels]
-
-#             testPercentage = (entry.testPercentage)/100
-
-#             return "done"
 
 
