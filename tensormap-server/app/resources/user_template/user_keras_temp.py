@@ -8,12 +8,12 @@ import pandas as pd
 
 np.random.seed(0)
 
-dataCsv = pd.read_csv()
-        
-_x = dataCsv[]
-_y = dataCsv[]
+dataCsv = pd.read_csv ('store.csv')
 
-x_train, y_train, x_test, y_test = train_test_split(_x, _y, random_state=42, shuffle=True, test_size=)
+_x = dataCsv['Store', 'StoreType']
+_y = dataCsv['Promo2']
+
+x_train, y_train, x_test, y_test = train_test_split (_x, _y, random_state=42, shuffle=True, test_size=0.71)
 
 network = tf.keras.models.Sequential(name='userModel')
 

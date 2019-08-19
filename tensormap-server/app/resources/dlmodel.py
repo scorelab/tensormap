@@ -55,13 +55,12 @@ def nn_execute(nnmodelconfig):
         splitFeatures = featureString.split(",")
         splitLabels = labelString.split(",")
 
-        testPercentage = (entry.testPercentage)/100
+        testPercentage = int(entry.testPercentage)/100
 
         _X = dataCsv[splitFeatures]
         _y = dataCsv[splitLabels]
 
         train_features, train_labels, test_features, test_labels = train_test_split(_X, _y, random_state=42, shuffle=True, test_size=testPercentage)
-
 
         model = keras.models.model_from_json(modelJSON)
 

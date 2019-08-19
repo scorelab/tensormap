@@ -64,6 +64,79 @@ def edit_line_no(filename):
                                 result.lineNo = i
                                 db.session.commit()   
 
+def getLabelFeatures(dataString,code):
+
+        tempString = code
+
+        if "," in dataString:
+                splitdata = dataString.split(",")
+                index = 0
+                for data in  splitdata:
+                        if index == 0 :
+                                tempString = '{}{}{}{}'.format(tempString,"'",data,"'")
+                        elif index < (len(splitdata)-1):
+                                tempString = '{}{}{}{}'.format(tempString,", '",data,"'")
+                        elif index == (len(splitdata)-1):
+                                tempString = '{}{}{}{}'.format(tempString,", '",data,"']")
+                        index += 1
+        else:
+                tempString = '{}{}{}{}'.format(tempString,"'",dataString,"']")
+        
+        return tempString
+
+
+def editExperimentConfigurations(featureString,labelString,trainPercentage,entry):
+
+        csvFileName = '{}{}{}'.format(entry.fileName,".", entry.fileFormat)
+        percentage = int(trainPercentage)/100
+
+        filename = getFile()
+
+        layerInfoReadCsvReplace = user_template_index.query.filter_by(layerId="read_csv").one()
+        layerInfoXReplace = user_template_index.query.filter_by(layerId="_x").one()
+        layerInfoYReplace = user_template_index.query.filter_by(layerId="_y").one()
+        layerInfoDataSplitReplace = user_template_index.query.filter_by(layerId="train_test_split").one()
+        
+        layerInfoReadCsv = code_layers.query.filter_by(name="readcsv").one()
+        layerInfoX = code_layers.query.filter_by(name="_x").one()
+        layerInfoY = code_layers.query.filter_by(name="_y").one()
+        layerInfoDataSplit = code_layers.query.filter_by(name="train_test_split").one()
+
+        lineToReplaceReadCsv = layerInfoReadCsvReplace.lineNo
+        tempStringReadCsv = layerInfoReadCsv.code
+        tempStringReadCsv += "'" + csvFileName + "')" 
+        tempStringReadCsv += "\n"
+
+        lineToReplaceX = layerInfoXReplace.lineNo
+        tempStringX = getLabelFeatures(featureString,layerInfoX.code)
+        tempStringX += "\n"      
+
+        lineToReplaceY = layerInfoYReplace.lineNo
+        tempStringY = getLabelFeatures(labelString,layerInfoY.code)        
+        tempStringY += "\n"
+             
+        lineToReplaceDataSplit = layerInfoDataSplitReplace.lineNo
+        codeAttributesDataSplit = layerInfoDataSplit.attributes
+        splitAttrDataSplit = codeAttributesDataSplit.split(",")
+        tempStringDataSplit = layerInfoDataSplit.code
+        tempStringDataSplit += splitAttrDataSplit[0] +", "+splitAttrDataSplit[1]+", "+splitAttrDataSplit[2]+"="+str(42)+", "+splitAttrDataSplit[3]+"=True, "+splitAttrDataSplit[4]+"="+str(percentage)+")"                                            
+        tempStringDataSplit += "\n"
+
+        f = open(filename, "r")
+        fileContents = f.readlines()
+        f.close()
+
+        fileContents[lineToReplaceReadCsv] = tempStringReadCsv
+        fileContents[lineToReplaceX] = tempStringX
+        fileContents[lineToReplaceY] = tempStringY
+        fileContents[lineToReplaceDataSplit] = tempStringDataSplit
+
+        f = open(filename, "w")
+        f.writelines(fileContents)
+        f.close()
+
+        update_template_copies(filename)
+
 
 @main.route('/add', methods=['POST'])
 def addNewLine():
@@ -285,12 +358,20 @@ def createExperiment():
         db.session.commit()
 
         #entries for table to index lines in file
-        data1 = user_template_index("userModel",8)
-        data2 = user_template_index("network.compile",10)
-        data3 = user_template_index("network.fit",12)
+        data1 = user_template_index("userModel",17)
+        data2 = user_template_index("network.compile",19)
+        data3 = user_template_index("network.fit",21)
+        data4 = user_template_index("read_csv",10)
+        data5 = user_template_index("_x",12)
+        data6 = user_template_index("_y",13)
+        data7 = user_template_index("train_test_split",15)
         db.session.add(data1)
         db.session.add(data2)
         db.session.add(data3)
+        db.session.add(data4)
+        db.session.add(data5)
+        db.session.add(data6)
+        db.session.add(data7)
         db.session.commit()
 
         return "done"
