@@ -19,11 +19,6 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import { saveAs } from 'file-saver';
-// import DiscreteSlider from './assets/slider'
-
-// import Checkbox from './Checkbox';
-
-// import ScrollableTabsButtonAuto from './assets/ScrollableTabsButtonAuto'
 import { forwardRef } from 'react';
 import { template } from '@babel/core';
 
@@ -86,14 +81,12 @@ class VisualizeData extends React.Component {
 
   componentWillMount() { 
 
-    // this.setState({fileName: this.props.location.state.fileName })
-    this.setState({fileName: "store" })
-
+    this.setState({fileName: this.props.location.state.fileName })
 
     let url = "http://127.0.0.1:5000/visualizeData?fileName="
-    // url = url.concat(this.props.location.state.fileName)
-    url = url.concat("store")
-    console.log(url)
+    url = url.concat(this.props.location.state.fileName)
+
+    console.log(this.props.location.state.fileName)
 
     fetch(url, {
       method: 'GET'
@@ -123,8 +116,7 @@ class VisualizeData extends React.Component {
 
   
   saveConfig(){
-    // ********************************************************************
-    var obj = {trainPercentage: this.state.trainPercentage, fileName: "store", features:this.state.features, labels:this.state.labels}
+    var obj = {trainPercentage: this.state.trainPercentage, fileName: this.state.fileName, features:this.state.features, labels:this.state.labels}
     var data = JSON.stringify(obj)
     console.log(data)
     fetch("http://127.0.0.1:5000/saveConfig", {
@@ -146,8 +138,7 @@ class VisualizeData extends React.Component {
 
   sendAddRequest(newData){
     console.log(newData)
-    // ********************************************************************
-    var obj = {rowdata: newData, fileName: "store", columnData:this.state.columns}
+    var obj = {rowdata: newData, fileName: this.state.fileName, columnData:this.state.columns}
     var data = JSON.stringify(obj)
     console.log(data) 
 
@@ -167,8 +158,7 @@ class VisualizeData extends React.Component {
 }
 
   sendDeleteRequest(oldData){
-    // ********************************************************************
-    var obj = {oldRowData: oldData, fileName: "store"}
+    var obj = {oldRowData: oldData, fileName: this.state.fileName}
     var data = JSON.stringify(obj)
     console.log(data) 
 
@@ -190,8 +180,7 @@ class VisualizeData extends React.Component {
 
   sendEditRequest(newData){
 
-    // ********************************************************************
-    var obj = {newRowData: newData, fileName: "store", columnData:this.state.columns}
+    var obj = {newRowData: newData, fileName: this.state.fileName, columnData:this.state.columns}
     var data = JSON.stringify(obj)
     console.log(data) 
 
@@ -212,8 +201,7 @@ class VisualizeData extends React.Component {
   }
 
   downloadCSV(){
-    // ********************************************************************
-    var obj = {fileName: "store"}
+    var obj = {fileName: this.state.fileName}
     var data = JSON.stringify(obj)
     console.log(data) 
 
@@ -239,8 +227,7 @@ class VisualizeData extends React.Component {
 
   deleteCol(){    
     
-    // ********************************************************************
-    var obj = {columnData: this.state.columnCheckBoxes, fileName: "store"}
+    var obj = {columnData: this.state.columnCheckBoxes, fileName: this.state.fileName}
     var data = JSON.stringify(obj)
     console.log(data) 
 
