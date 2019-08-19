@@ -257,4 +257,11 @@ def viewData():
 
 
 
+@main.route('/test', methods=['POST'])
+def test():
+    
+    return "hi"
+
+
+
 
