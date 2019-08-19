@@ -46,8 +46,35 @@ CREATE TABLE `code_layers` (
 
 LOCK TABLES `code_layers` WRITE;
 /*!40000 ALTER TABLE `code_layers` DISABLE KEYS */;
-INSERT INTO `code_layers` VALUES ('compile','network.compile (','optimizer,loss',NULL),('dense','network.add(tf.keras.layers.Dense(','units,activation,name','{\"config\": {\"name\": \"dense_1\", \"dtype\": \"float32\", \"units\": 128, \"use_bias\": true, \"trainable\": true, \"activation\": \"relu\", \"bias_constraint\": null, \"bias_initializer\": {\"config\": {\"dtype\": \"float32\"}, \"class_name\": \"Zeros\"}, \"bias_regularizer\": null, \"kernel_constraint\": null, \"kernel_initializer\": {\"config\": {\"seed\": null, \"dtype\": \"float32\"}, \"class_name\": \"GlorotUniform\"}, \"kernel_regularizer\": null, \"activity_regularizer\": null}, \"class_name\": \"Dense\"}'),('fit','network.fit (','epochs,verbose,batch_size',NULL);
+INSERT INTO `code_layers` VALUES ('compile','network.compile (','optimizer,loss',NULL),('dense','network.add(tf.keras.layers.Dense(','units,activation,name','{\"config\": {\"name\": \"dense_1\", \"dtype\": \"float32\", \"units\": 128, \"use_bias\": true, \"trainable\": true, \"activation\": \"relu\", \"bias_constraint\": null, \"bias_initializer\": {\"config\": {\"dtype\": \"float32\"}, \"class_name\": \"Zeros\"}, \"bias_regularizer\": null, \"kernel_constraint\": null, \"kernel_initializer\": {\"config\": {\"seed\": null, \"dtype\": \"float32\"}, \"class_name\": \"GlorotUniform\"}, \"kernel_regularizer\": null, \"activity_regularizer\": null}, \"class_name\": \"Dense\"}'),('fit','network.fit (','epochs,verbose,batch_size',NULL),('readcsv','dataCsv = pd.read_csv (',NULL,NULL),('train_test_split','x_train, y_train, x_test, y_test = train_test_split (','_x,_y,random_state,shuffle,test_size',NULL),('_x','_x = dataCsv[',NULL,NULL),('_y','_y = dataCsv[',NULL,NULL);
 /*!40000 ALTER TABLE `code_layers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `dataset`
+--
+
+DROP TABLE IF EXISTS `dataset`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dataset` (
+  `filePath` varchar(1000) DEFAULT NULL,
+  `fileName` varchar(50) NOT NULL,
+  `fileFormat` varchar(50) DEFAULT NULL,
+  `features` varchar(1000) DEFAULT NULL,
+  `labels` varchar(1000) DEFAULT NULL,
+  `testPercentage` int(11) DEFAULT NULL,
+  PRIMARY KEY (`fileName`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `dataset`
+--
+
+LOCK TABLES `dataset` WRITE;
+/*!40000 ALTER TABLE `dataset` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dataset` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -105,4 +132,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-20 16:26:56
+-- Dump completed on 2019-08-19 20:15:10
