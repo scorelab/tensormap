@@ -367,7 +367,6 @@ class VisualizeData extends React.Component {
         <input
         type="checkbox"
         value={column.title}
-        // checked={column.checked}
         onChange={this.toggleCheckboxChange}
         />        
         </span>
@@ -384,7 +383,6 @@ class VisualizeData extends React.Component {
           <input
           type="checkbox"
           value={column.title}
-          // checked={column.checked}
           onClick={this.toggleFeatureCheckboxChange}
           />        
         </span>
@@ -402,7 +400,6 @@ class VisualizeData extends React.Component {
           <input
           type="checkbox"
           value={column.title}
-          // checked={column.checked}
           onChange={this.toggleLabelCheckboxChange}
           />       
         </span> 
@@ -431,7 +428,6 @@ class VisualizeData extends React.Component {
       <div>
         <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
         <Tab eventKey="Delete" title="Delete Column">
-         {/* <Collapse in={this.state.open1}> */}
           <div className= {classes.tabStyle}>
               <div>
                 {this.createCheckboxes()}
@@ -440,18 +436,14 @@ class VisualizeData extends React.Component {
                 <Button variant="primary" size="sm" onClick={this.deleteCol}>Delete</Button>
               </div>
           </div>
-        {/* </Collapse> */}
         </Tab>
 
-        {/* <Collapse in={this.state.open2}> */}
         <Tab eventKey="Download" title="Download">
           <div className= {classes.tabStyle}>
             <Button variant="primary" size="sm" onClick={this.downloadCSV}>Download CSV</Button>
           </div>
-        {/* </Collapse> */}
         </Tab>
 
-        {/* <Collapse in={this.state.open3}> */}
         <Tab eventKey="Config" title="Experiment Config">
 
           <div>
@@ -482,7 +474,6 @@ class VisualizeData extends React.Component {
             </div>            
 
           </div>
-        {/* </Collapse> */}
         </Tab>
         </Tabs>
 
