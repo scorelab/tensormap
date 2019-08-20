@@ -8,5 +8,6 @@ cache:
 before_script:
 - cd tensormap-client
 - yarn install
+- npm install
 script:
   - npm test
