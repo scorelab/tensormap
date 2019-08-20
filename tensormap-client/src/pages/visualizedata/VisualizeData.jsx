@@ -429,24 +429,6 @@ class VisualizeData extends React.Component {
 
       <div className={classes.visualizeHeader}>
       <div>
-        {/* <div>
-        <ButtonGroup aria-label="Basic example">
-          <Button variant="secondary"
-          onClick={() => this.setState({open1: !(this.state.open1)})}
-          aria-controls="example-collapse-text"
-          aria-expanded={this.state.open1}>Delete Column</Button>
-
-          <Button variant="secondary"
-          onClick={() => this.setState({open2: !(this.state.open2)})}
-          aria-controls="example-collapse-text"
-          aria-expanded={this.state.open2}>Download</Button>
-
-          <Button variant="secondary"
-          onClick={() => this.setState({open3: !(this.state.open3)})}
-          aria-controls="example-collapse-text"
-          aria-expanded={this.state.open3}>Experiment Config</Button>
-        </ButtonGroup>
-        </div> */}
         <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
         <Tab eventKey="Delete" title="Delete Column">
          {/* <Collapse in={this.state.open1}> */}
@@ -455,7 +437,7 @@ class VisualizeData extends React.Component {
                 {this.createCheckboxes()}
               </div>
               <div>
-                <button type="button"  onClick={this.deleteCol}>Delete</button>          
+                <Button variant="primary" size="sm" onClick={this.deleteCol}>Delete</Button>
               </div>
           </div>
         {/* </Collapse> */}
@@ -464,7 +446,7 @@ class VisualizeData extends React.Component {
         {/* <Collapse in={this.state.open2}> */}
         <Tab eventKey="Download" title="Download">
           <div className= {classes.tabStyle}>
-            <button type="button"  onClick={this.downloadCSV}>Download CSV</button>
+            <Button variant="primary" size="sm" onClick={this.downloadCSV}>Download CSV</Button>
           </div>
         {/* </Collapse> */}
         </Tab>
@@ -487,10 +469,12 @@ class VisualizeData extends React.Component {
                 </Tab>
                 <Tab eventKey="Percentage" title="Test Percentage">
                   <div className= {classes.tabStyle}>
-                    <input type="range" min="1" max="90" className={classes.slider} onInput={this.getSliderValue} />  <br/>
-                    <label>{this.state.trainPercentage}</label>
+                    <label>Percentage: {this.state.trainPercentage}</label>
                     <div>
-                      <button type="button"  onClick={this.saveConfig}>Save All Configurations</button>  
+                      <input type="range" min="10" max="90" className={classes.slider} onInput={this.getSliderValue} /> 
+                    </div>
+                    <div className= {classes.tabStyle}>
+                      <Button variant="primary" size="sm" onClick={this.saveConfig}>Save All Configurations</Button>
                     </div>    
                   </div>
                 </Tab>
