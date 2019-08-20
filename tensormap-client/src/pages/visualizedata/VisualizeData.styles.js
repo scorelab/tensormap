@@ -1,7 +1,7 @@
 const styles = theme => ({
 	container: {
 	    position: 'absolute',
-	    left: '40%',
+	    left: '20%',
 	    top: '20%'
   	},
   	highlightRow: {
