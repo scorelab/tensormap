@@ -49,12 +49,18 @@ const styles = theme => ({
 	  },
 
 	visualizeHeader: {
-		padding: '60px',
+		padding: '5px',
 		// textAlign: 'center',
-		background: '#1abc9c',
-		color: 'white',
+		background: 'white',
+		color: 'black',
 		fontSize: '15px'
-	  }
+	  },
+
+	tabStyle:{
+		padding: '30px'
+	}
+
+
 })
 
 export default styles
