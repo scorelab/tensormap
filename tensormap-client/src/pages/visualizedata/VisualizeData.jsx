@@ -21,6 +21,7 @@ import ViewColumn from '@material-ui/icons/ViewColumn';
 import { saveAs } from 'file-saver';
 import { forwardRef } from 'react';
 import { template } from '@babel/core';
+import {Button,ButtonGroup,Collapse,Tabs,Tab} from 'react-bootstrap';
 
 
 const tableIcons = {
@@ -50,14 +51,15 @@ class VisualizeData extends React.Component {
 
     this.state = {
       fileName: "null",
-      trainPercentage : "null",
+      trainPercentage : 50,
       columnCheckBoxes : [],
       features : [],
       labels :  [],
       columns: [],
       data: [],
-
-           
+      open1: false,
+      open2: false,
+      open3: false        
     }
     
     this.createCheckboxes = this.createCheckboxes.bind(this);
@@ -359,46 +361,54 @@ class VisualizeData extends React.Component {
 
   createCheckboxes(){
     return this.state.columnCheckBoxes.map((column) => (
-      <label>
-        {column.title}
-       <input
-      type="checkbox"
-      value={column.title}
-      // checked={column.checked}
-      onChange={this.toggleCheckboxChange}
-      />        
-        <br/>
-      </label>
+      <div>
+        
+        <span>
+        <input
+        type="checkbox"
+        value={column.title}
+        // checked={column.checked}
+        onChange={this.toggleCheckboxChange}
+        />        
+        </span>
+        <label>{column.title}</label>
+      </div>
     ));    
   }
 
   createFeatureCheckboxes(){
     return this.state.features.map((column) => (
-      <label>
-        {column.title}
-       <input
-      type="checkbox"
-      value={column.title}
-      // checked={column.checked}
-      onClick={this.toggleFeatureCheckboxChange}
-      />        
-        <br/>
-      </label>
+      <div>
+        
+        <span>
+          <input
+          type="checkbox"
+          value={column.title}
+          // checked={column.checked}
+          onClick={this.toggleFeatureCheckboxChange}
+          />        
+        </span>
+        <label>{column.title}</label>
+      </div>    
     ));
   }
 
   createLabelCheckboxes(){
     return this.state.labels.map((column) => (
-      <label>
-        {column.title}
-       <input
-      type="checkbox"
-      value={column.title}
-      // checked={column.checked}
-      onChange={this.toggleLabelCheckboxChange}
-      />        
-        <br/>
-      </label>
+
+      <div>
+        
+        <span>
+          <input
+          type="checkbox"
+          value={column.title}
+          // checked={column.checked}
+          onChange={this.toggleLabelCheckboxChange}
+          />       
+        </span> 
+        <label>{column.title}</label>
+      </div>
+     
     ));
   }
 
@@ -416,34 +426,86 @@ class VisualizeData extends React.Component {
 
     return (
       <div className={classes.container}>
+
       <div className={classes.visualizeHeader}>
-        {/* <ScrollableTabsButtonAuto/> */}
-        <div>
-          <label>Choose colums to delete:</label>
-          <br/>
-            {this.createCheckboxes()}
-            <button type="button"  onClick={this.deleteCol}>Delete</button>          
+      <div>
+        {/* <div>
+        <ButtonGroup aria-label="Basic example">
+          <Button variant="secondary"
+          onClick={() => this.setState({open1: !(this.state.open1)})}
+          aria-controls="example-collapse-text"
+          aria-expanded={this.state.open1}>Delete Column</Button>
+
+          <Button variant="secondary"
+          onClick={() => this.setState({open2: !(this.state.open2)})}
+          aria-controls="example-collapse-text"
+          aria-expanded={this.state.open2}>Download</Button>
+
+          <Button variant="secondary"
+          onClick={() => this.setState({open3: !(this.state.open3)})}
+          aria-controls="example-collapse-text"
+          aria-expanded={this.state.open3}>Experiment Config</Button>
+        </ButtonGroup>
+        </div> */}
+        <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
+        <Tab eventKey="Delete" title="Delete Column">
+         {/* <Collapse in={this.state.open1}> */}
+          <div className= {classes.tabStyle}>
+              <div>
+                {this.createCheckboxes()}
+              </div>
+              <div>
+                <button type="button"  onClick={this.deleteCol}>Delete</button>          
+              </div>
+          </div>
+        {/* </Collapse> */}
+        </Tab>
+
+        {/* <Collapse in={this.state.open2}> */}
+        <Tab eventKey="Download" title="Download">
+          <div className= {classes.tabStyle}>
+            <button type="button"  onClick={this.downloadCSV}>Download CSV</button>
+          </div>
+        {/* </Collapse> */}
+        </Tab>
+
+        {/* <Collapse in={this.state.open3}> */}
+        <Tab eventKey="Config" title="Experiment Config">
+
+          <div>
+            <div>
+              <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
+                <Tab eventKey="Features" title="Choose Features">
+                  <div className= {classes.tabStyle}>
+                    {this.createFeatureCheckboxes()}                      
+                  </div>
+                </Tab>
+                <Tab eventKey="Label" title="Choose Label">
+                  <div className= {classes.tabStyle}>
+                    {this.createLabelCheckboxes()}
+                  </div>
+                </Tab>
+                <Tab eventKey="Percentage" title="Test Percentage">
+                  <div className= {classes.tabStyle}>
+                    <input type="range" min="1" max="90" className={classes.slider} onInput={this.getSliderValue} />  <br/>
+                    <label>{this.state.trainPercentage}</label>
+                    <div>
+                      <button type="button"  onClick={this.saveConfig}>Save All Configurations</button>  
+                    </div>    
+                  </div>
+                </Tab>
+              </Tabs>
+            </div>            
+
+          </div>
+        {/* </Collapse> */}
+        </Tab>
+        </Tabs>
+
+
         </div>
-        <div><button type="button"  onClick={this.downloadCSV}>Download CSV</button> </div>
-        <div>
-          Experiment Configurations:
-        <div>
-          <label>Choose Features:</label>
-          <br/>
-            {this.createFeatureCheckboxes()}                      
         </div>
-        <div>
-          <label>Choose Label:</label>
-          <br/>
-            {this.createLabelCheckboxes()}
-        </div>
-        <div>
-        <label>Select Test Data Percentage</label><br/>
-        <input type="range" min="1" max="90" className={classes.slider} onInput={this.getSliderValue} />  
-        <button type="button"  onClick={this.saveConfig}>Save Configurations</button>      
-        </div>
-        </div>
-        </div>
+
         <div style={{ maxWidth: "100%" }}>
         <MaterialTable
         icons={tableIcons}
@@ -489,8 +551,7 @@ class VisualizeData extends React.Component {
               this.sendEditRequest(newData);
             }, 600);
           }),
-      }}
-    />
+      }} />
         </div>
       </div>
     )
