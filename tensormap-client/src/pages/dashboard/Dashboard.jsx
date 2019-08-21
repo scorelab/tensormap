@@ -18,7 +18,7 @@ class Dashboard extends React.Component {
 
   componentWillMount() { 
 
-    obj = {user_id:"1", experimet_type: "regression"}
+    var obj = {user_id:"1", experimet_type: "regression"}
     var data = JSON.stringify(obj)    
     console.log(data)
     fetch("http://127.0.0.1:5000/createExperiment", {
