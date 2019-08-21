@@ -1,7 +1,11 @@
-[![Build Status](https://travis-ci.com/scorelab/TensorMap.svg?branch=master)](https://travis-ci.com/scorelab/TensorMap)
+[![Build Status](https://travis-ci.com/scorelab/TensorMap.svg?branch=master)](https://travis-ci.com/scorelab/TensorMap)  [![Join the chat at https://gitter.im/scorelab/TensorMap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/scorelab/TensorMap) 
+[![HitCount](http://hits.dwyl.com/scorelab/TensorMap.svg)](http://hits.dwyl.com/scorelab/TensorMap)
+
+
+
 # TensorMap
 
-TensorMap is a web application that will allow the users to create machine learning algorithms visually. TensorMap supports reverse engineering of the visual layout to a Tensorflow implementation in preferred languages. The goal of the project is to let the beginners play with machine learning algorithms in Tensorflow without less background knowledge about the library.
+TensorMap is a web application that will allow the users to create machine learning algorithms visually. TensorMap supports reverse engineering of the visual layout to a Tensorflow implementation in preferred languages. The goal of the project is to let the beginners play with machine learning algorithms in Tensorflow without less background knowledge about the library. For more details about the project, read our [project wiki.](https://github.com/scorelab/TensorMap/wiki)
 
 ## Getting Started
 Follow these steps to set up TensorMap on your local machine.
@@ -11,7 +15,6 @@ First clone this repo by running
 
 git clone https://github.com/scorelab/TensorMap.git
 ```````````````````````````
-
 
 ### Setting up Frontend
 
@@ -25,6 +28,7 @@ cd TensorMap
 yarn install
 npm start
 ```
+
 ### Setting up Backend
 
 First make sure you have MySQL server and Python 3.x installed in your system.
@@ -65,6 +69,7 @@ To start the server run
 ```bash
 python run.py
 ```
+
 ## Built With
 
 * [Reactjs](https://reactjs.org/docs/getting-started.html) : Frontend  
@@ -73,15 +78,7 @@ python run.py
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/scorelab/TensorMap/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [git](https://git-scm.com/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
-
-## Authors
-
-
+Please read ['Note to Contributors'](https://github.com/scorelab/TensorMap/wiki/Note-to-Contributors) in project wiki for more details.
 
 ## License
 
