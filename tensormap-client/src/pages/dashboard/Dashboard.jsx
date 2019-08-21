@@ -15,6 +15,30 @@ import styles       from './Dashboard.styles'
 
 class Dashboard extends React.Component {
 
+
+  componentWillMount() { 
+
+    obj = {user_id:"1", experimet_type: "regression"}
+    var data = JSON.stringify(obj)    
+    console.log(data)
+    fetch("http://127.0.0.1:5000/createExperiment", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: data
+    }).then((response) => {
+      return response.text();
+    }).then((response) => {
+      console.log(response)
+   }).catch(function (error) {
+      console.log(error);
+  }); 
+  
+  } 
+
+
+
   render() {
     const {classes} = this.props
     console.log(window.location.href);
