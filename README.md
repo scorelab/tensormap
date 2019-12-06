@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.com/scorelab/TensorMap.svg?branch=master)](https://travis-ci.com/scorelab/TensorMap)  [![Join the chat at https://gitter.im/scorelab/TensorMap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/scorelab/TensorMap) 
 [![HitCount](http://hits.dwyl.com/scorelab/TensorMap.svg)](http://hits.dwyl.com/scorelab/TensorMap)
 
-
+![logo](https://user-images.githubusercontent.com/41909955/70296231-ac3a6080-179e-11ea-8d8d-870bab75a72d.png)
 
 # TensorMap
 
