@@ -7,6 +7,8 @@
 
 TensorMap is a web application that will allow the users to create machine learning algorithms visually. TensorMap supports reverse engineering of the visual layout to a Tensorflow implementation in preferred languages. The goal of the project is to let the beginners play with machine learning algorithms in Tensorflow without less background knowledge about the library. For more details about the project, read our [project wiki.](https://github.com/scorelab/TensorMap/wiki)
 
+![](docs/tensormaplogo2)
+
 ## Getting Started
 Follow these steps to set up TensorMap on your local machine.
 
