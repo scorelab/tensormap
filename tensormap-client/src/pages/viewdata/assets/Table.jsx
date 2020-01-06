@@ -30,7 +30,7 @@ function createData(id, name, dtype) {
 
 function getDeleteHandler(idx) {
     var Httpreq = new XMLHttpRequest();
-    Httpreq.open("GET", 'http://localhost:5000/deleteData?id=' + idx, true);
+    Httpreq.open("GET", 'http://127.0.0.1:5000/deleteData?id=' + idx, true);
     Httpreq.send(null);
     console.log("completed")
 }
@@ -44,7 +44,7 @@ const rows = [
 
 
 class EnhancedTableHead extends React.Component {
-  createSortHandler = property => event => {
+  createSortHandler = property => event => {    
     this.props.onRequestSort(event, property);
   };
 
