@@ -16,9 +16,9 @@ bash
 git clone https://github.com/scorelab/TensorMap.git
 ```````````````````````````
 
-### Setting up Frontend
+## Setting up Frontend
 
-#### Prerequisites
+## Prerequisites
 * Node.js
 * Yarn
 * Npm
