@@ -11,7 +11,7 @@ TensorMap is a web application that will allow the users to create machine learn
 Follow these steps to set up TensorMap on your local machine.
 
 First clone this repo by running
-```bash
+bash
 
 git clone https://github.com/scorelab/TensorMap.git
 ```````````````````````````
