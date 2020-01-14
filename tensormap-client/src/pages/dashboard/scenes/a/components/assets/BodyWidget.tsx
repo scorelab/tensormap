@@ -49,7 +49,7 @@ export interface BodyWidgetState {
   tmp_id: string;
   dialog_group:boolean;
   layer_name:string;
-  layer_color:string;
+  layer_color:any;
   runtime_data:string;
   code:string;
   node:
