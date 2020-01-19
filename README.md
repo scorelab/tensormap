@@ -1,8 +1,6 @@
 [![Build Status](https://travis-ci.com/scorelab/TensorMap.svg?branch=master)](https://travis-ci.com/scorelab/TensorMap)  [![Join the chat at https://gitter.im/scorelab/TensorMap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/scorelab/TensorMap) 
 [![HitCount](http://hits.dwyl.com/scorelab/TensorMap.svg)](http://hits.dwyl.com/scorelab/TensorMap)
 
-
-
 # TensorMap
 
 TensorMap is a web application that will allow the users to create machine learning algorithms visually. TensorMap supports reverse engineering of the visual layout to a Tensorflow implementation in preferred languages. The goal of the project is to let the beginners play with machine learning algorithms in Tensorflow without less background knowledge about the library. For more details about the project, read our [project wiki.](https://github.com/scorelab/TensorMap/wiki)
@@ -15,7 +13,6 @@ First clone this repo by running
 
 git clone https://github.com/scorelab/TensorMap.git
 ```````````````````````````
-
 ### Setting up Frontend
 
 #### Prerequisites
@@ -28,7 +25,6 @@ cd TensorMap
 yarn install
 npm start
 ```
-
 ### Setting up Backend
 
 First make sure you have MySQL server and Python 3.x installed in your system.
@@ -52,7 +48,6 @@ Next, login to MySQL and create a database named 'tensormap'
 mysql -u <user> -p
 CREATE DATABASE tensormap;
 ```
-
 Then in the '__init__' file that is inside the 'app' folder, replace the database connection string with your username and password
 
 ```bash
@@ -63,13 +58,11 @@ Next, restore the sql dump
 ```bash
 mysql -u {user} -p -Dtensormap < {path-to-dump-file}/dump.sql
 ```
-
 To start the server run
 
 ```bash
 python run.py
 ```
-
 ## Built With
 
 * [Reactjs](https://reactjs.org/docs/getting-started.html) : Frontend  
