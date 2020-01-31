@@ -14,9 +14,7 @@ import {VisualizeData} from '../visualizedata'
 import styles       from './Dashboard.styles'
 
 class Dashboard extends React.Component {
-// state = {
-//   open:true
-// }
+
 
   componentWillMount() { 
 
@@ -38,22 +36,6 @@ class Dashboard extends React.Component {
   }); 
   
   } 
-
-  // handleClick = ()=>{
-
-  //   let sidebar  = window.document.querySelector('.sidebar');
-  //   let target  = sidebar.childNodes[0].childNodes[0];
-
-  //   if(this.state.open)
-  //   target.style.width = 0;
-  //   else
-  //   target.style.width = "240px" ;
-  //   this.setState((state)=>({
-  //     open:!state.open}));
-
-  // }
-
-
 
   render() {
 

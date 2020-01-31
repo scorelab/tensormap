@@ -235,13 +235,6 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     }
     console.log(comp_data);
 
-    // const socket = socketIOClient(endpoint);
-    // socket.emit('nn_execute', comp_data, function(response: any) {
-    //   console.log(response)
-    //   this.setState({
-    //     runtime_data:response.json()
-    //   })
-    // });
 
   }
 
@@ -252,9 +245,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       graph: [json_graph],
       node_param: node_data
     }
-    // console.log(data);
     var url_ = baseURL + 'getcode/';
-    // console.log(url_)
     fetch(url_, {
       method: 'POST',
       headers: {

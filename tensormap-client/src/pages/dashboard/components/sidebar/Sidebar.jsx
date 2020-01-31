@@ -22,15 +22,26 @@ class Sidebar extends React.Component {
     mobileOpen: false,
   }
 
+<<<<<<< HEAD
  
+=======
+  handleDrawerToggle = () => {
+    this.setState(state => ({mobileOpen: !state.mobileOpen}))
+  }
+>>>>>>> f4680c217941cae3990de591426d28ab38f6751d
 
   render() {
     const {classes, theme} = this.props
 
 
     const drawer = (
+<<<<<<< HEAD
         <div  style ={{width:"0px"}}>
           <List  onClick={this.props.handleClick}
+=======
+        <div>
+          <List
+>>>>>>> f4680c217941cae3990de591426d28ab38f6751d
               component="nav"
               subheader={<ListSubheader component="div">TensorMap</ListSubheader>}
           >
@@ -40,30 +51,43 @@ class Sidebar extends React.Component {
               </ListItemIcon>
               <ListItemText inset primary="Home"/>
             </ListItem>
+<<<<<<< HEAD
 
             <Divider/>
 
+=======
+            <Divider/>
+>>>>>>> f4680c217941cae3990de591426d28ab38f6751d
             <ListItem button component={Link} to="/adddata">
               <ListItemIcon>
                 <LibraryBooksIcon/>
               </ListItemIcon>
               <ListItemText inset primary="Pre-processing"/>
             </ListItem>
+<<<<<<< HEAD
 
+=======
+>>>>>>> f4680c217941cae3990de591426d28ab38f6751d
             <ListItem button component={Link} to="/neuralnet">
               <ListItemIcon>
                 <LibraryBooksIcon/>
               </ListItemIcon>
               <ListItemText inset primary="Neural Networks"/>
             </ListItem>
+<<<<<<< HEAD
 
+=======
+>>>>>>> f4680c217941cae3990de591426d28ab38f6751d
             <ListItem button component={Link} to="/data">
               <ListItemIcon>
                 <FindInPageIcon/>
               </ListItemIcon>
               <ListItemText inset primary="Data"/>
             </ListItem>
+<<<<<<< HEAD
 
+=======
+>>>>>>> f4680c217941cae3990de591426d28ab38f6751d
             <Divider/>
           </List>
         </div>
@@ -87,8 +111,11 @@ class Sidebar extends React.Component {
             </Drawer>
           </Hidden>
           <Hidden xsDown implementation="css">
+<<<<<<< HEAD
           <div className = "sidebar" style={{width:"0"}}>
 
+=======
+>>>>>>> f4680c217941cae3990de591426d28ab38f6751d
             <Drawer
                 classes={{
                   paper: classes.drawerPaper,
@@ -98,10 +125,15 @@ class Sidebar extends React.Component {
             >
               {drawer}
             </Drawer>
+<<<<<<< HEAD
             </div>
           </Hidden>
         </nav>
         
+=======
+          </Hidden>
+        </nav>
+>>>>>>> f4680c217941cae3990de591426d28ab38f6751d
     )
   }
 
