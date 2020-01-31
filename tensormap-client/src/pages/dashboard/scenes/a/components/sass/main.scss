@@ -1,0 +1,12 @@
+@import "DiagramWidget";
+@import "LinkLayerWidget";
+@import "NodeLayerWidget";
+@import "NodeWidget";
+@import "PortWidget";
+@import "../../../../../../../node_modules/highlight.js/styles/vs2015.css" ;
+
+//defaults
+@import "defaults/DefaultNodeWidget";
+@import "defaults/DefaultPortWidget";
+@import "defaults/DefaultLabelWidget";
+@import "defaults/DefaultLinkWidget";

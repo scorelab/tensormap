@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - "8.10.0"
+warnings_are_errors: false
+cache:
+  directories:
+    - tensormap-client/node_modules
+before_script:
+- cd tensormap-client
+- yarn install
+- npm install
+script:
+  - npm test
