@@ -17,11 +17,7 @@ def create_app(debug=False):
     app.config['SECRET_KEY'] = 'secret'
     app.config['USE_PERMANENT_SESSION'] = True
     # app.config['SECRET_KEY'] = os.urandom(25)
-<<<<<<< HEAD
     app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:Niteshmaha1@@localhost/tensormap"
-=======
-    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:pass@localhost/tensormap"
->>>>>>> f4680c217941cae3990de591426d28ab38f6751d
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     from .resources import main
@@ -31,8 +27,4 @@ def create_app(debug=False):
     db.init_app(app)
     sess.init_app(app)
     CORS(app, expose_headers='Authorization', support_credentials=True)
-<<<<<<< HEAD
     return app
-=======
-    return app
->>>>>>> f4680c217941cae3990de591426d28ab38f6751d

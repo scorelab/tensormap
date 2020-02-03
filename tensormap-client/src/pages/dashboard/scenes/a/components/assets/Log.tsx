@@ -1,32 +1,20 @@
 import React from 'react';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Highlight from 'react-highlight';
 import Typography from '@material-ui/core/Typography';
-// import hljs from 'highlight.js';
-// import python from 'highlight.js/lib/languages/python';
 
-// import 'highlight.js/styles/github.css';
-// // import Highlight from 'react-highlight-js';
-// var Highlight = require ('react-highlight-js');
-// const hljs = require("highlight.js/lib/highlight.js");
-// hljs.registerLanguage('python', require('highlight.js/lib/languages/python'));
+
+
 
 const text_style = {
     color:"red"
   
 }
-
-
-
-// const highlightedCode = hljs.highlight('html', '<span>Hello World!</span>').value
-
-
-// import hljs from 'highlight.js/lib/highlight';
-
-// const hljs = require('./highlight.js');
 
 interface TabContainerProps {
   children?: React.ReactNode;
@@ -59,13 +47,10 @@ export default function SimpleTabs(props: SimpleTabsProps) {
   }
 
   let newText = props.code.split('\n').map((item, i) => {
-  let color = {
-      color:'rgb('+ Math.random()*255 +','+ Math.random()*255 +', '+ Math.random()*255 +' )' 
-    };
-    return <p key={i} style={color}>{item}</p>;
+
+    return <p><SyntaxHighlighter language = "python" style = {docco}>{` ${item}`} </SyntaxHighlighter></p>;
   });
-  // const highlightedCode = hljs.highlightAuto(props.code).value;
-  // const highlightedCode = hljs.highlight('python',(props.code)).value;
+
 
   return (
     <div className="log_main">
@@ -81,13 +66,8 @@ export default function SimpleTabs(props: SimpleTabsProps) {
         {value === 0 && <TabContainer>{props.runtimeData}</TabContainer>}
         {console.log(props.code)}
   {value === 1 && <TabContainer>
-    <div style = {text_style}>
-    <Highlight >
-   {/* {"html with multiple code snippets"} */}
-    {newText}
-
-  </Highlight>
-    </div>
+   
+      {newText}
      
         </TabContainer>}
       </div>
