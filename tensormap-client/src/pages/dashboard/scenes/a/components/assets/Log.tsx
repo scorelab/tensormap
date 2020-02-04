@@ -1,11 +1,10 @@
 import React from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+// import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Highlight from 'react-highlight';
 import Typography from '@material-ui/core/Typography';
 
 

@@ -379,15 +379,12 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
       tmp_form
     } as any)
 
-    // console.log(tmp_form)
-    // console.log(tmp_form.metrics)
   };
 
   handleSelection = () => {
     var graph = this.props.app.getDiagramEngine().getDiagramModel()
     var selected = graph.getSelectedItems()
 
-    // console.log(selected.length)
     for( var i = 0 ; i < selected.length ; ++i){
       if(selected[i].constructor.name === "DefaultNodeModel"){
         (selected[i] as DefaultNodeModel).extras.layer = this.state.layer_name;
