@@ -22,18 +22,19 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Avatar from '@material-ui/core/Avatar';
-
-
-
+import {withStyles} from '@material-ui/core';
+import styles       from './BodyWidget.styles'
 
 import { baseURL } from '../../../../../../config';
 
 import socketIOClient from "socket.io-client";
 
+
 var _ = require('lodash')
 
 const endpoint = "ws://localhost:5000/nn";
 
+ 
 export interface BodyWidgetProps {
   app: Application;
   classes?:any;
@@ -66,7 +67,7 @@ export interface BodyWidgetState {
 }
 
 
-export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
+class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
   constructor(props: BodyWidgetProps) {
     super(props);
     this.state = {
@@ -413,8 +414,11 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 			this.forceUpdate();
   };
 
+  
+
 
   render() {
+    const {classes} = this.props
     return (
       <div>
             <Grid container spacing={8} style={{width:"100%",margin:"0px"}}>
@@ -538,9 +542,9 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
                   </Grid>
                   <Grid item xs style={{paddingTop:10, textAlign:"right"}}>
                     <Paper style={{padding:5}} square>
-                      <Button variant= "contained"  onClick = {this.handleExecute}> Get Code </Button>
-                      <Button variant = "contained"  onClick = { this.handleClickOpen } > Change Exe Config </Button>
-                      <Button variant = "contained"  onClick = { this.handleClickOpenGrouping } > Group Selection </Button>
+                      <Button variant= "contained"  onClick = {this.handleExecute} className={classes.button}> Get Code </Button>
+                      <Button variant = "contained"  onClick = { this.handleClickOpen } className={classes.button}> Change Exe Config </Button>
+                      <Button variant = "contained"  onClick = { this.handleClickOpenGrouping } className={classes.button}> Group Selection </Button>
                       </Paper>
                   </Grid>
               </Grid>
@@ -695,25 +699,26 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
                 fullWidth
                 onChange={(e) => {this.setState({layer_color:e.target.value})}}
                 value={this.state.layer_color}
+                classes={{select:classes.select}}
               >
                 <MenuItem value="" >
                   <em>None</em>
                 </MenuItem>
                 <MenuItem value={"rgb(255,0,0)"}>
-                  <Avatar className='avatar red'>
-                  </Avatar>
+                  <Avatar variant="circle" className={classes.red} >R 
+                  </Avatar> Red
                 </MenuItem>
                 <MenuItem value={"rgb(100,128,155)"}>
-                  <Avatar className='avatar gray'>
-                  </Avatar>
+                  <Avatar className={classes.grey}>G
+                  </Avatar>Grey
                 </MenuItem>
                 <MenuItem value={"rgb(0,255,0)"}>
-                  <Avatar className='avatar green'>
-                  </Avatar>
+                  <Avatar className={classes.green}>G
+                  </Avatar>Green
                 </MenuItem>
                 <MenuItem value={"rgb(0,128,255)"}>
-                  <Avatar className='avatar blue'>
-                  </Avatar>
+                  <Avatar className={classes.blue}>B
+                  </Avatar>Blue
                 </MenuItem>
               </Select>
           </DialogContent>
@@ -736,3 +741,5 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
     );
 	}
 }
+
+export default withStyles(styles, {withTheme: true})(BodyWidget)
