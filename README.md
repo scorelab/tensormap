@@ -25,6 +25,7 @@ git clone https://github.com/scorelab/TensorMap.git
 
 ```bash
 cd TensorMap
+cd tensormap-client
 yarn install
 npm start
 ```
