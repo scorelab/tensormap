@@ -415,8 +415,8 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
 
   render() {
     return (
-      <div style = {{margin:"50px"}}>
-            <Grid container spacing={8} style={{width:"100%",margin:"0px"}}>
+      <div style = {{margin:"80px auto"}}>
+            <Grid container xs spacing={1}>
               <Grid item xs className={"tray_"}>
                 <Paper square>
                   <SidebarWidget>
@@ -439,7 +439,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
                 </Paper>
 
               </Grid>
-              <Grid item xs={8} spacing={8}>
+              <Grid item xs={6} spacing={1}>
               <Grid item xs style={{paddingBottom:10}}>
                 <Paper square>
                   <Button variant= "contained" onClick = {this.handledelete} style={{backgroundColor:"#fff",boxShadow:"none"}}> <DeleteIcon /></Button>
@@ -448,7 +448,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
                 <Grid item >
                   <Paper square>
                     <div
-          						        className = "diagram-layer"
+          						        className = "diagram-layerz`"
           						        onDrop = {
                                   event => {
                                     var data = JSON.parse(event.dataTransfer.getData("storm-diagram-node"));
@@ -531,7 +531,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
           						diagramEngine = { this.props.app.getDiagramEngine() }
           						maxNumberPointsPerLink = {0}
                       allowLooseLinks={false}
-                      deleteKeys = {[]}
+                      deleteKeys = {[]} 
                       />
                     </div>
                   </Paper>
@@ -550,7 +550,7 @@ export default class BodyWidget extends React.Component<BodyWidgetProps, BodyWid
                 </Paper>
               </Grid>
             </Grid>
-            <Grid container spacing={8}>
+            <Grid container spacing={1} xs>
               <Grid item xs>
                 <Paper square>
                   <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data}/>

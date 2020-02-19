@@ -55,10 +55,11 @@ class Dashboard extends React.Component {
           }
            {/* <Header handleClick = {this.handleClick}/> */}
            {/* <Sidebar handleClick = {this.handleClick}/> */}
+
            <Sidebar/>
           <main className={classes.content}>
             {url_.pathname !== '/neuralnet' &&
-                <div className={classes.toolbar}/>
+                <div className={classes.toolbar} style ={{margin:"54px auto"}} />
             }
 
             <Route exact path='/home' component={Home}/>

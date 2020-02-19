@@ -38,7 +38,7 @@ class Sidebar extends React.Component {
               <ListItemIcon>
                 <HomeIcon/>
               </ListItemIcon>
-              <ListItemText inset primary="Home"/>
+              <ListItemText  primary="Home"/>
             </ListItem>
 
             <Divider/>
@@ -47,19 +47,20 @@ class Sidebar extends React.Component {
               <ListItemIcon>
                 <LibraryBooksIcon/>
               </ListItemIcon>
-              <ListItemText inset primary="Pre-processing"/>
+              <ListItemText primaryTypographyProps = {{noWrap:true}}
+               primary="Pre-processing"/>
             </ListItem>
             <ListItem button component={Link} to="/neuralnet">
               <ListItemIcon>
                 <LibraryBooksIcon/>
               </ListItemIcon>
-              <ListItemText inset primary="Neural Networks"/>
+              <ListItemText primaryTypographyProps = {{noWrap:true}} primary="Neural Networks"/>
             </ListItem>
             <ListItem button component={Link} to="/data">
               <ListItemIcon>
                 <FindInPageIcon/>
               </ListItemIcon>
-              <ListItemText inset primary="Data"/>
+              <ListItemText  primary="Data"/>
             </ListItem>
             <Divider/>
           </List>

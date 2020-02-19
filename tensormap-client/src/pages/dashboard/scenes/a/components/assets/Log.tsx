@@ -1,6 +1,6 @@
 import React from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-// import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -47,7 +47,7 @@ export default function SimpleTabs(props: SimpleTabsProps) {
 
   let newText = props.code.split('\n').map((item, i) => {
 
-    return <p><SyntaxHighlighter language = "python" style = {docco}>{` ${item}`} </SyntaxHighlighter></p>;
+    return <p><SyntaxHighlighter language = "python" style = {docco}>{`${item}`} </SyntaxHighlighter></p>;
   });
 
 
