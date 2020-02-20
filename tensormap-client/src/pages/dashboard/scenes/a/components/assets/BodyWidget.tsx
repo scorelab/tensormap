@@ -79,6 +79,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       accuracy: false,
       neg_mean_square_error: false,
       layer_name:"",
+      
       layer_color:"",
       runtime_data:"Epoch Number: 25, Val Acc: 87.3623%, Train Acc: 90.821% ",
       code:"from keras.datasets import mnist\nfrom keras.layers import Dense, Conv2D, Flatten\nmodel = Sequential()\nmodel.add(Conv2D(64, kernel_size=3, activation=’relu’, input_shape=(28,28,1)))\nmodel.add(Flatten())\nmodel.add(Dense(10, activation=’softmax’))\nmodel.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3)",
@@ -91,6 +92,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       ,
       tmp_form:
       {
+        error_text:"",
         units: "",
         activation: "",
       },
@@ -179,6 +181,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 
   handleChange = (key: number, param_name: string, event: React.ChangeEvent<HTMLInputElement>, islink: boolean, id: string) => {
     var tmp_form = this.state.tmp_form;
+ if (/^(\s*|\d+)$/.test(event.target.value)){
     if (islink) {
       var link = this.props.app.getDiagramEngine().getDiagramModel().getLink(id);
       if (link != null) {
@@ -195,10 +198,18 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     }
     else {
       tmp_form[param_name] = event.target.value
+      tmp_form["error_text"]=""
       this.setState({
-        tmp_form
+        tmp_form,
+       
       } as any)
     }
+ }else{
+ 
+   tmp_form["error_text"]="Please Enter A valid Number"
+   this.setState({
+ tmp_form,} as any)
+ }
   };
 
   handleSave = () => {
@@ -421,8 +432,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     const {classes} = this.props
     return (
       <div>
-            <Grid container spacing={8} style={{width:"100%",margin:"0px"}}>
-              <Grid item xs className={"tray_"}>
+            <Grid container spacing={1} style={{width:"100%",margin:"0px"}}>
+              <Grid item xs={2} className={"tray_"}>
                 <Paper square>
                   <SidebarWidget>
                     <TrayWidget nntype="FDN">
@@ -443,7 +454,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                   </SidebarWidget>
                 </Paper>
               </Grid>
-              <Grid item xs={8} spacing={8}>
+              <Grid item xs={8} spacing={5}>
               <Grid item xs style={{paddingBottom:10}}>
                 <Paper square>
                   <Button variant= "contained" onClick = {this.handledelete} style={{backgroundColor:"#fff",boxShadow:"none"}}> <DeleteIcon /></Button>
@@ -548,7 +559,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                       </Paper>
                   </Grid>
               </Grid>
-              <Grid item xs >
+              <Grid item xs={2} >
                 <Paper square>
                   <Properties/>
                 </Paper>
@@ -573,10 +584,10 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
             className = { "param_drawer"} >
             <h2>Node Parameters </h2>
             <form noValidate autoComplete = "off" className = { "drawer_form"} >
-              <TextField  id="standard-name" label = "units" value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event, false, this.state.tmp_id)} margin = "normal" >
+              <TextField  id="standard-name" label = "units"helperText={this.state.tmp_form.error_text}  value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event, false, this.state.tmp_id)} margin = "normal" >
               </TextField>
                 <br />
-              <TextField  id="standard-name" label = "activation" value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
+              <TextField  id="standard-name" label = "activation" helperText={this.state.tmp_form.error_text} value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
               </TextField>
             </form>
                 <br />
@@ -593,12 +604,12 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
             className = { "param_drawer"} >
               <h2>Link Parameters </h2>
               <form noValidate autoComplete = "off" className = { "drawer_form"} >
-                <TextField  id="standard-name" label = "weight" value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event, true, this.state.tmp_id)} margin = "normal" >
+                <TextField  id="standard-name" helperText={this.state.tmp_form.error_text}  label = "weight" value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event, true, this.state.tmp_id)} margin = "normal" >
                 </TextField>
                   <br />
-                <TextField  id="standard-name" label = "activation" value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
+                <TextField  id="standard-name"helperText={this.state.tmp_form.error_text} label = "activation" value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
                 </TextField>
-              </form>
+                </form>
                 <br />
               <Button variant="contained"  onClick = { this.handleNodeEdit } >
                 <SaveIcon className={ 'right_icon'} />
