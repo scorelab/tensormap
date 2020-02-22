@@ -40,26 +40,26 @@ class Sidebar extends React.Component {
               <ListItemIcon>
                 <HomeIcon/>
               </ListItemIcon>
-              <ListItemText inset primary="Home"/>
+              <ListItemText  primary="Home"/>
             </ListItem>
             <Divider/>
             <ListItem button component={Link} to="/adddata">
               <ListItemIcon>
                 <LibraryBooksIcon/>
               </ListItemIcon>
-              <ListItemText inset primary="Pre-processing"/>
+              <ListItemText  primary="Pre-processing"/>
             </ListItem>
             <ListItem button component={Link} to="/neuralnet">
               <ListItemIcon>
                 <LibraryBooksIcon/>
               </ListItemIcon>
-              <ListItemText inset primary="Neural Networks"/>
+              <ListItemText  primary="Neural Networks"/>
             </ListItem>
             <ListItem button component={Link} to="/data">
               <ListItemIcon>
                 <FindInPageIcon/>
               </ListItemIcon>
-              <ListItemText inset primary="Data"/>
+              <ListItemText  primary="Data"/>
             </ListItem>
             <Divider/>
           </List>
