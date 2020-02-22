@@ -4,6 +4,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
+### `npm audit fix`
+
+Will remove all the vulnerabilities which may have occured on installing the node modules. 
+
 ### `npm start`
 
 Runs the app in the development mode.<br>
