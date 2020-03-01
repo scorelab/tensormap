@@ -23,11 +23,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Avatar from '@material-ui/core/Avatar';
 import {withStyles} from '@material-ui/core';
+import InputLabel from '@material-ui/core/InputLabel';
 import styles       from './BodyWidget.styles'
 
 import { baseURL } from '../../../../../../config';
 
 import socketIOClient from "socket.io-client";
+import { FormControl } from "react-bootstrap";
+import { ConsoleWriter } from "istanbul-lib-report";
 
 
 var _ = require('lodash')
@@ -178,7 +181,33 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     var str = JSON.stringify(this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram());
     return str
   };
-
+  handleChangeActivation=(key:number,param_name:string,event:React.ChangeEvent<{value:unknown}>,islink:boolean,id:string)=>{
+    console.log(event.target.value as string)
+    var tmp_form=this.state.tmp_form;
+    if (islink) {
+      var link = this.props.app.getDiagramEngine().getDiagramModel().getLink(id);
+      if (link != null) {
+        link.extras = {
+          weight: event.target.value
+        };
+        var labels_node = link.labels[0] as DefaultLabelModel;
+        labels_node.setLabel(event.target.value as string);
+      }
+      tmp_form[param_name] = event.target.value
+      this.setState({
+        tmp_form
+      } as any)
+    }
+    else {
+      tmp_form[param_name] = event.target.value
+      tmp_form["error_text"]=""
+      this.setState({
+        tmp_form,
+       
+      } as any)
+    }
+    
+  }
   handleChange = (key: number, param_name: string, event: React.ChangeEvent<HTMLInputElement>, islink: boolean, id: string) => {
     var tmp_form = this.state.tmp_form;
  if (/^(\s*|\d+)$/.test(event.target.value)){
@@ -236,7 +265,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       graph: [json_graph],
       node_param: node_data
     }
-    console.log(comp_data);
+    console.log(comp_data,"aactivationadi");
 
     // const socket = socketIOClient(endpoint);
     // socket.emit('nn_execute', comp_data, function(response: any) {
@@ -255,22 +284,22 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       graph: [json_graph],
       node_param: node_data
     }
-    // console.log(data);
+    console.log(data);
     var url_ = baseURL + 'getcode/';
     // console.log(url_)
     fetch(url_, {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
+        'access-control-allow-origin': 'localhost:3000',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     })
-      .then(response => response.json())
-      .then(response => this.setState({
-        code:response
-      }))
-      .catch(response => console.log(response));
+      .then(response => (response.json() ))
+      .then(response => console.log(response,"response-code")
+    )
+      .catch(response => console.log(response,"error1"));
   }
 
   handleExeConfig = () => {
@@ -282,7 +311,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     fetch(url_, {
       method: 'POST',
       headers: {
-        'access-control-allow-origin': '*',
+        'access-control-allow-origin': 'localhost:3000',
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
@@ -302,7 +331,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     fetch(url_, {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
+        'access-control-allow-origin': 'localhost:3000',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
@@ -323,7 +353,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     fetch(url_, {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
+        'access-control-allow-origin': 'localhost:3000',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
@@ -344,7 +375,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     fetch(url_, {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
+        'access-control-allow-origin': 'localhost:3000',
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
@@ -430,6 +462,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 
   render() {
     const {classes} = this.props
+
     return (
       <div>
             <Grid container spacing={1} style={{width:"100%",margin:"0px"}}>
@@ -553,7 +586,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                   </Grid>
                   <Grid item xs style={{paddingTop:10, textAlign:"right"}}>
                     <Paper style={{padding:5}} square>
-                      <Button variant= "contained"  onClick = {this.handleExecute} className={classes.button}> Get Code </Button>
+                      <Button variant= "contained"  onClick = {this.handleGetCode} className={classes.button}> Get Code </Button>
                       <Button variant = "contained"  onClick = { this.handleClickOpen } className={classes.button}> Change Exe Config </Button>
                       <Button variant = "contained"  onClick = { this.handleClickOpenGrouping } className={classes.button}> Group Selection </Button>
                       </Paper>
@@ -587,8 +620,20 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
               <TextField  id="standard-name" label = "units"helperText={this.state.tmp_form.error_text}  value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event, false, this.state.tmp_id)} margin = "normal" >
               </TextField>
                 <br />
-              <TextField  id="standard-name" label = "activation" helperText={this.state.tmp_form.error_text} value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
-              </TextField>
+              {/* <TextField  id="standard-name" label = "activation" helperText={this.state.tmp_form.error_text} value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
+              </TextField> */}
+              
+               <InputLabel id="select-label" style={{marginTop:"10px"}}>Activation</InputLabel>
+                
+              <Select labelId="select-label" style={{width:"210px",}}  id="standard-name"  value={this.state.tmp_form.activation} label="activation"  onChange={(event:React.ChangeEvent<{value:unknown}>)=>this.handleChangeActivation(1,"activation",event,false,this.state.tmp_id)}>
+               
+                <MenuItem value="default" disabled selected>Select Activation Function</MenuItem>
+                        <MenuItem value="relu">ReLu(Rectified Linear unit)</MenuItem>
+                        <MenuItem value="sigmoid">Sigmoid</MenuItem>
+                        <MenuItem value="tanh">Tanh</MenuItem>
+                        <MenuItem value="softmax">Softmax</MenuItem>
+                </Select>
+                        
             </form>
                 <br />
               <Button variant="contained"  onClick = { this.handleNodeEdit } >
@@ -609,6 +654,15 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                   <br />
                 <TextField  id="standard-name"helperText={this.state.tmp_form.error_text} label = "activation" value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
                 </TextField>
+                
+               {/* <Select fullWidth labelId="demo-simple-select-label" id="demo-simple-select" value={this.state.tmp_form.units} label="weight"  onChange={(event:React.ChangeEvent<{value:unknown}>)=>this.handleChangeActivation(1,"activation",event,false,this.state.tmp_id)} defaultValue="default">
+                <MenuItem value="default" disabled>Select Activation Function</MenuItem>
+                        <MenuItem value="relu">ReLu(Rectified Linear unit)</MenuItem>
+                        <MenuItem value="sigmoid">Sigmoid</MenuItem>
+                        <MenuItem value="tanh">Tanh</MenuItem>
+                        <MenuItem value="softmax">Softmax</MenuItem>
+                </Select> */}
+                        
                 </form>
                 <br />
               <Button variant="contained"  onClick = { this.handleNodeEdit } >
