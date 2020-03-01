@@ -8,12 +8,12 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
 	formControl: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     minWidth: "calc(100% - 16px)",
 		textAlign:"center",
   },
 	buttonControl:{
-		margin: theme.spacing.unit,
+		margin: theme.spacing(1),
     minWidth: "calc(100% - 16px)",
 		textAlign:"center",
 		marginTop:20
