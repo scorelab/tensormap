@@ -57,6 +57,6 @@ export default function SimpleTabs(props: SimpleTabsProps) {
 }
 
 SimpleTabs.propTypes = {
-  code: PropTypes.string.isRequired,
-  runtimeData: PropTypes.string.isRequired,
+  code: PropTypes.string,
+  runtimeData: PropTypes.string,
 };

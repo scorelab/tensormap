@@ -289,7 +289,7 @@ class EnhancedTable extends React.Component {
 
 
     return (
-      <Grid container spacing={24}>
+      <Grid container spacing={10}>
         <Grid item xs={2}>
         </Grid>
         <Grid item xs={8}>
@@ -300,8 +300,8 @@ class EnhancedTable extends React.Component {
               <Table className={classes.table} aria-labelledby="tableTitle">
                 <EnhancedTableHead
                   numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
+                  order={order?order:'asc'}
+                  orderBy={orderBy?orderBy:'name'}
                   onSelectAllClick={this.handleSelectAllClick}
                   onRequestSort={this.handleRequestSort}
                   rowCount={data.length}
