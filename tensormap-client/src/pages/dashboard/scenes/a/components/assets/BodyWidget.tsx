@@ -53,6 +53,7 @@ export interface BodyWidgetState {
   tmp_id: string;
   dialog_group:boolean;
   layer_name:string;
+  activation_function:string;
   layer_color:any;
   runtime_data:string;
   code:string;
@@ -82,7 +83,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       accuracy: false,
       neg_mean_square_error: false,
       layer_name:"",
-      
+      activation_function:"",
       layer_color:"",
       runtime_data:"Epoch Number: 25, Val Acc: 87.3623%, Train Acc: 90.821% ",
       code:"from keras.datasets import mnist\nfrom keras.layers import Dense, Conv2D, Flatten\nmodel = Sequential()\nmodel.add(Conv2D(64, kernel_size=3, activation=’relu’, input_shape=(28,28,1)))\nmodel.add(Flatten())\nmodel.add(Dense(10, activation=’softmax’))\nmodel.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3)",
@@ -183,30 +184,32 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
   };
   handleChangeActivation=(key:number,param_name:string,event:React.ChangeEvent<{value:unknown}>,islink:boolean,id:string)=>{
     console.log(event.target.value as string)
-    var tmp_form=this.state.tmp_form;
-    if (islink) {
-      var link = this.props.app.getDiagramEngine().getDiagramModel().getLink(id);
-      if (link != null) {
-        link.extras = {
-          weight: event.target.value
-        };
-        var labels_node = link.labels[0] as DefaultLabelModel;
-        labels_node.setLabel(event.target.value as string);
-      }
-      tmp_form[param_name] = event.target.value
-      this.setState({
-        tmp_form
-      } as any)
-    }
-    else {
-      tmp_form[param_name] = event.target.value
-      tmp_form["error_text"]=""
-      this.setState({
-        tmp_form,
+    // var tmp_form=this.state.tmp_form;
+    // if (islink) {
+    //   var link = this.props.app.getDiagramEngine().getDiagramModel().getLink(id);
+    //   if (link != null) {
+    //     link.extras = {
+    //       weight: event.target.value
+    //     };
+    //     var labels_node = link.labels[0] as DefaultLabelModel;
+    //     labels_node.setLabel(event.target.value as string);
+    //   }
+    //   tmp_form[param_name] = event.target.value
+    //   this.setState({
+    //     tmp_form
+    //   } as any)
+    // }
+    // else {
+    //   tmp_form[param_name] = event.target.value
+    //   tmp_form["error_text"]=""
+    //   this.setState({
+    //     tmp_form,
        
-      } as any)
-    }
-    
+    //   } as any)
+    // }
+    this.setState({
+      activation_function:event.target.value as string
+    })
   }
   handleChange = (key: number, param_name: string, event: React.ChangeEvent<HTMLInputElement>, islink: boolean, id: string) => {
     var tmp_form = this.state.tmp_form;
@@ -289,8 +292,9 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     // console.log(url_)
     fetch(url_, {
       method: 'POST',
+      
       headers: {
-        'access-control-allow-origin': 'localhost:3000',
+        'Access-Control-Allow-Origin':"http://localhost:3000",
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
@@ -310,8 +314,9 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     var url_ = baseURL + 'getcode/';
     fetch(url_, {
       method: 'POST',
+      
       headers: {
-        'access-control-allow-origin': 'localhost:3000',
+        'Access-Control-Allow-Origin':"http://localhost:3000",
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
@@ -330,8 +335,9 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     var url_ = baseURL + 'delete/';
     fetch(url_, {
       method: 'POST',
+      
       headers: {
-        'access-control-allow-origin': 'localhost:3000',
+        'Access-Control-Allow-Origin':"http://localhost:3000",
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
@@ -352,8 +358,10 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     var url_ = baseURL + 'add/';
     fetch(url_, {
       method: 'POST',
+      
+
       headers: {
-        'access-control-allow-origin': 'localhost:3000',
+        'Access-Control-Allow-Origin':"http://localhost:3000",
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
@@ -374,8 +382,9 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     var url_ = baseURL + 'edit/';
     fetch(url_, {
       method: 'POST',
+      
       headers: {
-        'access-control-allow-origin': 'localhost:3000',
+        'Access-Control-Allow-Origin':"http://localhost:3000",
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
@@ -620,10 +629,11 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
               <TextField  id="standard-name" label = "units"helperText={this.state.tmp_form.error_text}  value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event, false, this.state.tmp_id)} margin = "normal" >
               </TextField>
                 <br />
-              {/* <TextField  id="standard-name" label = "activation" helperText={this.state.tmp_form.error_text} value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
-              </TextField> */}
+                {this.state.tmp_form.activation}
+              <TextField  id="standard-name" label = "activation" helperText={this.state.tmp_form.error_text} value = { this.state.activation_function } color="primary">
+              </TextField>
               
-               <InputLabel id="select-label" style={{marginTop:"10px"}}>Activation</InputLabel>
+               {/* <InputLabel id="select-label" style={{marginTop:"10px"}}>Activation</InputLabel>
                 
               <Select labelId="select-label" style={{width:"210px",}}  id="standard-name"  value={this.state.tmp_form.activation} label="activation"  onChange={(event:React.ChangeEvent<{value:unknown}>)=>this.handleChangeActivation(1,"activation",event,false,this.state.tmp_id)}>
                
@@ -632,7 +642,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                         <MenuItem value="sigmoid">Sigmoid</MenuItem>
                         <MenuItem value="tanh">Tanh</MenuItem>
                         <MenuItem value="softmax">Softmax</MenuItem>
-                </Select>
+                </Select> */}
                         
             </form>
                 <br />
@@ -652,7 +662,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                 <TextField  id="standard-name" helperText={this.state.tmp_form.error_text}  label = "weight" value = { this.state.tmp_form.units } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(0, "units", event, true, this.state.tmp_id)} margin = "normal" >
                 </TextField>
                   <br />
-                <TextField  id="standard-name"helperText={this.state.tmp_form.error_text} label = "activation" value = { this.state.tmp_form.activation } onChange = {(event: React.ChangeEvent<HTMLInputElement>) => this.handleChange(1, "activation", event, false, this.state.tmp_id)} margin = "normal" >
+                <TextField  color="primary" id="standard-name"helperText={this.state.tmp_form.error_text} label = "activation" value = { this.state.activation_function }  margin = "normal" >
                 </TextField>
                 
                {/* <Select fullWidth labelId="demo-simple-select-label" id="demo-simple-select" value={this.state.tmp_form.units} label="weight"  onChange={(event:React.ChangeEvent<{value:unknown}>)=>this.handleChangeActivation(1,"activation",event,false,this.state.tmp_id)} defaultValue="default">
@@ -708,7 +718,18 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                   }}
                 fullWidth
                 />
-
+          
+          <InputLabel id="select-label" style={{marginTop:"10px"}}>Activation</InputLabel>
+                
+                <Select labelId="select-label" style={{width:"210px",}}  id="standard-name"  value={this.state.activation_function} label="activation"  onChange={(event:React.ChangeEvent<{value:unknown}>)=>this.handleChangeActivation(1,"activation",event,false,this.state.tmp_id)}>
+                 
+                  <MenuItem value="default" disabled selected>Select Activation Function</MenuItem>
+                          <MenuItem value="relu">ReLu(Rectified Linear unit)</MenuItem>
+                          <MenuItem value="sigmoid">Sigmoid</MenuItem>
+                          <MenuItem value="tanh">Tanh</MenuItem>
+                          <MenuItem value="softmax">Softmax</MenuItem>
+                  </Select>
+        
           <FormControlLabel
               control={
                 < Checkbox
