@@ -1,11 +1,11 @@
 [![Build Status](https://travis-ci.com/scorelab/TensorMap.svg?branch=master)](https://travis-ci.com/scorelab/TensorMap)  [![Join the chat at https://gitter.im/scorelab/TensorMap](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/scorelab/TensorMap) 
-[![HitCount](http://hits.dwyl.com/scorelab/TensorMap.svg)](http://hits.dwyl.com/scorelab/TensorMap)
+[![Hit Count](http://hits.dwyl.com/scorelab/TensorMap.svg)](http://hits.dwyl.com/scorelab/TensorMap)
 
 
 
 # TensorMap
 
-TensorMap is a web application that will allow the users to create machine learning algorithms visually. TensorMap supports reverse engineering of the visual layout to a Tensorflow implementation in preferred languages. The goal of the project is to let the beginners play with machine learning algorithms in Tensorflow without less background knowledge about the library. For more details about the project, read our [project wiki.](https://github.com/scorelab/TensorMap/wiki)
+TensorMap is a web application that will allow the users to create machine learning algorithms visually. TensorMap supports reverse engineering of the visual layout to a Tensorflow implementation in preferred languages. The goal of the project is to let beginners play with machine learning algorithms in Tensorflow without much background knowledge of the library. For more details about the project, read our [project wiki.](https://github.com/scorelab/TensorMap/wiki)
 
 ## Getting Started
 Follow these steps to set up TensorMap on your local machine.
@@ -21,7 +21,7 @@ git clone https://github.com/scorelab/TensorMap.git
 #### Prerequisites
 * Node.js
 * Yarn
-* Npm
+* npm
 
 ```bash
 cd TensorMap
