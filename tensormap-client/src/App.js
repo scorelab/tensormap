@@ -5,7 +5,7 @@ import {Route, Router} from 'react-router-dom'
 import styles          from './App.styles'
 import {history}       from './helpers'
 import {Dashboard}     from './pages/dashboard'
-
+import Form            from './pages/login/login'
 class App extends React.Component {
 
   render() {
@@ -16,9 +16,7 @@ class App extends React.Component {
           <Router history={history}>
             <div>
               <Route path="/" component={Dashboard}/>
-              {/*<PrivateRoute exact path="/" component={Dashboard}/>*/}
-              {/*<Route path="/login" component={SignIn}/>*/}
-              {/*<Route path="/register" component={SignUp}/>*/}
+              <Route path="/login" component={Form}/>
             </div>
           </Router>
         </div>
