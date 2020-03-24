@@ -415,12 +415,20 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
   handleLayerCreated = () =>{
     //Post request to backend
   }
+  handledeleteKey=(event: any)=>{
+    if(event.key==='Enter'){
+      this.handledelete();
+    }
+  }
 
   handledelete = () => {
 			_.forEach(this.props.app.getDiagramEngine().getDiagramModel().getSelectedItems(), (element : any) => {
 				if (!this.props.app.getDiagramEngine().isModelLocked(element)) {
 					element.remove();
-				}
+        }
+        else{
+          window.alert("Select a node!")
+        }
 			});
 			this.forceUpdate();
   };
@@ -508,6 +516,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                             event.preventDefault();
                           }
                         }
+                        onKeyPress={
+                         this.handledeleteKey}
 
           						onDoubleClick = {
                           event => {
@@ -546,7 +556,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
           						diagramEngine = { this.props.app.getDiagramEngine() }
           						maxNumberPointsPerLink = {0}
                       allowLooseLinks={false}
-                      deleteKeys = {[]}
+                      deleteKeys = {[46]}
                       />
                     </div>
                   </Paper>
