@@ -567,8 +567,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
             </Grid>
             <Grid container spacing={8}>
               <Grid item xs>
-                <Paper square>
-                  <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data}/>
+                <Paper square> 
+                  <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data} className={classes.copybutton} divStyle={classes.divStyle}/>
                 </Paper>
               </Grid>
             </Grid>

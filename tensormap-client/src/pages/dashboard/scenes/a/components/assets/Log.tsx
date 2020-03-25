@@ -1,17 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-
+import React from "react";
+import PropTypes from "prop-types";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
 interface TabContainerProps {
   children?: React.ReactNode;
 }
 
 interface SimpleTabsProps {
-  code:string;
-  runtimeData:string;
+  divStyle?: string;
+  className?: string;
+  code: string;
+  runtimeData: string;
 }
 
 function TabContainer(props: TabContainerProps) {
@@ -23,7 +26,7 @@ function TabContainer(props: TabContainerProps) {
 }
 
 TabContainer.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };
 
 export default function SimpleTabs(props: SimpleTabsProps) {
@@ -33,7 +36,7 @@ export default function SimpleTabs(props: SimpleTabsProps) {
     setValue(newValue);
   }
 
-  let newText = props.code.split('\n').map((item, i) => {
+  let newText = props.code.split("\n").map((item, i) => {
     return <p key={i}>{item}</p>;
   });
 
@@ -41,14 +44,21 @@ export default function SimpleTabs(props: SimpleTabsProps) {
     <div className="log_main">
       <div>
         <AppBar position="static" color="default">
-          <Tabs value={value} onChange={handleChange} >
+          <Tabs value={value} onChange={handleChange}>
             <Tab label="Logs" />
             <Tab label="Code" />
           </Tabs>
         </AppBar>
         {value === 0 && <TabContainer>{props.runtimeData}</TabContainer>}
-        {value === 1 && <TabContainer>{newText}
-        </TabContainer>}
+        {value === 1 && (
+          <div className={props.divStyle}>
+            <TabContainer>{newText}</TabContainer>
+            <Button variant="contained" className={props.className}>
+              <FileCopyIcon fontSize="small" />
+              Copy Code To Clipboard
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -56,5 +66,5 @@ export default function SimpleTabs(props: SimpleTabsProps) {
 
 SimpleTabs.propTypes = {
   code: PropTypes.string.isRequired,
-  runtimeData: PropTypes.string.isRequired,
+  runtimeData: PropTypes.string.isRequired
 };
