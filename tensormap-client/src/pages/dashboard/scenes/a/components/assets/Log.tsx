@@ -1,4 +1,5 @@
 import React from "react";
+import { useRef } from "react";
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -40,11 +41,24 @@ export default function SimpleTabs(props: SimpleTabsProps) {
     return <p key={i}>{item}</p>;
   });
 
+  function copyCode() {
+    const node = document.createElement("textarea");
+    console.log("button clicked!");
+
+    node.innerText = props.code;
+    console.log(node.value);
+    document.body.appendChild(node);
+    node.select();
+    if (document.execCommand("copy")) {
+      window.alert("Code Copied");
+    }
+    document.body.removeChild(node);
+  }
   return (
     <div className="log_main">
       <div>
         <AppBar position="static" color="default">
-          <Tabs value={value} onChange={handleChange}>
+          <Tabs value={value} onChange={handleChange} variant="scrollable">
             <Tab label="Logs" />
             <Tab label="Code" />
           </Tabs>
@@ -53,7 +67,11 @@ export default function SimpleTabs(props: SimpleTabsProps) {
         {value === 1 && (
           <div className={props.divStyle}>
             <TabContainer>{newText}</TabContainer>
-            <Button variant="contained" className={props.className}>
+            <Button
+              variant="contained"
+              className={props.className}
+              onClick={copyCode}
+            >
               <FileCopyIcon fontSize="small" />
               Copy Code To Clipboard
             </Button>

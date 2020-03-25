@@ -247,6 +247,12 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     // });
 
   }
+  //function to copy code
+  handlecopyCode=()=>{
+    const code=this.state.code;
+    
+
+  }
 
   handleGetCode = () => {
     var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
@@ -568,7 +574,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
             <Grid container spacing={8}>
               <Grid item xs>
                 <Paper square> 
-                  <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data} className={classes.copybutton} divStyle={classes.divStyle}/>
+                  <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data} className={classes.copybutton} divStyle={classes.divStyle} />
                 </Paper>
               </Grid>
             </Grid>
