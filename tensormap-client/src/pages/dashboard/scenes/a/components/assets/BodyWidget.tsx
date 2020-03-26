@@ -23,8 +23,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Avatar from '@material-ui/core/Avatar';
 import {withStyles} from '@material-ui/core';
-import styles       from './BodyWidget.styles'
-
+import styles       from './BodyWidget.styles';
+//import FileSaver from 'file-saver';
 import { baseURL } from '../../../../../../config';
 
 import socketIOClient from "socket.io-client";
@@ -568,7 +568,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
             <Grid container spacing={8}>
               <Grid item xs>
                 <Paper square>
-                  <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data}/>
+                  <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data}  divStyle={classes.divStyle} exportStyle={classes.exportButton}/>
                 </Paper>
               </Grid>
             </Grid>
