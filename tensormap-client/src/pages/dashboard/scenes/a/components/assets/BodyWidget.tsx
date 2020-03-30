@@ -28,6 +28,7 @@ import styles       from './BodyWidget.styles'
 import { baseURL } from '../../../../../../config';
 
 import socketIOClient from "socket.io-client";
+import { isTemplateElement } from "@babel/types";
 
 
 var _ = require('lodash')
@@ -229,6 +230,14 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     // console.log(this.state.node);
   }
 
+  handleError=()=>{
+    var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
+    var input_layer=0;
+    json_graph.nodes.map(item=>{if(item.extras.name==="Input Node"){input_layer+=1}})
+    if(input_layer===0){
+      window.alert("There is no input layer")
+    }
+  }
   handleExecute = () => {
     var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
     var node_data = this.state.node
@@ -237,6 +246,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       node_param: node_data
     }
     console.log(comp_data);
+    this.handleError();
 
     // const socket = socketIOClient(endpoint);
     // socket.emit('nn_execute', comp_data, function(response: any) {
