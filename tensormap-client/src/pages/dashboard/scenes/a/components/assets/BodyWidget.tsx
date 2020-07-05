@@ -23,8 +23,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Avatar from '@material-ui/core/Avatar';
 import {withStyles} from '@material-ui/core';
-import styles       from './BodyWidget.styles'
-
+import styles       from './BodyWidget.styles';
+//import FileSaver from 'file-saver';
 import { baseURL } from '../../../../../../config';
 
 import socketIOClient from "socket.io-client";
@@ -228,7 +228,14 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     this.setState({ node: joined, });
     // console.log(this.state.node);
   }
-
+  handleOutputError=()=>{
+    var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
+    var output_layer=0;
+    json_graph.nodes.map(item=>{if(item.extras.name==="Output Node"){output_layer+=1}})
+    if(output_layer===0){
+      window.alert("There is no Output layer")
+    }
+  }
   handleExecute = () => {
     var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
     var node_data = this.state.node
@@ -237,7 +244,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       node_param: node_data
     }
     console.log(comp_data);
-
+    this.handleOutputError();
     // const socket = socketIOClient(endpoint);
     // socket.emit('nn_execute', comp_data, function(response: any) {
     //   console.log(response)
@@ -415,12 +422,20 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
   handleLayerCreated = () =>{
     //Post request to backend
   }
+  handledeleteKey=(event: any)=>{
+    if(event.key==='Enter'){
+      this.handledelete();
+    }
+  }
 
   handledelete = () => {
 			_.forEach(this.props.app.getDiagramEngine().getDiagramModel().getSelectedItems(), (element : any) => {
 				if (!this.props.app.getDiagramEngine().isModelLocked(element)) {
 					element.remove();
-				}
+        }
+        else{
+          window.alert("Select a node!")
+        }
 			});
 			this.forceUpdate();
   };
@@ -508,6 +523,8 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                             event.preventDefault();
                           }
                         }
+                        onKeyPress={
+                         this.handledeleteKey}
 
           						onDoubleClick = {
                           event => {
@@ -546,7 +563,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
           						diagramEngine = { this.props.app.getDiagramEngine() }
           						maxNumberPointsPerLink = {0}
                       allowLooseLinks={false}
-                      deleteKeys = {[]}
+                      deleteKeys = {[46]}
                       />
                     </div>
                   </Paper>
@@ -568,7 +585,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
             <Grid container spacing={8}>
               <Grid item xs>
                 <Paper square>
-                  <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data}/>
+                  <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data}  divStyle={classes.divStyle} exportStyle={classes.exportButton}/>
                 </Paper>
               </Grid>
             </Grid>
