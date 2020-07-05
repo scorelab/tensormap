@@ -7,6 +7,10 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
+import { Button } from "@material-ui/core";
+import Filesaver from "file-saver";
+import GetAppIcon from "@material-ui/icons/GetApp";
+
 interface TabContainerProps {
   children?: React.ReactNode;
 }
@@ -14,6 +18,8 @@ interface TabContainerProps {
 interface SimpleTabsProps {
   divStyle?: string;
   className?: string;
+  exportStyle?: string | undefined;
+  divStyle?: string | undefined;
   code: string;
   runtimeData: string;
 }
@@ -40,6 +46,10 @@ export default function SimpleTabs(props: SimpleTabsProps) {
   let newText = props.code.split("\n").map((item, i) => {
     return <p key={i}>{item}</p>;
   });
+  function exportPython() {
+    var blob = new Blob([props.code], { type: "text/x-python;charset=utf-8" });
+    Filesaver.saveAs(blob, "hello-world.py");
+  }
 
   function copyCode() {
     const node = document.createElement("textarea");
@@ -59,6 +69,7 @@ export default function SimpleTabs(props: SimpleTabsProps) {
       <div>
         <AppBar position="static" color="default">
           <Tabs value={value} onChange={handleChange} variant="scrollable">
+          <Tabs value={value} onChange={handleChange}>
             <Tab label="Logs" />
             <Tab label="Code" />
           </Tabs>
@@ -74,6 +85,10 @@ export default function SimpleTabs(props: SimpleTabsProps) {
             >
               <FileCopyIcon fontSize="small" />
               Copy Code To Clipboard
+              className={props.exportStyle}
+              onClick={exportPython}
+            >
+              <GetAppIcon fontSize="small" /> Export to Python
             </Button>
           </div>
         )}

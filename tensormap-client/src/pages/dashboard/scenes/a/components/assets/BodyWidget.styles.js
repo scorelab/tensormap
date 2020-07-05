@@ -1,6 +1,6 @@
 import { Theme } from "@material-ui/core/styles";
 import { red, grey, green, blue } from "@material-ui/core/colors";
-import { flexbox } from "@material-ui/system";
+//import { flexbox } from "@material-ui/system";
 const styles = theme => ({
   root: {
     display: "flex",
@@ -36,6 +36,10 @@ const styles = theme => ({
     margin: theme.spacing(1)
   },
   copybutton: {
+  height: "40px",
+    margin: theme.spacing(2)
+  },
+  exportButton: {
     height: "40px",
     margin: theme.spacing(2)
   },
