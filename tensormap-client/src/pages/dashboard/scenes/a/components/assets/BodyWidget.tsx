@@ -229,13 +229,20 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     this.setState({ node: joined, });
     // console.log(this.state.node);
   }
-
   handleError=()=>{
     var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
     var input_layer=0;
     json_graph.nodes.map(item=>{if(item.extras.name==="Input Node"){input_layer+=1}})
     if(input_layer===0){
       window.alert("There is no input layer")
+
+  handleOutputError=()=>{
+    var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
+    var output_layer=0;
+    json_graph.nodes.map(item=>{if(item.extras.name==="Output Node"){output_layer+=1}})
+    if(output_layer===0){
+      window.alert("There is no Output layer")
+
     }
   }
   handleExecute = () => {
@@ -248,6 +255,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
     console.log(comp_data);
     this.handleError();
 
+    this.handleOutputError();
     // const socket = socketIOClient(endpoint);
     // socket.emit('nn_execute', comp_data, function(response: any) {
     //   console.log(response)
