@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "isolatedModules": false,
+    "isolatedModules": true,
     "target": "es5",
     "lib": [
       "dom",
