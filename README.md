@@ -40,6 +40,8 @@ Then, go into 'tensormap-server' folder
 cd TensorMap
 cd tensormap-server
 ```
+Create a python 3 virtual environment and activate it.
+* Follow this [How to setup and install virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) tutorial to set up and activate the virtual environment. 
 
 Then, install all the required packages by running
 
