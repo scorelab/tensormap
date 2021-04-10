@@ -21,6 +21,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
+import * as ENDPOINT from "../../../constants/URLs";
 
 let counter = 0;
 function createData(id, name, dtype) {
@@ -30,7 +31,8 @@ function createData(id, name, dtype) {
 
 function getDeleteHandler(idx) {
     var Httpreq = new XMLHttpRequest();
-    Httpreq.open("GET", 'http://localhost:5000/deleteData?id=' + idx, true);
+    const URI = ENDPOINT.BACKEND_BASE_URL+ ENDPOINT.DELETE_DATA_URL;
+    Httpreq.open("GET",   URI+'?id=' + idx, true);
     Httpreq.send(null);
     console.log("completed")
 }

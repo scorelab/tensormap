@@ -13,13 +13,15 @@ import { ViewData } from "../viewdata";
 import { VisualizeData } from "../visualizedata";
 import styles from "./Dashboard.styles";
 import { Error404 } from "../error404";
+import * as ENDPOINT from "../../constants/URLs";
 
 class Dashboard extends React.Component {
   componentWillMount() {
     var obj = { user_id: "1", experimet_type: "regression" };
     var data = JSON.stringify(obj);
     console.log(data);
-    fetch("http://127.0.0.1:5000/createExperiment", {
+    const URI = ENDPOINT.BACKEND_BASE_URL + ENDPOINT.CREATE_EXPERIMENT_URL;
+    fetch( URI, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -45,19 +47,19 @@ class Dashboard extends React.Component {
     return (
       <div className={classes.root}>
         <CssBaseline />
-        {url_.pathname !== "/neuralnet" && <Header />}
+        {url_.pathname !== ENDPOINT.NEURAL_NET_URL && <Header />}
         <Sidebar />
         <main className={classes.content}>
-          {url_.pathname !== "/neuralnet" && (
+          {url_.pathname !== ENDPOINT.NEURAL_NET_URL && (
             <div className={classes.toolbar} />
           )}
 
-          <Route exact path="/home" component={Home} />
-          <Route exact path="/neuralnet" component={A} />
-          <Route exact path="/data" component={B} />
-          <Route exact path="/adddata" component={AddData} />
+          <Route exact path={ENDPOINT.HOME_URL} component={Home} />
+          <Route exact path={ENDPOINT.NEURAL_NET_URL} component={A} />
+          <Route exact path={ENDPOINT.DATA_URL} component={B} />
+          <Route exact path={ENDPOINT.ADD_DATA_URL} component={AddData} />
           <Route exact path="/visualize/:id" component={VisualizeData} />
-          <Route exact path="/viewdata" component={ViewData} />
+          <Route exact path={ENDPOINT.VIEW_DATA_URL} component={ViewData} />
           <Route component={Error404} />
         </main>
       </div>

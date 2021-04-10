@@ -5,7 +5,9 @@ import { Route, Router } from "react-router-dom";
 import styles from "./App.styles";
 import { history } from "./helpers";
 import { Dashboard } from "./pages/dashboard";
-import { Home } from "./pages/dashboard/scenes/home";
+import { Home }      from "./pages/dashboard/scenes/home";
+import * as ENDPOINT from "./constants/URLs";
+
 
 class App extends React.Component {
   render() {
@@ -15,7 +17,7 @@ class App extends React.Component {
       <div className={classes.root}>
         <Router history={history}>
           <div>
-            <Route path="/" component={Dashboard} />
+            <Route path={ENDPOINT.TOP_URL} component={Dashboard} />
             {/*<PrivateRoute exact path="/" component={Dashboard}/>*/}
             {/*<Route path="/login" component={SignIn}/>*/}
             {/*<Route path="/register" component={SignUp}/>*/}

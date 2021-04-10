@@ -3,12 +3,14 @@ import PropTypes    from 'prop-types'
 import * as React   from 'react'
 import styles       from './ViewData.styles'
 import Table from './assets/Table'
+import * as ENDPOINT from '../../constants/URLs';
 
 class ViewData extends React.Component {
   constructor() {
     super();
     var Httpreq = new XMLHttpRequest();
-    Httpreq.open("GET", 'http://localhost:5000/viewData', false);
+    const URI = ENDPOINT.BACKEND_BASE_URL + ENDPOINT.VIEW_DATA_URL;
+    Httpreq.open("GET", URI, false);
     Httpreq.send(null);
     this.state = {
       data:JSON.parse(Httpreq.responseText),

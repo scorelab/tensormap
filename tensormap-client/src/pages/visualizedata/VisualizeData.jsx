@@ -22,6 +22,7 @@ import { saveAs } from 'file-saver';
 import { forwardRef } from 'react';
 import { template } from '@babel/core';
 import {Button,ButtonGroup,Collapse,Tabs,Tab} from 'react-bootstrap';
+import * as ENDPOINT from '../../constants/URLs';
 
 
 const tableIcons = {
@@ -85,7 +86,7 @@ class VisualizeData extends React.Component {
 
     this.setState({fileName: this.props.location.state.fileName })
 
-    let url = "http://127.0.0.1:5000/visualizeData?fileName="
+    let url = ENDPOINT.BACKEND_BASE_URL + ENDPOINT.VISUALIZE_DATA_URL + "?fileName="
     url = url.concat(this.props.location.state.fileName)
 
     console.log(this.props.location.state.fileName)
@@ -121,7 +122,8 @@ class VisualizeData extends React.Component {
     var obj = {trainPercentage: this.state.trainPercentage, fileName: this.state.fileName, features:this.state.features, labels:this.state.labels}
     var data = JSON.stringify(obj)
     console.log(data)
-    fetch("http://127.0.0.1:5000/saveConfig", {
+    const URI = ENDPOINT.BACKEND_BASE_URL + ENDPOINT.SAVE_CONFIG_URL;
+    fetch(URI, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -143,8 +145,8 @@ class VisualizeData extends React.Component {
     var obj = {rowdata: newData, fileName: this.state.fileName, columnData:this.state.columns}
     var data = JSON.stringify(obj)
     console.log(data) 
-
-    fetch("http://127.0.0.1:5000/addRow", {
+    const URI = ENDPOINT.BACKEND_BASE_URL + ENDPOINT.ADD_ROW_URL;
+    fetch(URI, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -162,9 +164,10 @@ class VisualizeData extends React.Component {
   sendDeleteRequest(oldData){
     var obj = {oldRowData: oldData, fileName: this.state.fileName}
     var data = JSON.stringify(obj)
-    console.log(data) 
+    console.log(data)
+    const URI = ENDPOINT.BACKEND_BASE_URL + ENDPOINT.DELETE_ROW_URL;
 
-    fetch("http://127.0.0.1:5000/deleteRow", {
+    fetch(URI, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -184,9 +187,10 @@ class VisualizeData extends React.Component {
 
     var obj = {newRowData: newData, fileName: this.state.fileName, columnData:this.state.columns}
     var data = JSON.stringify(obj)
-    console.log(data) 
+    console.log(data)
+    const URI = ENDPOINT.BACKEND_BASE_URL + ENDPOINT.EDIT_ROW_URL;
 
-    fetch("http://127.0.0.1:5000/editRow", {
+    fetch(URI, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -206,8 +210,8 @@ class VisualizeData extends React.Component {
     var obj = {fileName: this.state.fileName}
     var data = JSON.stringify(obj)
     console.log(data) 
-
-    fetch("http://127.0.0.1:5000/downloadCSV", {
+    const URI = ENDPOINT.BACKEND_BASE_URL + ENDPOINT.DOWNLOAD_CSV_URL
+    fetch(URI, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -232,8 +236,8 @@ class VisualizeData extends React.Component {
     var obj = {columnData: this.state.columnCheckBoxes, fileName: this.state.fileName}
     var data = JSON.stringify(obj)
     console.log(data) 
-
-    fetch("http://127.0.0.1:5000/deleteColumn", {
+    const URI = ENDPOINT.BACKEND_BASE_URL + ENDPOINT.DELETE_COLUMN_URL;
+    fetch(URI, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
