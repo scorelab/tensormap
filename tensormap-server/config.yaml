@@ -1,0 +1,23 @@
+api:
+  baseURL: ''
+  template:
+    edit: '/edit'
+    add: '/add'
+    delete: '/delete'
+    get: '/getCode'
+    compile: '/compileConfig'
+    experiment:
+      create: '/createExperiment'
+      delete: '/deleteExperiment'
+  data:
+    add: '/addData'
+    visualize: '/visualizeData'
+    view: '/viewData'
+    save: '/saveConfig'
+    download: '/downloadCSV'
+    row:
+      add: '/addRow'
+      edit: '/editRow'
+      delete: '/deleteRow'
+    column:
+      delete: '/deleteColumn'

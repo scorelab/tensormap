@@ -8,24 +8,40 @@ import csv
 import pandas as pd
 from flask import send_file
 from .template_manipulation import editExperimentConfigurations
+from app.services.ConfigManager import get_configs
+
+configs = get_configs()
+
+# Create URLs for API endpoints
+
+URI_ADD_DATA = configs['api']['data']['add']
+URI_VISUALIZE_DATA = configs['api']['data']['visualize']
+URI_SAVE_CONFIG = configs['api']['data']['save']
+URI_DOWNLOAD = configs['api']['data']['download']
+URI_VIEW_DATA = configs['api']['data']['view']
+
+URI_ADD_ROW = configs['api']['data']['row']['add']
+URI_EDIT_ROW = configs['api']['data']['row']['edit']
+URI_DELETE_ROW = configs['api']['data']['row']['delete']
+URI_DELETE_COLUMN = configs['api']['data']['column']['delete']
 
 
 def createJsonData(entry):
-    i= 0
+    i = 0
     columns = []
     data = []
     splitLine = None
-    allData = {} 
+    allData = {}
 
     if entry:
         with open(entry.filePath, 'r') as f:
             index = 0
             for line in f:
-                if index == 0:                
+                if index == 0:
                     print(line)
-                    newLine = line.replace('\n', '').replace('"','')
+                    newLine = line.replace('\n', '').replace('"', '')
                     splitLine = newLine.split(",")
-                    print(splitLine)                    
+                    print(splitLine)
                     for column in splitLine:
                         temColumn = {}
                         temColumn["title"] = column
@@ -33,42 +49,41 @@ def createJsonData(entry):
                         columns.append(temColumn)
                     print(columns)
                 else:
-                    
-                    newRowLine = line.replace('\n', '').replace('"','')
+
+                    newRowLine = line.replace('\n', '').replace('"', '')
                     splitData = newRowLine.split(",")
-                    if index==1:
+                    if index == 1:
                         print(line)
                         print(newRowLine)
                         print(splitData)
                         print(splitLine)
-                    
+
                     temRow = {}
-                    for i in range(len(splitData)):                        
+                    for i in range(len(splitData)):
                         temRow[splitLine[i]] = splitData[i]
-                    data.append(temRow) 
+                    data.append(temRow)
                 index += 1
-           
-        allData["columns"]=columns
-        allData["data"]=data
-        allData["error"]="None"
-        responseData = json.dumps(allData)
-        return responseData    
-           
-    else:
-        allData["columns"]="None"
-        allData["data"]="None"
-        allData["error"]="Dataset Not Found"
+
+        allData["columns"] = columns
+        allData["data"] = data
+        allData["error"] = "None"
         responseData = json.dumps(allData)
         return responseData
 
- 
-@main.route('/addData', methods=['POST'])
-def addData():
+    else:
+        allData["columns"] = "None"
+        allData["data"] = "None"
+        allData["error"] = "Dataset Not Found"
+        responseData = json.dumps(allData)
+        return responseData
 
+
+@main.route(URI_ADD_DATA, methods=['POST'])
+def addData():
     file = request.files['file']
     datasetFile = file.filename
 
-    dirPath = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.', 'dataset'))
+    dirPath = os.path.abspath(os.path.join(os.path.dirname(__file__), '.', 'dataset'))
     path = '{}{}{}'.format(dirPath, "/", datasetFile)
 
     splitFileInfo = datasetFile.split(".")
@@ -80,18 +95,17 @@ def addData():
 
     else:
 
-        file.save(path)   
+        file.save(path)
 
         # writing the file entry in the database.
-        data = dataset(fileName, path, fileFormat, "None","None",0)
+        data = dataset(fileName, path, fileFormat, "None", "None", 0)
         db.session.add(data)
-        db.session.commit()           
+        db.session.commit()
         return splitFileInfo[0]
 
 
-@main.route('/visualizeData', methods=['GET'])
+@main.route(URI_VISUALIZE_DATA, methods=['GET'])
 def visualizeData():
-
     # ******************************************change
     # entry = dataset.query.filter_by(fileName=request.args['fileName']).one()
 
@@ -101,7 +115,7 @@ def visualizeData():
     return responseData
 
 
-@main.route('/addRow', methods=['POST'])
+@main.route(URI_ADD_ROW, methods=['POST'])
 def addDataRow():
     content = request.get_json()
 
@@ -113,7 +127,7 @@ def addDataRow():
     dataCsv = pd.read_csv(entry.filePath)
 
     for column in content["columnData"]:
-        if column["title"] in  content["rowdata"]:
+        if column["title"] in content["rowdata"]:
             row.append(content["rowdata"][column["title"]])
         else:
             row.append("None")
@@ -121,12 +135,12 @@ def addDataRow():
 
     dataCsv.loc[len(dataCsv)] = row
     dataCsv.to_csv(entry.filePath, index=False)
-    
+
     return "Done"
 
-@main.route('/editRow', methods=['POST'])
-def editDataRow():
 
+@main.route(URI_EDIT_ROW, methods=['POST'])
+def editDataRow():
     content = request.get_json()
 
     entry = dataset.query.filter_by(fileName=content['fileName']).one()
@@ -137,7 +151,7 @@ def editDataRow():
     dataCsv = pd.read_csv(entry.filePath)
 
     for column in content["columnData"]:
-        if column["title"] in  content["newRowData"]:
+        if column["title"] in content["newRowData"]:
             row.append(content["newRowData"][column["title"]])
         else:
             row.append("None")
@@ -148,9 +162,9 @@ def editDataRow():
 
     return "Done"
 
-@main.route('/deleteRow', methods=['POST'])
-def deleteDataRow():
 
+@main.route(URI_DELETE_ROW, methods=['POST'])
+def deleteDataRow():
     content = request.get_json()
 
     entry = dataset.query.filter_by(fileName=content['fileName']).one()
@@ -159,14 +173,14 @@ def deleteDataRow():
 
     dataCsv = pd.read_csv(entry.filePath)
 
-    dataCsv.drop(dataCsv.index[content["oldRowData"]["tableData"]["id"]], inplace = True)
+    dataCsv.drop(dataCsv.index[content["oldRowData"]["tableData"]["id"]], inplace=True)
     dataCsv.to_csv(entry.filePath, index=False)
 
-    return "Done" 
+    return "Done"
 
-@main.route('/deleteColumn', methods=['POST'])
+
+@main.route(URI_DELETE_COLUMN, methods=['POST'])
 def deleteDataColumn():
-
     content = request.get_json()
 
     entry = dataset.query.filter_by(fileName=content['fileName']).one()
@@ -190,25 +204,23 @@ def deleteDataColumn():
 
     return responseData
 
-@main.route('/downloadCSV', methods=['POST'])
-def download():
 
+@main.route(URI_DOWNLOAD, methods=['POST'])
+def download():
     content = request.get_json()
 
     entry = dataset.query.filter_by(fileName=content['fileName']).one()
     fullFileName = '{}{}{}'.format(entry.fileName, ".", entry.fileFormat)
     try:
         return send_file(entry.filePath,
-        attachment_filename=fullFileName,
-        as_attachment=True)
+                         attachment_filename=fullFileName,
+                         as_attachment=True)
     except Exception as e:
         return str(e)
 
 
-
-@main.route('/saveConfig', methods=['POST'])
+@main.route(URI_SAVE_CONFIG, methods=['POST'])
 def saveConfig():
-
     content = request.get_json()
 
     featureString = ""
@@ -216,27 +228,27 @@ def saveConfig():
     index = 0
 
     entry = dataset.query.filter_by(fileName=content['fileName']).one()
-    
+
     for feature in content["features"]:
-        if feature["checked"] :
+        if feature["checked"]:
             print(feature["title"])
             if index == 0:
                 featureString = '{}{}'.format(featureString, feature["title"])
-            else:                
+            else:
                 featureString = '{}{}{}'.format(featureString, ",", feature["title"])
-            index += 1     
-    
+            index += 1
+
     index = 0
 
     for label in content["labels"]:
-        if label["checked"] :
+        if label["checked"]:
             print(label["title"])
             if index == 0:
                 labelString = '{}{}'.format(labelString, label["title"])
-            else:                
+            else:
                 labelString = '{}{}{}'.format(labelString, ",", label["title"])
-            index += 1     
-    
+            index += 1
+
     print(labelString)
 
     entry.features = featureString
@@ -244,19 +256,13 @@ def saveConfig():
     entry.testPercentage = content['trainPercentage']
     db.session.commit()
 
-    editExperimentConfigurations(featureString,labelString,content['trainPercentage'],entry)
+    editExperimentConfigurations(featureString, labelString, content['trainPercentage'], entry)
 
     return "done"
 
 
-@main.route('/viewData', methods=['GET'])
+@main.route(URI_VIEW_DATA, methods=['GET'])
 def viewData():
     entries = dataset.query.all()
     entries = [entry.serialize() for entry in entries]
     return json.dumps(entries)
-
-
-
-
-
-
