@@ -1,0 +1,14 @@
+api:
+  base: '/api/v1'
+  port: 5000
+  host: 0.0.0.0
+  process:
+    uri: '/data/process'
+  upload:
+    uri: '/data/upload'
+  model:
+    uri: '/model'
+
+
+app:
+  debug: True
