@@ -5,18 +5,26 @@ import os
 configs = get_configs()
 
 
+"""
+All the application related settings handle through here
+"""
+
+
 class SettingUp:
 
     def __init__(self, app):
         self.app = app
         self.app.config['SECRET_KEY'] = os.getenv("secret_key")
-        app.config['UPLOAD_FOLDER'] = configs['api']['upload']['folder']
-        app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
+        self.file_setup()
         self.database_setup()
         self.swagger_setup()
 
     def swagger_setup(self):
         pass
+
+    def file_setup(self):
+        self.app.config['UPLOAD_FOLDER'] = configs['api']['upload']['folder']
+        self.app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
 
     def database_setup(self):
         connection = create_db_connection()
