@@ -1,6 +1,10 @@
 from flask_restful import Api
 from endpoints.DataUpload.urls import data_urls
 
+"""
+To add a new urls to the application, all the url functions defined in the relevant files, need to be register here.
+"""
+
 
 class MainURLRegister:
     api_ref = None
