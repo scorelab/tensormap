@@ -6,6 +6,7 @@ api:
     uri: '/data/process'
   upload:
     uri: '/data/upload'
+    folder: './data'
   model:
     uri: '/model'
 
