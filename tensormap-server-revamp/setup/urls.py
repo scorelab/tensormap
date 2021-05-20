@@ -7,6 +7,10 @@ from endpoints.DeepLearning.urls import model_urls
 To add a new urls to the application, all the url functions defined in the relevant files, need to be register here.
 """
 
+"""
+To add a new urls to the application, all the url functions defined in the relevant files, need to be register here.
+"""
+
 
 class MainURLRegister:
     api_ref = None
