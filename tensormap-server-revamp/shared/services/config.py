@@ -2,6 +2,11 @@ import yaml
 
 
 def get_configs():
+    """
+    This function used to receive configs object that store in the configs.yaml file.
+
+    :return: configs as a object
+    """
     if ConfigHandler.config_obj is None:
         ConfigHandler()
     return ConfigHandler.config_obj
