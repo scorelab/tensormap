@@ -1,5 +1,6 @@
 from shared.utils import get_db_ref, create_db_connection
 from shared.services.config import get_configs
+from flask_migrate import Migrate
 import os
 
 configs = get_configs()
@@ -33,5 +34,5 @@ class SettingUp:
         self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         db = get_db_ref()
         db.init_app(self.app)
-        with self.app.app_context():
-            db.create_all()
+        migrate = Migrate(self.app, db)
+

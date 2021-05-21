@@ -31,10 +31,16 @@ db_password = 'database user password'
 db_user = 'database username'
 ```
 
+* set up the FLASK_APP environment variable:
+
+`export FLASK_APP=app.py`
+
 * Now the backend is ready to go ! You can run the backend
   by the following command. 
   
 `python app.py`
+ or
+`flask run`
 
 
 ### Application Architecture
@@ -53,6 +59,16 @@ The application architecture is set up as follows.
 │   ├── DataUpload
 │   └── DeepLearning
 ├── requirements.txt
+├── migrations
+│   ├── README
+│   ├── __pycache__
+│   │   └── env.cpython-39.pyc
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+│       ├── db_migration_table_v1.py
+
 ├── setup
 │   ├── settings.py
 │   └── urls.py
@@ -67,3 +83,15 @@ The application architecture is set up as follows.
 ```
 
 ##### TODO: Describe architecture and how to do incremental developments.
+
+### Database modifications
+
+Once you change to database models or create one, it will not affect as soon you have done it.
+You have to migrate the database accordingly. To migrate database, please follow the below steps.
+
+* run `flask db migrate`
+This will generate migration scripts in `migrations/versions` directory. 
+  
+* To apply migrations to the database, run `flask db upgrade`
+
+* Don't forget to commit the generated migration scripts to code.
