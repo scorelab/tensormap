@@ -46,3 +46,14 @@ def save_multiple_records(records):
     for record in records:
         db.session.add(record)
     db.session.commit()
+
+
+def delete_one_record(record):
+    """
+    This function is used to delete one record to db
+
+    :param record: one record as model object
+    """
+    db = get_db_ref()
+    db.session.delete(record)
+    db.session.commit()
