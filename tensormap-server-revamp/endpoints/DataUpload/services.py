@@ -5,6 +5,7 @@ from shared.request.response import generic_response
 from endpoints.DataUpload.models import DataFile
 from shared.utils import save_one_record, delete_one_record
 import os
+import pandas as pd
 
 configs = get_configs()
 
@@ -29,7 +30,9 @@ def get_all_files_service():
     data = []
     files = DataFile.query.all()
     for file in files:
-        data.append({"file_name": file.file_name, "file_type": file.file_type})
+        df = pd.read_csv(configs['api']['upload']['folder'] + "/" + file.file_name + "." + file.file_type)
+        fields = list(df.columns)
+        data.append({"file_name": file.file_name, "file_type": file.file_type, "file_id": file.id, "fields": fields})
     return generic_response(status_code=200, success=True, message="Saved files found successfully", data=data)
 
 
