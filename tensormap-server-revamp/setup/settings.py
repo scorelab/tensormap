@@ -25,7 +25,7 @@ class SettingUp:
 
     def file_setup(self):
         self.app.config['UPLOAD_FOLDER'] = configs['api']['upload']['folder']
-        self.app.config['MAX_CONTENT_LENGTH'] = 20 * 1024 * 1024
+        self.app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024
 
     def database_setup(self):
         connection = create_db_connection()
