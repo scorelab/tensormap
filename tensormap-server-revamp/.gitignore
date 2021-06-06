@@ -90,3 +90,6 @@ ENV/
 
 .idea
 ./data/*.csv
+
+templates/generated-code/*.py
+templates/json-model/*.json
