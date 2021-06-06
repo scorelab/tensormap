@@ -6,6 +6,12 @@ from shared.services.config import get_configs
 
 
 def code_generation(code_params):
+    """
+    This service is used to generate code
+
+    :param code_params: parameters used to generate the code
+    :return: success of the operation
+    """
     dataset = code_params[DATASET]
     model = code_params[LEARNING_MODEL]
 
@@ -27,6 +33,7 @@ def code_generation(code_params):
     generated_code_file = open(CODE_GENERATION_LOCATION + model[MODEL_NAME] + CODE_GENERATION_TYPE, 'w+')
     generated_code_file.write(output + "\n")
     generated_code_file.close()
+    return True
 
 
 def helper_map_correct_code_template(problem_type_id):
