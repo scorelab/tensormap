@@ -89,7 +89,7 @@ ENV/
 .ropeproject
 
 .idea
-./data/*.csv
+data/*.csv
 
 templates/generated-code/*.py
 templates/json-model/*.json
