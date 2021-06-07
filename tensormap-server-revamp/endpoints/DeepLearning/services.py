@@ -9,7 +9,6 @@ import os
 
 
 def model_validate_service(incoming):
-
     # Generate basic model and config records
     model = ModelBasic(model_name=incoming[MODEL][MODEL_NAME], model_dataset=incoming[CODE][DATASET][FILE_ID],
                        model_type=incoming[CODE][PROBLEM_TYPE], target_class=incoming[CODE][DATASET][FILE_TARGET])
@@ -48,3 +47,14 @@ def get_code_service(incoming):
         return generic_response(status_code=200, success=True, message="Code retrieved successfully.", data=data)
     else:
         return generic_response(status_code=400, success=False, message="Code retrieve failed.")
+
+
+def run_code_service(incoming):
+    model_name = incoming[MODEL_NAME]
+    file_path = CODE_GENERATION_LOCATION + model_name + CODE_GENERATION_TYPE
+    if os.path.isfile(file_path):
+        exec(open(file_path).read(), globals())
+        data = {"epochs": history.epoch, "history": history.history, "test_acc": test_acc, "test_loss": test_loss}
+        return generic_response(status_code=200, success=True, message="Model executed successfully.", data=data)
+    else:
+        return generic_response(status_code=400, success=False, message="Model file not found.")

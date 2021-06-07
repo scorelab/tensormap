@@ -31,3 +31,4 @@ URL_CODE = "/" + CODE
 URL_VALIDATE = "/validate"
 FILE_OPEN_MODE_READ = "r"
 DATA = "data"
+URL_RUN = "/run"
