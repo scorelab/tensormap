@@ -36,3 +36,6 @@ def deep_learning_model():
     test_loss, test_acc = model.evaluate(x_testing, y_testing, verbose=2)
 
     return history, test_loss, test_acc
+
+
+history, test_loss, test_acc = deep_learning_model()
