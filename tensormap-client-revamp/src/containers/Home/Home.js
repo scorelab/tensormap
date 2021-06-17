@@ -2,7 +2,7 @@ import React from 'react';
 import { Message, Segment, Grid, Header, Icon, Button } from 'semantic-ui-react';
 import { useHistory } from "react-router";
 import * as urls from '../../constants/Urls';
-import {TENSOR_MAP_URL} from "../../constants/Urls";
+import * as strings from '../../constants/Strings';
 
 const Home = () => {
 
@@ -17,28 +17,22 @@ const Home = () => {
     };
 
     const handleButtonGoToGit = ()=> {
-        window.location.replace(TENSOR_MAP_URL);
+        window.location.replace(urls.TENSOR_MAP_URL);
     }
 
     return (
         <div>
             <Message size='huge'
                 icon='cogs'
-                header='TensorMap'
-                content='TensorMap is a web application that enables you to create deep learning models using a
-                graphical interface without having to know how to code. It is an open-source application.'
+                header={strings.HOME_MAIN_TITLE}
+                content={strings.HOME_MAIN_CONTENT}
             />
 
             <Message size='big'
                 success
-                header='You can'
-                list={[
-                    'Upload Data for Preprocessing.',
-                    'Make Neural Network Models using Drag and Drop Feature.',
-                    'Visualise uploaded Data.',
-                    'Change Data Columns,Rows etc.',
-                    'Get Generated Code for Neural Network Model Made.'
-                ]}
+                header={strings.HOME_ABILITY_TITLE}
+                list={[strings.HOME_ABILITY_CONTENT_1, strings.HOME_ABILITY_CONTENT_2, strings.HOME_ABILITY_CONTENT_3,
+                    strings.HOME_ABILITY_CONTENT_4, strings.HOME_ABILITY_CONTENT_5]}
             />
 
             <Segment placeholder>
