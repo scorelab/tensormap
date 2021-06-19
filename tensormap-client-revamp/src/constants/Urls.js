@@ -3,3 +3,7 @@ export const DATA_UPLOAD_URL = "/data-upload";
 export const DATA_PROCESS_URL = "/data-process";
 export const DEEP_LEARN_URL = "/deep-learning";
 export const TENSOR_MAP_URL = "https://github.com/scorelab/TensorMap"
+export const base_URL = 'http://127.0.0.1:5000/api/v1';
+export const BACKEND_GET_ALL_FILES = '/data/upload/file';
+export const BACKEND_ADD_TARGET_FIELD = '/data/process/target';
+export const BACKEND_FILE_UPLOAD = '/data/upload/file'
