@@ -1,22 +1,12 @@
 import React, {Component} from 'react';
 import { Grid } from 'semantic-ui-react'
 import Canvas from "../../components/DragAndDropCanvas/canvas";
-import {subject} from "../../services";
 import PropertiesBar from "../../components/PropertiesBar/PropertiesBar";
 import ResultPanel from "../../components/ResultPanel/ResultPanel";
 
 class DeepLearning extends Component {
 
 
-    componentDidMount() {
-        this.subscription = subject.subscribe(res => {
-            console.log(res);
-        });
-    }
-
-    componentWillUnmount() {
-        this.subscription.unsubscribe();
-    }
 
     render() {
         return (
