@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Form, Message, Segment, Dropdown, Button} from 'semantic-ui-react';
+import {Form, Message, Segment, Dropdown, Button, Modal, Header, Icon} from 'semantic-ui-react';
 import axios from "../../shared/Axios";
 import * as urls from '../../constants/Urls';
 import * as strings from "../../constants/Strings";
@@ -30,6 +30,8 @@ class PropertiesBar extends Component {
         denseUnitParamsList:[],
         denseActParamsList:[],
         disableButton:true,
+        modalOpen:false,
+        modelValidatedSuccessfully:false,
     }
 
 
@@ -196,9 +198,29 @@ class PropertiesBar extends Component {
             data.model["dense"] = denseNodeDataList
         }
 
-        //TODO : create backend request to validate model
-        console.log(data);
+        axios.post(urls.BACKEND_VALIDATE_MODEL,data)
+            .then(resp=>{
+                if(resp.data.success === true){
+                    this.setState({...this.state, modelValidatedSuccessfully:true});
+                    this.modelOpen();
+                }
+            }).catch(err => {
+            console.log(err);
+            this.setState({...this.state, modelValidatedSuccessfully:false});
+        });
     }
+
+    /*
+    * Model related functions controls the feedback of the request
+    *
+    * */
+    modelClose = () => {
+        this.setState({ ...this.state, modalOpen: false });
+        window.location.reload();
+    }
+
+    modelOpen = () => this.setState({ ...this.state, modalOpen: true });
+
 
     optimizerOptions = [
         { key: 'opt_1', text: 'Adam', value: 'adam' },
@@ -218,6 +240,39 @@ class PropertiesBar extends Component {
     ]
 
     render() {
+
+
+        /*
+        * addedSuccessfully and errorInAddition are modals that will pop up after successful addition or failure.
+        *
+        * */
+        const validatedSuccessfully = (
+            <Modal open={this.state.modalOpen} onClose={this.modelClose} basic size='small' >
+
+                <Header icon='check circle' content={strings.MODEL_VALIDATION_MODAL_MESSAGE} />
+
+
+                <Modal.Actions>
+                    <Button color='green' onClick={this.modelClose} inverted>
+                        <Icon name='checkmark' /> {strings.PROCESS_SUCCESS_MODEL_BUTTON}
+                    </Button>
+                </Modal.Actions>
+
+            </Modal>
+        );
+
+        const errorInValidation = (
+            <Modal open={this.state.modalOpen} onClose={this.modelClose} basic size='small' >
+
+                <Header icon='exclamation' content={strings.PROCESS_FAIL_MODEL_MESSAGE} />
+
+                <Modal.Actions>
+                    <Button color='red' onClick={this.modelClose} inverted>
+                        <Icon name='checkmark' /> {strings.PROCESS_FAIL_MODEL_BUTTON}
+                    </Button>
+                </Modal.Actions>
+            </Modal>
+        );
 
         let inputNodes = this.state.inputNodesList.map((nodeName, index)=> (
             <Segment key={"input_node_"+index} style={{marginTop:'5px',marginBottom:'5px'}}>
@@ -340,6 +395,9 @@ class PropertiesBar extends Component {
 
         return (
             <div>
+
+                {(this.state.modelValidatedSuccessfully)? validatedSuccessfully : errorInValidation}
+
                 <Segment style={{overflow: 'auto', maxHeight: '60vh', minWidth:'15vw', marginLeft:'-13px',marginRight:'-28px'}}>
                     <Message style={{textAlign:"center"}}>Code Related </Message>
                     <Form>
