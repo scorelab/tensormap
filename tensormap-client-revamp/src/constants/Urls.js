@@ -6,4 +6,6 @@ export const TENSOR_MAP_URL = "https://github.com/scorelab/TensorMap"
 export const base_URL = 'http://127.0.0.1:5000/api/v1';
 export const BACKEND_GET_ALL_FILES = '/data/upload/file';
 export const BACKEND_ADD_TARGET_FIELD = '/data/process/target';
-export const BACKEND_FILE_UPLOAD = '/data/upload/file'
+export const BACKEND_FILE_UPLOAD = '/data/upload/file';
+export const WS_DL_RESULTS = "http://127.0.0.1:5000/dl-result";
+export const BACKEND_VALIDATE_MODEL = "/model/validate"
