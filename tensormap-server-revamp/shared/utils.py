@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_socketio import SocketIO
 import os
 
 
@@ -7,6 +8,13 @@ class DB:
 
     def __init__(self):
         DB.db_ref = SQLAlchemy()
+
+
+class SOK:
+    socket_ref = None
+
+    def __init__(self):
+        SOK.socket_ref = SocketIO(cors_allowed_origins="*")
 
 
 def get_db_ref():
@@ -18,6 +26,12 @@ def get_db_ref():
     if not DB.db_ref:
         DB()
     return DB.db_ref
+
+
+def get_socket_ref():
+    if not SOK.socket_ref:
+        SOK()
+    return SOK.socket_ref
 
 
 def create_db_connection():

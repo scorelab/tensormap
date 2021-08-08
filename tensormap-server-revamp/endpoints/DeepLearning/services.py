@@ -6,6 +6,12 @@ from shared.constants import *
 from flatten_json import flatten
 from shared.utils import save_one_record, save_multiple_records
 import os
+import subprocess
+import shlex
+from shared.utils import get_socket_ref
+
+
+socketio = get_socket_ref()
 
 
 def model_validate_service(incoming):
@@ -53,8 +59,26 @@ def run_code_service(incoming):
     model_name = incoming[MODEL_NAME]
     file_path = CODE_GENERATION_LOCATION + model_name + CODE_GENERATION_TYPE
     if os.path.isfile(file_path):
-        exec(open(file_path).read(), globals())
-        data = {"epochs": history.epoch, "history": history.history, "test_acc": test_acc, "test_loss": test_loss}
-        return generic_response(status_code=200, success=True, message="Model executed successfully.", data=data)
+        run_command("python " + file_path)
+        return generic_response(status_code=200, success=True, message="Model executed successfully.")
     else:
         return generic_response(status_code=400, success=False, message="Model file not found.")
+
+
+def run_command(command):
+    process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+    while True:
+        output = process.stdout.readline().decode("utf-8")
+        if output == '' and process.poll() is not None:
+            break
+        if output.__contains__("Finish"):
+            break
+        if output:
+            model_result(output)
+            print(output)
+    rc = process.poll()
+    return rc
+
+
+def model_result(message):
+    socketio.emit(SOCKETIO_LISTENER, message, namespace=SOCKETIO_DL_NAMESPACE)
