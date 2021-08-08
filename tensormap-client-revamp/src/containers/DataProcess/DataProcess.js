@@ -91,7 +91,7 @@ class DataProcess extends Component {
         window.location.reload();
     }
 
-    modelOpen = () => this.setState({ modalOpen: true });
+    modelOpen = () => this.setState({ ...this.state, modalOpen: true });
 
     render() {
 

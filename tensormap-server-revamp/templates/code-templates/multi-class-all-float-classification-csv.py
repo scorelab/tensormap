@@ -39,3 +39,4 @@ def deep_learning_model():
 
 
 history, test_loss, test_acc = deep_learning_model()
+print("Finish")
