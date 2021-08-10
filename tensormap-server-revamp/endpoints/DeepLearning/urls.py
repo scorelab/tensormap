@@ -1,4 +1,4 @@
-from endpoints.DeepLearning.views import ValidateModel, GetCode, RunCode
+from endpoints.DeepLearning.views import ValidateModel, GetCode, RunCode, GetModelList
 from shared.services.config import get_configs
 from shared.constants import *
 
@@ -11,4 +11,5 @@ def model_urls(api):
 
     api.add_resource(ValidateModel, base + learn_uri + URL_VALIDATE)
     api.add_resource(GetCode, base + learn_uri + URL_CODE)
+    api.add_resource(GetModelList, base + learn_uri + URL_GET_MODEL_LIST)
     api.add_resource(RunCode, base + learn_uri + URL_RUN)
