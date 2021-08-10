@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Grid } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react';
 import Canvas from "../../components/DragAndDropCanvas/canvas";
 import PropertiesBar from "../../components/PropertiesBar/PropertiesBar";
 import ResultPanel from "../../components/ResultPanel/ResultPanel";
@@ -21,7 +21,9 @@ class DeepLearning extends Component {
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
-                        <ResultPanel/>
+                        <Grid.Column>
+                            <ResultPanel/>
+                        </Grid.Column>
                     </Grid.Row>
                 </Grid>
             </div>

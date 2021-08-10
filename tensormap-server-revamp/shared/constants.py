@@ -32,6 +32,7 @@ URL_VALIDATE = "/validate"
 FILE_OPEN_MODE_READ = "r"
 DATA = "data"
 URL_RUN = "/run"
+URL_GET_MODEL_LIST = "/model-list"
 SOCKETIO_DL_NAMESPACE = '/dl-result'
 SOCKETIO_LISTENER = 'result :::'
 DL_RESULT = "result"

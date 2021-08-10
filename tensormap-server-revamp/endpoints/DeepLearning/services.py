@@ -8,8 +8,8 @@ from shared.utils import save_one_record, save_multiple_records
 import os
 import subprocess
 import shlex
+from flask import send_file
 from shared.utils import get_socket_ref
-
 
 socketio = get_socket_ref()
 
@@ -47,10 +47,11 @@ def get_code_service(incoming):
     model_name = incoming[MODEL_NAME]
     file_path = CODE_GENERATION_LOCATION + model_name + CODE_GENERATION_TYPE
     if os.path.isfile(file_path):
-        file = open(file_path, FILE_OPEN_MODE_READ)
-        data = file.read()
-        file.close()
-        return generic_response(status_code=200, success=True, message="Code retrieved successfully.", data=data)
+        # file = open(file_path, FILE_OPEN_MODE_READ)
+        # data = file.read()
+        # file.close()
+        return send_file(path_or_file=file_path, as_attachment=True)
+        # return generic_response(status_code=200, success=True, message="Code retrieved successfully.", data=data)
     else:
         return generic_response(status_code=400, success=False, message="Code retrieve failed.")
 
@@ -82,3 +83,11 @@ def run_command(command):
 
 def model_result(message):
     socketio.emit(SOCKETIO_LISTENER, message, namespace=SOCKETIO_DL_NAMESPACE)
+
+
+def get_available_model_list():
+    model_list = ModelBasic.query.all()
+    data = []
+    for model in model_list:
+        data.append(model.model_name)
+    return generic_response(status_code=200, success=True, message="Model list generated successfully.", data=data)

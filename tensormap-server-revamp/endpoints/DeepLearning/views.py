@@ -1,6 +1,7 @@
 from flask_restful import Resource
 from endpoints.DeepLearning.validators import model_validate_post_validator, get_code_post_validator
-from endpoints.DeepLearning.services import model_validate_service, get_code_service, run_code_service
+from endpoints.DeepLearning.services import model_validate_service, get_code_service, run_code_service, \
+    get_available_model_list
 
 
 class ValidateModel(Resource):
@@ -26,3 +27,8 @@ class RunCode(Resource):
         args = validator.parse_args()
         return run_code_service(incoming=args)
 
+
+class GetModelList(Resource):
+
+    def get(self):
+        return get_available_model_list()
