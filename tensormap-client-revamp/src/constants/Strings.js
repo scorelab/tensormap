@@ -40,3 +40,4 @@ export const DL_MODEL_FLATTEN_COLOR = "rgb(247, 173, 20)"
 export const DL_NODE_IN = "In";
 export const DL_NODE_OUT = "Out";
 export const DL_RESULT_LISTENER = "result :::"
+export const MODEL_EXTENSION = ".py"
