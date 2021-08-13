@@ -73,6 +73,7 @@ def run_command(command):
         if output == '' and process.poll() is not None:
             break
         if output.__contains__("Finish"):
+            model_result(output)
             break
         if output:
             model_result(output)
@@ -82,6 +83,7 @@ def run_command(command):
 
 
 def model_result(message):
+    message = message.split("")[-1]
     socketio.emit(SOCKETIO_LISTENER, message, namespace=SOCKETIO_DL_NAMESPACE)
 
 
