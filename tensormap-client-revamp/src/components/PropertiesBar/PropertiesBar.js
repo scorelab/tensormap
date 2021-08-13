@@ -75,7 +75,7 @@ class PropertiesBar extends Component {
 
             this.setState({...this.state, fieldsList: selectedFIleDetails[0].fields.map(
                     (item,index)=>({"text":item, "value":item, "key":index})) });
-        })
+        });
     };
 
     fieldSelectHandler = (event,val) => {

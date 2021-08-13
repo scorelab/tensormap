@@ -3,7 +3,8 @@ import io from "socket.io-client";
 import * as urls from '../../constants/Urls';
 import * as strings from "../../constants/Strings";
 import axios from "../../shared/Axios";
-import {Grid, Menu, Button, Form, Dropdown} from 'semantic-ui-react';
+import {Grid, Menu, Button, Form, Dropdown, Segment, Dimmer, Loader} from 'semantic-ui-react';
+import Result from "./Result/Result";
 
 class ResultPanel extends Component {
 
@@ -13,21 +14,81 @@ class ResultPanel extends Component {
     state = {
         modelList: null,
         selectedModel:null,
-        disableDownloadButton: true
+        disableDownloadButton: true,
+        disableRunButton: true,
+        disableClearButton: true,
+        resultValues: null,
+        resultFinished:null
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        this.socket.on(strings.DL_RESULT_LISTENER, (resp)=>{
-            // console.log(resp)
-        })
+        // this.socket.on(strings.DL_RESULT_LISTENER, (resp)=>{
+        //
+        //
+        //     if (!Array.isArray(prevState.resultValues) && resp.includes("Starting")){
+        //         if (!Array.isArray(this.state.resultValues)){
+        //             this.setState({...this.state, resultValues:[]})
+        //             console.log("array created")
+        //         }
+        //
+        //     }
+        //
+        //     if (Array.isArray(this.state.resultValues) && resp.includes("Finish")) {
+        //         if (this.state.resultFinished === null){
+        //
+        //             this.setState({...this.state, resultFinished:true});
+        //             console.log("Finishing");
+        //         }
+        //     }
+        //
+        //
+        //     if (Array.isArray(this.state.resultValues) && this.state.resultFinished === null){
+        //
+        //
+        //             if (this.state.resultValues[this.state.resultValues.length -1] !== resp){
+        //                 this.setState({...this.state, resultValues:this.state.resultValues.push(resp)});
+        //             }
+        //
+        //
+        //
+        //     }
+        //
+        //
+        // })
     }
 
     componentDidMount() {
+
+        this.socket.on(strings.DL_RESULT_LISTENER, (resp)=>{
+
+            if (resp.includes("Starting")){
+
+                this.setState({...this.state, resultValues:[]});
+
+            } else if(resp.includes("Finish")){
+
+                this.setState({...this.state, resultFinished:true});
+
+            }else if (Array.isArray(this.state.resultValues) && this.state.resultFinished === null){
+
+                let a = [...this.state.resultValues]
+                a.push(resp)
+
+                this.setState({...this.state, resultValues: a });
+
+            }
+
+            }
+        )
+
+
+
         axios.get(urls.BACKEND_GET_ALL_MODELS)
             .then(resp => {
                 if (resp.data.success === true){
                     this.setState({
                         ...this.state,
+                        resultFinished:null,
                         modelList: resp.data.data.map((file, index)=> (
                             {"text":file + strings.MODEL_EXTENSION, "value":file, "key":index}
                         ))
@@ -37,7 +98,8 @@ class ResultPanel extends Component {
     }
 
     modelSelectHandler = (event,val)=> {
-        this.setState({...this.state, selectedModel: val.value, disableDownloadButton: false });
+        this.setState({...this.state, selectedModel: val.value, disableDownloadButton: false,
+            disableRunButton:false });
     }
 
     modelDownloadHandler = ()=> {
@@ -58,13 +120,55 @@ class ResultPanel extends Component {
                 setTimeout(function () {
                     window.URL.revokeObjectURL(link);
                 }, 200);
-                
+
         });
         }
     }
 
+    RunButtonHandler = () => {
+        this.setState({...this.state, resultValues: ""}, ()=> {
+            if (this.state.selectedModel != null){
+                const data = {"model_name": this.state.selectedModel};
+
+                    axios.post(urls.BACKEND_RUN_MODEL, data).then( resp => {
+                        if(resp.data.success === true){
+                            console.log(resp.data.message);
+                            this.setState({...this.state, disableRunButton: false, disableClearButton:false, })
+                        }
+                });
+
+                this.setState({...this.state, disableRunButton:true});
+            }
+        });
+    };
+
+
+    clearButtonHandler = () => {
+        this.setState({...this.state, resultValues:null, disableClearButton:true})
+    }
+
 
     render() {
+
+        let results = null;
+
+        if(this.state.resultValues === ""){
+            results = (
+                <Segment style={{marginLeft: "10px", marginRight: "10px", height:"400px", marginTop:"10px"}} >
+                    <Dimmer active inverted>
+                        <Loader size='large' content='Model is running please wait ...' />
+                    </Dimmer>
+                </Segment>
+            );
+        }
+
+        if (Array.isArray(this.state.resultValues) ){
+
+            results = this.state.resultValues.map((item, index)=> (
+                <Result result={item} key={index} />
+            ));
+        }
+
         return (
             <div>
                 <Grid.Row>
@@ -99,15 +203,31 @@ class ResultPanel extends Component {
                                 </Menu.Item>
 
                                 <Menu.Item>
-                                    <Button color='green'>Model Run</Button>
+                                    <Button
+                                        color='green'
+                                        onClick={this.RunButtonHandler}
+                                        disabled={this.state.disableRunButton}
+                                    >
+                                        Model Run
+                                    </Button>
                                 </Menu.Item>
 
                                 <Menu.Item>
-                                    <Button color='brown'>Clear Panel</Button>
-
+                                    <Button
+                                        color='brown'
+                                        onClick={this.clearButtonHandler}
+                                        disabled={this.state.disableClearButton}
+                                    >
+                                        Clear Panel
+                                    </Button>
                                 </Menu.Item>
                             </Menu.Menu>
                         </Menu>
+                    </Grid.Column>
+                </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column>
+                        {results}
                     </Grid.Column>
                 </Grid.Row>
 
