@@ -1,6 +1,6 @@
 from endpoints.DeepLearning.views import ValidateModel, GetCode, RunCode, GetModelList
-from shared.services.config import get_configs
 from shared.constants import *
+from shared.services.config import get_configs
 
 configs = get_configs()
 

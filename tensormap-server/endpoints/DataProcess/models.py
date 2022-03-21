@@ -1,6 +1,5 @@
 from shared.utils import get_db_ref
 
-
 db = get_db_ref()
 
 

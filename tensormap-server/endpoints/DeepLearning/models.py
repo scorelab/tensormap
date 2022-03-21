@@ -1,6 +1,5 @@
 from shared.utils import get_db_ref
 
-
 db = get_db_ref()
 
 
@@ -32,5 +31,3 @@ class ModelResults(db.Model):
     iteration = db.Column(db.Integer, nullable=False)
     metric = db.Column(db.String(50), nullable=False)
     value = db.Column(db.Float, nullable=False)
-
-

@@ -1,10 +1,11 @@
+from dotenv import load_dotenv
 from flask import Flask
-from setup.urls import MainURLRegister
+from flask_cors import CORS
+
 from setup.settings import SettingUp
+from setup.urls import MainURLRegister
 from shared.services.config import get_configs
 from shared.utils import get_socket_ref
-from flask_cors import CORS
-from dotenv import load_dotenv
 
 load_dotenv()
 configs = get_configs()

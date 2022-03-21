@@ -1,19 +1,20 @@
+import os
+
+import pandas as pd
 from flask import request
 from werkzeug.utils import secure_filename
-from shared.services.config import get_configs
-from shared.request.response import generic_response
+
 from endpoints.DataUpload.models import DataFile
-from shared.utils import save_one_record, delete_one_record
-import os
-import pandas as pd
 from shared.constants import *
+from shared.request.response import generic_response
+from shared.services.config import get_configs
+from shared.utils import save_one_record, delete_one_record
 
 configs = get_configs()
 upload_folder = configs['api']['upload']['folder']
 
 
 def add_file_service():
-
     # Extract the file and save it in the ./data folder
     file = request.files["data"]
     filename = secure_filename(file.filename)
@@ -39,7 +40,6 @@ def get_all_files_service():
 
 
 def delete_one_file_by_id_service(file_id):
-
     # Check file exists in DB and check the file in ./data directory if exist, file deleted
     if DataFile.query.filter_by(id=file_id).count() > 0:
         file = DataFile.query.filter_by(id=file_id).first()

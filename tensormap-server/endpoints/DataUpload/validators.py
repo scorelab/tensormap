@@ -1,5 +1,6 @@
-from flask_restful import reqparse
 from flask import request
+from flask_restful import reqparse
+
 from shared.constants import *
 
 ALLOWED_EXTENSIONS = {'csv'}

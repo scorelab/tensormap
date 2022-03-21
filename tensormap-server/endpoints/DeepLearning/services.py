@@ -1,15 +1,17 @@
-from shared.request.response import generic_response
-from shared.services.model.generation import model_generation
-from shared.services.code.generation import code_generation
+import os
+import shlex
+import subprocess
+
+from flask import send_file
+from flatten_json import flatten
+
 from endpoints.DeepLearning.models import ModelBasic, ModelConfigs
 from shared.constants import *
-from flatten_json import flatten
-from shared.utils import save_one_record, save_multiple_records
-import os
-import subprocess
-import shlex
-from flask import send_file
+from shared.request.response import generic_response
+from shared.services.code.generation import code_generation
+from shared.services.model.generation import model_generation
 from shared.utils import get_socket_ref
+from shared.utils import save_one_record, save_multiple_records
 
 socketio = get_socket_ref()
 
@@ -83,7 +85,8 @@ def run_command(command):
 
 
 def model_result(message):
-    message = message.split("")[-1]
+    message = message.split("")[
+        -1]
     socketio.emit(SOCKETIO_LISTENER, message, namespace=SOCKETIO_DL_NAMESPACE)
 
 
