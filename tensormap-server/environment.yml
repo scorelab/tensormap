@@ -1,0 +1,27 @@
+name: tensormap-server
+
+dependencies:
+  - python=3.7
+  - notebook
+  - jupyterlab
+  - ipywidgets
+  - numpy
+  - pandas
+  - flask
+  - flask-cors
+  - flask-restful
+  - flask-migrate
+  - flask-sqlalchemy
+  - flask-socketio
+  - tensorflow
+  - tensorboard
+  - python-dotenv
+  - alembic
+  - pyyaml
+  - flatten_json
+  - python-decouple
+  - pymysql
+  - pip
+channels:
+  - conda-forge
+  - defaults

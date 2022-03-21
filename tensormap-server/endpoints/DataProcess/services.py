@@ -1,8 +1,8 @@
 from endpoints.DataProcess.models import DataProcess
 from endpoints.DataUpload.models import DataFile
-from shared.utils import save_one_record, delete_one_record
-from shared.request.response import generic_response
 from shared.constants import *
+from shared.request.response import generic_response
+from shared.utils import save_one_record, delete_one_record
 
 
 def add_target_service(incoming):

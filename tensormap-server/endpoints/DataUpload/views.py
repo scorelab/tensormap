@@ -1,6 +1,7 @@
 from flask_restful import Resource
-from endpoints.DataUpload.validators import data_upload_post_validator
+
 from endpoints.DataUpload.services import add_file_service, get_all_files_service, delete_one_file_by_id_service
+from endpoints.DataUpload.validators import data_upload_post_validator
 
 
 class UploadDataFile(Resource):
