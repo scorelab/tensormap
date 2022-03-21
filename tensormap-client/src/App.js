@@ -1,33 +1,25 @@
-import { withStyles } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
-import React from "react";
-import { Route, Router } from "react-router-dom";
-import styles from "./App.styles";
-import { history } from "./helpers";
-import { Dashboard } from "./pages/dashboard";
-import { Home } from "./pages/dashboard/scenes/home";
+import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
+import Layout from "./components/Layout/Layout";
+import Home from "./containers/Home/Home";
+import DataUpload from "./containers/DataUpload/DataUpload";
+import DataProcess from "./containers/DataProcess/DataProcess";
+import DeepLearning from "./containers/DeepLearning/DeepLearning";
+import * as urls from './constants/Urls';
 
-class App extends React.Component {
-  render() {
-    const { classes } = this.props;
-
-    return (
-      <div className={classes.root}>
-        <Router history={history}>
-          <div>
-            <Route path="/" component={Dashboard} />
-            {/*<PrivateRoute exact path="/" component={Dashboard}/>*/}
-            {/*<Route path="/login" component={SignIn}/>*/}
-            {/*<Route path="/register" component={SignUp}/>*/}
-          </div>
-        </Router>
-      </div>
-    );
-  }
+function App() {
+  return (
+      <BrowserRouter>
+        <Layout>
+          <Switch>
+            <Route path={urls.HOME_URL} exact component={Home} />
+            <Route path={urls.DATA_UPLOAD_URL} exact component={DataUpload} />
+            <Route path={urls.DATA_PROCESS_URL} exact component={DataProcess} />
+            <Route path={urls.DEEP_LEARN_URL} exact component={DeepLearning} />
+            <Redirect from='/' to={urls.HOME_URL} />
+          </Switch>
+        </Layout>
+      </BrowserRouter>
+  );
 }
 
-App.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles, { withTheme: true })(App);
+export default App;
