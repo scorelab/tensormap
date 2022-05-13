@@ -1,8 +1,7 @@
-from flask_restful import Api
-
 from endpoints.DataProcess.urls import process_urls
 from endpoints.DataUpload.urls import data_urls
 from endpoints.DeepLearning.urls import model_urls
+from flask_restful import Api
 
 """
 To add a new urls to the application, all the url functions defined in the relevant files, need to be register here.

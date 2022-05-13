@@ -11,10 +11,10 @@ def deep_learning_model():
 
     # Split Training and testing sets
     training_features = features.sample(frac={{data.dataset.training_split}}, random_state=200)
-    training_labels = training_features.pop('{{data.dataset.target_field}}')
+    training_labels = training_features.pop("{{data.dataset.target_field}}")
 
     testing_features = features.drop(training_features.index)
-    testing_labels = testing_features.pop('{{data.dataset.target_field}}')
+    testing_labels = testing_features.pop("{{data.dataset.target_field}}")
 
     x_training, y_training = (training_features.to_numpy(), training_labels.to_numpy())
     x_testing, y_testing = (testing_features.to_numpy(), testing_labels.to_numpy())
@@ -24,13 +24,13 @@ def deep_learning_model():
     x_testing = x_testing / np.linalg.norm(x_testing)
 
     json_string = json.dumps(yaml.load(open("{{data.dl_model.json_file}}")))
-    model = tf.keras.models.model_from_json(
-        json_string, custom_objects=None
-    )
+    model = tf.keras.models.model_from_json(json_string, custom_objects=None)
 
-    model.compile(optimizer='{{data.dl_model.optimizer}}',
-                  loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-                  metrics=['{{data.dl_model.metric}}'])
+    model.compile(
+        optimizer="{{data.dl_model.optimizer}}",
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        metrics=["{{data.dl_model.metric}}"],
+    )
 
     history = model.fit(x_training, y_training, epochs={{data.dl_model.epochs}})
 

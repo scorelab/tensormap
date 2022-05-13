@@ -1,5 +1,4 @@
 from flask_restful import reqparse
-
 from shared.constants import *
 
 

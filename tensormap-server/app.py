@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
-
 from setup.settings import SettingUp
 from setup.urls import MainURLRegister
 from shared.services.config import get_configs
@@ -16,6 +15,6 @@ MainURLRegister(app=app)
 SettingUp(app=app)
 CORS(app)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     socketio = get_socket_ref()
     socketio.run(app)
