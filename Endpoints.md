@@ -100,7 +100,7 @@ Deletes the row for a given file from the dataCsv.
     	tableData: {
     		id
 		}
-	}> 
+	}>
 }
 ```
 
@@ -131,7 +131,7 @@ Deletes checked columns for a given file from the dataCsv.
     	tableData: {
     		id
 		}
-	}> 
+	}>
 }
 ```
 

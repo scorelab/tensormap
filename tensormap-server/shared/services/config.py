@@ -17,11 +17,11 @@ class ConfigHandler:
 
     def __init__(self):
         if ConfigHandler.config_obj is None:
-            self.config_file = 'config.yaml'
+            self.config_file = "config.yaml"
             ConfigHandler.config_obj = self.load_config()
 
     def load_config(self):
-        with open(self.config_file, 'r+', encoding="utf-8") as stream:
+        with open(self.config_file, "r+", encoding="utf-8") as stream:
             try:
                 return yaml.safe_load(stream)
             except yaml.YAMLError as exc:
