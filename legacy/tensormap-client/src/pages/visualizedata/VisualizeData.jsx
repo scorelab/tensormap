@@ -59,9 +59,9 @@ class VisualizeData extends React.Component {
       data: [],
       open1: false,
       open2: false,
-      open3: false        
+      open3: false
     }
-    
+
     this.createCheckboxes = this.createCheckboxes.bind(this);
     this.populateCheckBox = this.populateCheckBox.bind(this);
     this.toggleCheckboxChange =this.toggleCheckboxChange.bind(this);
@@ -81,7 +81,7 @@ class VisualizeData extends React.Component {
 
 }
 
-  componentWillMount() { 
+  componentWillMount() {
 
     this.setState({fileName: this.props.location.state.fileName })
 
@@ -95,28 +95,28 @@ class VisualizeData extends React.Component {
     }).then((response) => {
       return response.json();
     }).then((response) => {
-      
-      var tempcols = [...this.state.columns] 
-      for (var column in response.columns) {               
-        tempcols.push(response.columns[column]);          
+
+      var tempcols = [...this.state.columns]
+      for (var column in response.columns) {
+        tempcols.push(response.columns[column]);
       }
       this.setState({columns:tempcols})
-      
+
       var tempdata = [...this.state.data]
-      for (var row in response.data) {       
-        tempdata.push(response.data[row]); 
-      }   
-      this.setState({data:tempdata}); 
+      for (var row in response.data) {
+        tempdata.push(response.data[row]);
+      }
+      this.setState({data:tempdata});
       this.populateCheckBox()
 
    }).catch(function (error) {
       console.log(error);
-  }); 
+  });
 
-  
+
   }
 
-  
+
   saveConfig(){
     var obj = {trainPercentage: this.state.trainPercentage, fileName: this.state.fileName, features:this.state.features, labels:this.state.labels}
     var data = JSON.stringify(obj)
@@ -131,10 +131,10 @@ class VisualizeData extends React.Component {
       return response.text();
     }).then((response) => {
       console.log(response)
-      alert("Configurations Saved for Experiment")  
+      alert("Configurations Saved for Experiment")
    }).catch(function (error) {
       console.log(error);
-  }); 
+  });
 
   }
 
@@ -142,7 +142,7 @@ class VisualizeData extends React.Component {
     console.log(newData)
     var obj = {rowdata: newData, fileName: this.state.fileName, columnData:this.state.columns}
     var data = JSON.stringify(obj)
-    console.log(data) 
+    console.log(data)
 
     fetch("http://127.0.0.1:5000/addRow", {
       method: 'POST',
@@ -153,16 +153,16 @@ class VisualizeData extends React.Component {
     }).then((response) => {
       return response.text();
     }).then((response) => {
-      console.log(response)  
+      console.log(response)
    }).catch(function (error) {
       console.log(error);
-  }); 
+  });
 }
 
   sendDeleteRequest(oldData){
     var obj = {oldRowData: oldData, fileName: this.state.fileName}
     var data = JSON.stringify(obj)
-    console.log(data) 
+    console.log(data)
 
     fetch("http://127.0.0.1:5000/deleteRow", {
       method: 'POST',
@@ -173,10 +173,10 @@ class VisualizeData extends React.Component {
     }).then((response) => {
       return response.text();
     }).then((response) => {
-      console.log(response)  
+      console.log(response)
    }).catch(function (error) {
       console.log(error);
-  }); 
+  });
 
   }
 
@@ -184,7 +184,7 @@ class VisualizeData extends React.Component {
 
     var obj = {newRowData: newData, fileName: this.state.fileName, columnData:this.state.columns}
     var data = JSON.stringify(obj)
-    console.log(data) 
+    console.log(data)
 
     fetch("http://127.0.0.1:5000/editRow", {
       method: 'POST',
@@ -195,17 +195,17 @@ class VisualizeData extends React.Component {
     }).then((response) => {
       return response.text();
     }).then((response) => {
-      console.log(response)  
+      console.log(response)
    }).catch(function (error) {
       console.log(error);
-  }); 
+  });
 
   }
 
   downloadCSV(){
     var obj = {fileName: this.state.fileName}
     var data = JSON.stringify(obj)
-    console.log(data) 
+    console.log(data)
 
     fetch("http://127.0.0.1:5000/downloadCSV", {
       method: 'POST',
@@ -219,19 +219,19 @@ class VisualizeData extends React.Component {
     }).then((blob) => {
       var filename = this.state.fileName
       filename = filename.concat(".csv")
-      saveAs(blob,filename)  
+      saveAs(blob,filename)
    }).catch(function (error) {
       console.log(error);
-  }); 
+  });
 
   }
 
 
-  deleteCol(){    
-    
+  deleteCol(){
+
     var obj = {columnData: this.state.columnCheckBoxes, fileName: this.state.fileName}
     var data = JSON.stringify(obj)
-    console.log(data) 
+    console.log(data)
 
     fetch("http://127.0.0.1:5000/deleteColumn", {
       method: 'POST',
@@ -244,24 +244,24 @@ class VisualizeData extends React.Component {
       return response.json();
     }).then((response) => {
 
-      // var oldCols = [...this.state.columns] 
+      // var oldCols = [...this.state.columns]
       var tempcols = []
-      for (var column in response.columns) {               
-        tempcols.push(response.columns[column]);          
+      for (var column in response.columns) {
+        tempcols.push(response.columns[column]);
       }
       this.setState({columns:tempcols})
-      
+
       // var oldRows = [...this.state.data]
       var tempdata = []
-      for (var row in response.data) {       
-        tempdata.push(response.data[row]); 
-      }   
-      this.setState({data:tempdata}); 
+      for (var row in response.data) {
+        tempdata.push(response.data[row]);
+      }
+      this.setState({data:tempdata});
       this.populateCheckBox()
 
    }).catch(function (error) {
       console.log(error);
-  }); 
+  });
 
   }
 
@@ -279,9 +279,9 @@ class VisualizeData extends React.Component {
       tempFeatureData.push(obj2);
       tempLabels.push(obj3);
       console.log(tempColumnData)
-      this.setState({columnCheckBoxes:tempColumnData});     
+      this.setState({columnCheckBoxes:tempColumnData});
       this.setState({features:tempFeatureData});
-      this.setState({labels:tempLabels}); 
+      this.setState({labels:tempLabels});
   }
 
   }
@@ -296,7 +296,7 @@ class VisualizeData extends React.Component {
       }
     }
     this.setState({columnCheckBoxes:tempData});
-    console.log(tempData)      
+    console.log(tempData)
   }
 
   toggleLabelCheckboxChange(e){
@@ -317,18 +317,18 @@ class VisualizeData extends React.Component {
 
 
   toggleFeatureCheckboxChange(e){
-    
+
     console.log(e.target.value);
     var tempFeatureData = [...this.state.features]
     var featureColumn = null
-    for (var column in tempFeatureData) {   
-      console.log(tempFeatureData[column].title)       
+    for (var column in tempFeatureData) {
+      console.log(tempFeatureData[column].title)
       if (e.target.value == tempFeatureData[column].title){
-        tempFeatureData[column].checked = !(tempFeatureData[column].checked) 
+        tempFeatureData[column].checked = !(tempFeatureData[column].checked)
         featureColumn = tempFeatureData[column]
         console.log(featureColumn)
-        break;       
-        }    
+        break;
+        }
       }
 
     this.setState({features:tempFeatureData});
@@ -338,17 +338,17 @@ class VisualizeData extends React.Component {
     var currentLabels = [...this.state.labels]
 
     if(featureColumn.checked == true){
-      console.log("y")          
+      console.log("y")
       for(var labeldata in currentLabels){
         if (e.target.value == currentLabels[labeldata].title){
           currentLabels.splice(currentLabels.indexOf(currentLabels[labeldata]), 1);
           this.setState({labels:currentLabels});
           break;
         }
-      }          
+      }
     }
-    else if(featureColumn.checked == false){  
-      console.log("else")      
+    else if(featureColumn.checked == false){
+      console.log("else")
         var labelCheckBoxAlter = featureColumn
         labelCheckBoxAlter.checked = false
         currentLabels.splice(tempFeatureData.indexOf(featureColumn), 0,labelCheckBoxAlter);
@@ -357,37 +357,37 @@ class VisualizeData extends React.Component {
     console.log(currentLabels)
 
     }
-    
+
 
   createCheckboxes(){
     return this.state.columnCheckBoxes.map((column) => (
       <div>
-        
+
         <span>
         <input
         type="checkbox"
         value={column.title}
         onChange={this.toggleCheckboxChange}
-        />        
+        />
         </span>
         <label>{column.title}</label>
       </div>
-    ));    
+    ));
   }
 
   createFeatureCheckboxes(){
     return this.state.features.map((column) => (
       <div>
-        
+
         <span>
           <input
           type="checkbox"
           value={column.title}
           onClick={this.toggleFeatureCheckboxChange}
-          />        
+          />
         </span>
         <label>{column.title}</label>
-      </div>    
+      </div>
     ));
   }
 
@@ -395,17 +395,17 @@ class VisualizeData extends React.Component {
     return this.state.labels.map((column) => (
 
       <div>
-        
+
         <span>
           <input
           type="checkbox"
           value={column.title}
           onChange={this.toggleLabelCheckboxChange}
-          />       
-        </span> 
+          />
+        </span>
         <label>{column.title}</label>
       </div>
-     
+
     ));
   }
 
@@ -419,7 +419,7 @@ class VisualizeData extends React.Component {
     const {classes} = this.props;
     const {match} = this.props;
 
-    
+
 
     return (
       <div className={classes.container}>
@@ -451,7 +451,7 @@ class VisualizeData extends React.Component {
               <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
                 <Tab eventKey="Features" title="Choose Features">
                   <div className= {classes.tabStyle}>
-                    {this.createFeatureCheckboxes()}                      
+                    {this.createFeatureCheckboxes()}
                   </div>
                 </Tab>
                 <Tab eventKey="Label" title="Choose Label">
@@ -463,15 +463,15 @@ class VisualizeData extends React.Component {
                   <div className= {classes.tabStyle}>
                     <label>Percentage: {this.state.trainPercentage}</label>
                     <div>
-                      <input type="range" min="10" max="90" className={classes.slider} onInput={this.getSliderValue} /> 
+                      <input type="range" min="10" max="90" className={classes.slider} onInput={this.getSliderValue} />
                     </div>
                     <div className= {classes.tabStyle}>
                       <Button variant="primary" size="sm" onClick={this.saveConfig}>Save All Configurations</Button>
-                    </div>    
+                    </div>
                   </div>
                 </Tab>
               </Tabs>
-            </div>            
+            </div>
 
           </div>
         </Tab>
@@ -541,8 +541,3 @@ VisualizeData.propTypes = {
 }
 
 export default withStyles(styles, {withTheme: true})(VisualizeData)
-
-
-
-
- 

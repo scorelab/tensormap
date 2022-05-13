@@ -34,7 +34,7 @@ var _ = require('lodash')
 
 const endpoint = "ws://localhost:5000/nn";
 
- 
+
 export interface BodyWidgetProps {
   app: Application;
   classes?:any;
@@ -79,7 +79,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       accuracy: false,
       neg_mean_square_error: false,
       layer_name:"",
-      
+
       layer_color:"",
       runtime_data:"Epoch Number: 25, Val Acc: 87.3623%, Train Acc: 90.821% ",
       code:"from keras.datasets import mnist\nfrom keras.layers import Dense, Conv2D, Flatten\nmodel = Sequential()\nmodel.add(Conv2D(64, kernel_size=3, activation=’relu’, input_shape=(28,28,1)))\nmodel.add(Flatten())\nmodel.add(Dense(10, activation=’softmax’))\nmodel.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3)",
@@ -201,11 +201,11 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
       tmp_form["error_text"]=""
       this.setState({
         tmp_form,
-       
+
       } as any)
     }
  }else{
- 
+
    tmp_form["error_text"]="Please Enter A valid Number"
    this.setState({
  tmp_form,} as any)
@@ -440,7 +440,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 			this.forceUpdate();
   };
 
-  
+
 
 
   render() {
@@ -733,7 +733,7 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                   <em>None</em>
                 </MenuItem>
                 <MenuItem value={"rgb(255,0,0)"}>
-                  <Avatar variant="circle" className={classes.red} >R 
+                  <Avatar variant="circle" className={classes.red} >R
                   </Avatar> Red
                 </MenuItem>
                 <MenuItem value={"rgb(100,128,155)"}>

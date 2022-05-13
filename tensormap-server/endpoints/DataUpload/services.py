@@ -1,17 +1,16 @@
 import os
 
 import pandas as pd
-from flask import request
-from werkzeug.utils import secure_filename
-
 from endpoints.DataUpload.models import DataFile
+from flask import request
 from shared.constants import *
 from shared.request.response import generic_response
 from shared.services.config import get_configs
-from shared.utils import save_one_record, delete_one_record
+from shared.utils import delete_one_record, save_one_record
+from werkzeug.utils import secure_filename
 
 configs = get_configs()
-upload_folder = configs['api']['upload']['folder']
+upload_folder = configs["api"]["upload"]["folder"]
 
 
 def add_file_service():
@@ -21,8 +20,8 @@ def add_file_service():
     file.save(os.path.join(upload_folder, filename))
 
     # Extract the file name and type and save details in the database
-    file_name_db = file.filename.rsplit('.', 1)[0].lower()
-    file_type_db = file.filename.rsplit('.', 1)[1].lower()
+    file_name_db = file.filename.rsplit(".", 1)[0].lower()
+    file_type_db = file.filename.rsplit(".", 1)[1].lower()
     data = DataFile(file_name=file_name_db, file_type=file_type_db)
     save_one_record(record=data)
 
