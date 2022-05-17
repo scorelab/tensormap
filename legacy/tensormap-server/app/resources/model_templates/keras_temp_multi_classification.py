@@ -8,8 +8,10 @@ from tensorflow.keras import layers
 
 np.random.seed(0)
 
-dataCsv = pd.read_csv()
 
+optimizerFunction = "adam"
+lossFunction = "Cross-entropy loss"
+dataCsv = pd.read_csv()
 _x = dataCsv[0]
 _y = dataCsv[1]
 
@@ -17,7 +19,7 @@ x_train, y_train, x_test, y_test = train_test_split(_x, _y, random_state=42, shu
 
 network = tf.keras.models.Sequential(name="userModel")
 
-network.compile(optimizer="adam", loss="Cross-entropy loss")
+network.compile(optimizer=optimizerFunction, loss=lossFunction)
 
 mod_history = network.fit(x_train, y_train, epochs=100, verbose=1, batch_size=16)
 
