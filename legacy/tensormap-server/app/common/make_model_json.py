@@ -1,13 +1,9 @@
 import json
 
 import modelCommon
+from app.resources.database_models import code_gen
 
 from .. import db
-from ..resources.database_models.code_gen import (
-    code_layers,
-    template_copies,
-    user_template_index,
-)
 
 
 def getNodeVal(layerId, sentKey, json_config):
@@ -35,7 +31,7 @@ def controlLogic(json_config, i):
     layerType = json_config["graph"][0]["layers"][i]["layerType"]
     layerId = json_config["graph"][0]["layers"][i]["id"]
 
-    layerInfo = code_layers.query.filter_by(name=layerType).one()
+    layerInfo = code_gen.code_layers.query.filter_by(name=layerType).one()
     attributeInfo = layerInfo.attributes
     splitAttr = attributeInfo.split(",")
     layer_dict = layerInfo.kerasConfig
