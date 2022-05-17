@@ -1,5 +1,7 @@
 import json
 
+import modelCommon
+
 from .. import db
 from ..resources.database_models.code_gen import (
     code_layers,
@@ -67,12 +69,7 @@ def makeKerasModel(json_config):
                 break
 
     layerCommon = {"name": "userModel", "layers": dict_list}
-    modelCommon = {
-        "class_name": "Sequential",
-        "config": layerCommon,
-        "keras_version": "2.2.4-tf",
-        "backend": "tensorflow",
-    }
+
     # Only for testing
     modelCommon["config"]["layers"][0]["input_shape"] = [
         1000,
