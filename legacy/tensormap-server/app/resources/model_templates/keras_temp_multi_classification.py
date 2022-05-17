@@ -6,10 +6,13 @@ from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from tensorflow.keras import layers
 
+optimizertype = "adam"
+lossFunction = "Cross-entropy loss"
+
 np.random.seed(0)
 
 
-optimizerFunction = "adam"
+optimizerType = "adam"
 lossFunction = "Cross-entropy loss"
 dataCsv = pd.read_csv()
 _x = dataCsv[0]
@@ -19,7 +22,9 @@ x_train, y_train, x_test, y_test = train_test_split(_x, _y, random_state=42, shu
 
 network = tf.keras.models.Sequential(name="userModel")
 
-network.compile(optimizer=optimizerFunction, loss=lossFunction)
+
+network.compile(optimizer=optimizerType, loss=lossFunction)
+
 
 mod_history = network.fit(x_train, y_train, epochs=100, verbose=1, batch_size=16)
 
