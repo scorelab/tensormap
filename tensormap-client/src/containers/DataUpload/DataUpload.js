@@ -54,7 +54,7 @@ class DataUpload extends Component {
             <div>
                 <Grid columns={2} relaxed='very' stackable>
                         <Grid.Column >
-                            <Segment textAlign='center' size='huge'>{strings.UPLOAD_NEW_FILE_TITLE}</Segment>
+                            <Segment textAlign='center' size='huge'>{"mdskafjkjdsakfljkl"}</Segment>
                             <NewFile/>
                         </Grid.Column>
                         <Grid.Column >

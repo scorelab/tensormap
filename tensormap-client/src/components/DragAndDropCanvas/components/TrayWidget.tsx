@@ -10,8 +10,9 @@ namespace S {
 	`;
 }
 
-export class TrayWidget extends React.Component {
-	render() {
-		return <S.Tray>{this.props.children}</S.Tray>;
-	}
+export function TrayWidget(props:any){
+
+		const {childern}=props
+		return <S.Tray>{childern}</S.Tray>;
+
 }
