@@ -7,6 +7,8 @@
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^3.0.2",
+    "@material-ui/icons/Save": "^3.0.2",
     "@projectstorm/react-diagrams": "^6.5.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
@@ -30,6 +32,7 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
     "socket.io-client": "^4.1.3",
+    "storm-react-diagrams": "^5.2.1",
     "typescript": "^4.3.5",
     "web-vitals": "^1.1.2"
   },
@@ -60,5 +63,6 @@
   "devDependencies": {
     "@types/lodash": "^4.14.171",
     "@types/react": "^18.0.15"
-  }
+  },
+  "noImplicitAny": false
 }

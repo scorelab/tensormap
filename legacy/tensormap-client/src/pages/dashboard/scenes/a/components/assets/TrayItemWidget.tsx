@@ -20,7 +20,7 @@ export class TrayItemWidget extends React.Component<TrayItemWidgetProps, TrayIte
 	render() {
 		return (
 			<ListItem
-						button style={{ borderColor: '#fff' }}
+						button style={{ borderColor: '#ff1' }}
 						draggable={true}
 						onDragStart={event => {
 							event.dataTransfer.setData("storm-diagram-node", JSON.stringify(this.props.model));

@@ -9,6 +9,7 @@ const NodeList = () => {
             <Input/>
             <Flatten/>
             <Dense/>
+
         </div>
     );
 };
