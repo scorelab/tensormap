@@ -14,7 +14,7 @@ export class SidebarWidget extends React.Component<SidebarWidgetProps, SidebarWi
 	}
 
 	render() {
-		console.log(this.props.children);
+		// console.log(this.props.children);
 		return (
 			<div className="tray">
 				{this.props.children}

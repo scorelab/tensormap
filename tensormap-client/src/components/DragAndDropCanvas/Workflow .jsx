@@ -1,7 +1,7 @@
 import * as React   from 'react'
-import BodyWidget from './BodyWidget'
-import { Application } from "../Application";
-import "./sass/workflow.scss";
+import BodyWidget from './components/BodyWidget'
+import { Application } from "./Application";
+import "../DragAndDropCanvas/components/sass/workflow.scss";
 
 class Workflow extends React.Component {
 
