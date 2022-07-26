@@ -9,6 +9,7 @@ import styled from '@emotion/styled';
 import NodeList from "../NodesList/NodeList";
 import * as strings from "../../../constants/Strings";
 import {subject} from "../../../services";
+import { string } from 'mathjs';
 
 export interface BodyWidgetProps {
 	app: Application;
@@ -79,9 +80,10 @@ class BodyWidget extends React.Component<BodyWidgetProps> {
 					<div className="title"> Model Deep neural network</div>
 				</S.Header>
 				<S.Content>
-					<TrayWidget>
-						<NodeList/>
-					</TrayWidget>
+
+					< TrayWidget childern={<NodeList/>}/>
+
+					{/* </TrayWidget> */}
 					<S.Layer
 						onDrop={(event) => {
 							let data = JSON.parse(event.dataTransfer.getData('storm-diagram-node'));
