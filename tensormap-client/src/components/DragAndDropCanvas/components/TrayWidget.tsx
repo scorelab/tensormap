@@ -1,22 +1,5 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
-
-// namespace S {
-// 	export const Tray = styled.div`
-// 		min-width: 200px;
-// 		background: rgb(20, 20, 20);
-// 		flex-grow: 0;
-// 		flex-shrink: 0;
-// 	`;
-// }
-
-// export function TrayWidget(props:any){
-
-// 		const {childern}=props
-// 		return <S.Tray>{childern}</S.Tray>;
-
-// }
-
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -24,10 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import List from '@material-ui/core/List';
 
-// type TrayWidgetProps={
-// 	nntype:string;
-// 	children: React.ReactNode;
-// };
+
 export interface TrayWidgetProps {
 	nntype:string;
 	children: React.ReactNode;
@@ -65,29 +45,3 @@ export class TrayWidget extends React.Component<TrayWidgetProps, TrayWidgetState
 
 	}
 }
-
-// export function TrayWidget(props:any){
-
-// 	const {childern}=props
-// 	return
-
-
-// 	<ExpansionPanel square>
-// 	        <ExpansionPanelSummary
-// 	          expandIcon={<ExpandMoreIcon />}
-// 	          aria-controls="panel1a-content"
-// 	          id="panel1a-header"
-// 	        >
-// 	          <Typography>{props.nntype}</Typography>
-// 	        </ExpansionPanelSummary>
-// 	        <ExpansionPanelDetails>
-// 							<Typography>
-// 								<List component="nav" aria-label="Main mailbox folders">
-// 									{props.children}
-// 								</List>
-// 							</Typography>
-// 	        </ExpansionPanelDetails>
-// 	      </ExpansionPanel>
-
-
-// }

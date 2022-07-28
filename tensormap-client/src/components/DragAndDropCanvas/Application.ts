@@ -24,7 +24,7 @@ import * as SRD from "storm-react-diagrams";
 	}
 
 	public getActiveDiagram(): SRD.DiagramModel {
-	@@ -20,4 +30,26 @@ export class Application {
+	 export class Application {
 	public getDiagramEngine(): SRD.DiagramEngine {
 		return this.diagramEngine;
 	}
@@ -32,22 +32,3 @@ import * as SRD from "storm-react-diagrams";
 		return this.diagramEngine;
 	}
 }
-
-// export class Application {
-// 	protected activeModel: SRD.DiagramModel;
-// 	protected diagramEngine: SRD.DiagramEngine;
-
-// 	constructor() {
-// 		this.diagramEngine = SRD.default();
-// 		this.activeModel = new SRD.DiagramModel();
-// 		this.diagramEngine.setModel(this.activeModel);
-// 	}
-
-// 	public getActiveDiagram(): SRD.DiagramModel {
-// 		return this.activeModel;
-// 	}
-
-// 	public getDiagramEngine(): SRD.DiagramEngine {
-// 		return this.diagramEngine;
-// 	}
-// }

@@ -76,8 +76,8 @@ export interface BodyWidgetState {
 }
 
 namespace S {
-	@@ -47,87 +107,816 @@ namespace S {
-	`;
+	namespace S {
+	;
 }
 
 class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
@@ -793,103 +793,4 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 }
 
  export default withStyles(styles, {withTheme: true})(BodyWidget)
-// export default BodyWidget;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 	// state ={inputNodes:[], flattenNodes:[], denseNodes:[]}
-
-// 	inputNodesHandler = (nodeID : string)=> {
-// 		let currentNodes = [...this.state.inputNodes];
-// 		// @ts-ignore
-// 		currentNodes.push(nodeID);
-// 		this.setState({...this.state, inputNodes: currentNodes}, ()=>{subject.next(this.state)});
-// 	}
-
-// 	flattenNodesHandler = (nodeID : string)=> {
-// 		let currentNodes = [...this.state.flattenNodes];
-// 		// @ts-ignore
-// 		currentNodes.push(nodeID);
-// 		this.setState({...this.state, flattenNodes: currentNodes}, ()=>{subject.next(this.state)});
-// 	}
-
-// 	denseNodesHandler = (nodeID : string)=> {
-// 		let currentNodes = [...this.state.denseNodes];
-// 		// @ts-ignore
-// 		currentNodes.push(nodeID);
-// 		this.setState({...this.state, denseNodes: currentNodes}, ()=>{subject.next(this.state)});
-// 	}
-
-
-// 	render() {
-// 		return (
-// 			<S.Body>
-// 				<S.Header>
-// 					<div className="title"> Model Deep neural network</div>
-// 				</S.Header>
-// 				<S.Content>
-
-// 					< TrayWidget childern={<NodeList/>}/>
-
-// 					{/* </TrayWidget> */}
-// 					<S.Layer
-// 						onDrop={(event) => {
-// 							let data = JSON.parse(event.dataTransfer.getData('storm-diagram-node'));
-// 							let nodesCount = _.keys(this.props.app.getDiagramEngine().getModel().getNodes()).length;
-
-
-// 							let node: DefaultNodeModel;
-// 							if (data.type === strings.DL_MODEL_INPUT_TYPE) {
-// 								const nodeID = strings.DL_MODEL_INPUT_NAME + " " + (nodesCount + 1);
-// 								node = new DefaultNodeModel(nodeID,strings.DL_MODEL_INPUT_COLOR);
-// 								node.addOutPort(strings.DL_NODE_OUT);
-// 								this.inputNodesHandler(nodeID);
-
-
-// 							}else if (data.type === strings.DL_MODEL_FLATTEN_TYPE) {
-// 								const nodeID = strings.DL_MODEL_FLATTEN_NAME + " " + (nodesCount + 1);
-// 								node = new DefaultNodeModel(nodeID,strings.DL_MODEL_FLATTEN_COLOR);
-// 								node.addInPort(strings.DL_NODE_IN);
-// 								node.addOutPort(strings.DL_NODE_OUT);
-// 								this.flattenNodesHandler(nodeID)
-
-// 							}else {
-// 								const nodeID = strings.DL_MODEL_DENSE_NAME + " " + (nodesCount + 1);
-// 								node = new DefaultNodeModel(nodeID,strings.DL_MODEL_DENSE_COLOR);
-// 								node.addInPort(strings.DL_NODE_IN);
-// 								node.addOutPort(strings.DL_NODE_OUT);
-// 								this.denseNodesHandler(nodeID)
-// 							}
-// 							let point = this.props.app.getDiagramEngine().getRelativeMousePoint(event);
-// 							node.setPosition(point);
-// 							this.props.app.getDiagramEngine().getModel().addNode(node);
-// 							this.forceUpdate();
-// 						}}
-// 						onDragOver={(event) => {
-// 							event.preventDefault();
-// 						}}>
-// 						<DemoCanvasWidget>
-// 							<CanvasWidget engine={this.props.app.getDiagramEngine()} />
-// 						</DemoCanvasWidget>
-// 					</S.Layer>
-// 				</S.Content>
-// 			</S.Body>
-// 		);
-// 	}
-// }
-
 // export default BodyWidget;
