@@ -3,9 +3,7 @@ import {Form, Button, Icon, Modal, Header} from 'semantic-ui-react';
 import * as strings from "../../../constants/Strings";
 import axios from "axios";
 import * as urls from '../../../constants/Urls';
-
 class NewFile extends Component {
-
     state = {
         fileType:'',
         fileName:'',
@@ -25,22 +23,18 @@ class NewFile extends Component {
         { key: 'zip', text: 'ZIP', value: 'zip' },
         { key: 'rar', text: 'RAR', value: 'rar' }
     ]
-
     dataTypeHandler = (event,val) => {
         this.setState({...this.state, fileType: val.value},
             ()=> {
                 this.submitButtonEnableHandler();
             });
     };
-
     fileChange = e => {
         this.setState({...this.state, file: e.target.files[0], fileName: e.target.files[0].name},
             ()=> {
                 this.submitButtonEnableHandler();
             });
     };
-
-
     /*
     * Submission button enable only after the all the necessary fields added.
     *
@@ -50,13 +44,11 @@ class NewFile extends Component {
             this.setState({...this.state, uploadButtonDisabledStatus:false})
         }
     };
-
     /*
     * handle file uploads and send a request to backend
     *
     * */
     fileUploadHandler = () => {
-
         const file = new FormData();
         file.append("data", this.state.file)
         axios({
@@ -74,8 +66,6 @@ class NewFile extends Component {
             this.setState({...this.state, fileAddedSuccessfully:false});
         })
     };
-
-
     /*
     * Model related functions controls the feedback of the request
     *
@@ -84,36 +74,25 @@ class NewFile extends Component {
         this.setState({ ...this.state, modalOpen: false });
         window.location.reload();
     }
-
     modelOpen = () => this.setState({ modalOpen: true });
-
     render() {
-
         /*
         * addedSuccessfully and errorInAddition are modals that will pop up after successful addition or failure.
         *
         * */
-
         const addedSuccessfully = (
             <Modal open={this.state.modalOpen} onClose={this.modelClose} basic size='small' >
-
                 <Header icon='check circle' content={strings.UPLOAD_SUCCESS_MODEL_MESSAGE} />
-
-
                 <Modal.Actions>
                     <Button color='green' onClick={this.modelClose} inverted>
                         <Icon name='checkmark' /> {strings.PROCESS_SUCCESS_MODEL_BUTTON}
                     </Button>
                 </Modal.Actions>
-
             </Modal>
         );
-
         const errorInAddition = (
             <Modal open={this.state.modalOpen} onClose={this.modelClose} basic size='small' >
-
                 <Header icon='exclamation' content={strings.PROCESS_FAIL_MODEL_MESSAGE} />
-
                 <Modal.Actions>
                     <Button color='red' onClick={this.modelClose} inverted>
                         <Icon name='checkmark' /> {strings.PROCESS_FAIL_MODEL_BUTTON}
@@ -121,12 +100,9 @@ class NewFile extends Component {
                 </Modal.Actions>
             </Modal>
         );
-
         return (
             <div>
-
                 {(this.state.fileAddedSuccessfully)? addedSuccessfully : errorInAddition}
-
                 <Form size='big' onSubmit={this.fileUploadHandler}>
                     <Form.Field required>
                         <label  >{strings.UPLOAD_SELECT_FILE_TYPE}</label>
@@ -177,5 +153,4 @@ class NewFile extends Component {
         );
     }
 }
-
 export default NewFile;
