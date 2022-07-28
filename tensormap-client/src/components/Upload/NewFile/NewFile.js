@@ -14,14 +14,16 @@ class NewFile extends Component {
         fileAddedSuccessfully:false,
         modalOpen:false
     }
-
+//default status file
     componentDidMount() {
         this.setState({fileType:'', fileName:'', file: null, uploadButtonDisabledStatus: true});
     };
 
-
+     //select fileTypes dataset
     fileTypes = [
-        { key: 'csv', text: 'CSV', value: 'csv' }
+        { key: 'csv', text: 'CSV', value: 'csv' },
+        { key: 'zip', text: 'ZIP', value: 'zip' },
+        { key: 'rar', text: 'RAR', value: 'rar' }
     ]
 
     dataTypeHandler = (event,val) => {
@@ -143,12 +145,16 @@ class NewFile extends Component {
                             </Button.Content>
                             <Button.Content hidden>{strings.UPLOAD_HIDDEN_BUTTON_CONTEXT}</Button.Content>
                         </Button>
-                        <input
+                        {/* button input dataset types  */}
+                         <input
                             type="file"
+                            name="files[]"
+                            multiple="true"
                             id="file"
-                            accept=".csv"
+                            accept={".csv"| ".zip" | ".rar"}
                             hidden
                             onChange={this.fileChange}
+
                         />
 
                         <Form.Input
