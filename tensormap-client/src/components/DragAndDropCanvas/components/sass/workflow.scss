@@ -1,0 +1,144 @@
+@import "./main";
+.body_wf{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .content{
+    display: flex;
+    flex-grow: 1;
+
+    .diagram-layer{
+      position: relative;
+      flex-grow: 1;
+    }
+
+    .tray{
+      min-width: 200px;
+      background: #e3e3e3;
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+  }
+}
+
+.srd-demo-workspace{
+  background: #ccc;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+
+  &__toolbar{
+    padding: 5px;
+    display: flex;
+    flex-shrink: 0;
+
+    button{
+      background: #ccc;
+      font-size: 14px;
+      padding: 5px 10px;
+      border: none;
+      color: white;
+      outline: none;
+      cursor: pointer;
+      margin: 2px;
+      border-radius: 3px;
+
+      &:hover{
+        background: rgb(0,192,255);
+      }
+    }
+  }
+
+  &__content{
+    flex-grow: 1;
+    height: 100%;
+  }
+}
+
+.srd-demo-canvas{
+  height: calc(100vh);
+  min-height:100%;
+  background-color: #ccc !important;
+  $color: rgba(white, .5);
+  background-image:
+    linear-gradient(0deg,
+      transparent 24%,
+      $color 25%,
+      $color 26%,
+      transparent 27%,
+      transparent 74%,
+      $color 75%,
+      $color 76%,
+      transparent 77%,
+      transparent),
+    linear-gradient(90deg,
+      transparent 24%,
+      $color 25%,
+      $color 26%,
+      transparent 27%,
+      transparent 74%,
+      $color 75%,
+      $color 76%,
+      transparent 77%,
+      transparent);
+  background-size:50px 50px;
+
+
+}
+.srd-diagram {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    cursor: move;
+    overflow: hidden;
+    height: 65vh;
+  }
+
+  .srd-link-layer {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      transform-origin: 0 0;
+      overflow: visible !important;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+  }
+
+.send_btn {
+  position: absolute !important;
+  z-index: 10000;
+  right: 20px;
+  bottom: 0px;
+}
+.exe_config_btn {
+  position: absolute !important;
+  z-index: 10000;
+  right: 140px;
+  bottom: 0px;
+}
+.group_selection_btn {
+  position: absolute !important;
+  z-index: 10000;
+  right: 340px;
+  bottom: 0px;
+}
+.param_drawer{
+  padding:20px;
+}
+
+.drawer_form {
+  margin-top: -30px;
+}
+
+.right_icon {
+  margin-right:10px;
+}
+.log_main{
+  height:100% !important;
+}
