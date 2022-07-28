@@ -15,10 +15,10 @@ All the application related settings handle through here
 class SettingUp:
     def __init__(self, app):
         self.app = app
-        self.app.config["SECRET_KEY"] = os.getenv("secret_key")
-        self.app.host = configs["api"]["host"]
-        self.app.port = configs["api"]["port"]
-        self.app.debug = configs["app"]["debug"]
+        self.app.config['SECRET_KEY'] = os.getenv('secret_key')
+        self.app.host = configs['api']['host']
+        self.app.port = configs['api']['port']
+        self.app.debug = configs['app']['debug']
         self.file_setup()
         self.database_setup()
         self.swagger_setup()
@@ -28,14 +28,14 @@ class SettingUp:
         pass
 
     def file_setup(self):
-        self.app.config["UPLOAD_FOLDER"] = configs["api"]["upload"]["folder"]
-        self.app.config["MAX_CONTENT_LENGTH"] = 200 * 1024 * 1024
+        self.app.config['UPLOAD_FOLDER'] = configs['api']['upload']['folder']
+        self.app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024
 
     def database_setup(self):
         connection = create_db_connection()
 
-        self.app.config["SQLALCHEMY_DATABASE_URI"] = connection
-        self.app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+        self.app.config['SQLALCHEMY_DATABASE_URI'] = connection
+        self.app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         db = get_db_ref()
         db.init_app(self.app)
         migrate = Migrate(self.app, db)

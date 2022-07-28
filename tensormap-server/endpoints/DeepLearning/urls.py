@@ -6,8 +6,8 @@ configs = get_configs()
 
 
 def model_urls(api):
-    base = configs["api"]["base"]
-    learn_uri = configs["api"]["model"]["uri"]
+    base = configs['api']['base']
+    learn_uri = configs['api']['model']['uri']
 
     api.add_resource(ValidateModel, base + learn_uri + URL_VALIDATE)
     api.add_resource(GetCode, base + learn_uri + URL_CODE)

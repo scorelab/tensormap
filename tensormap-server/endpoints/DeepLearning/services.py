@@ -24,7 +24,7 @@ def model_validate_service(incoming):
     )
 
     configs = []
-    params = flatten(incoming, separator=".")
+    params = flatten(incoming, separator='.')
     for param in params:
         configs.append(ModelConfigs(model_id=model.id, parameter=param, value=params[param]))
 
@@ -38,14 +38,14 @@ def model_validate_service(incoming):
         code_generated = code_generation(code_params=incoming[CODE])
         if not code_generated:
             return generic_response(
-                status_code=400, success=False, message="Model validated successfully but code generation unsuccessful."
+                status_code=400, success=False, message='Model validated successfully but code generation unsuccessful.'
             )
         else:
             return generic_response(
-                status_code=200, success=True, message="Model successfully validated and code generated."
+                status_code=200, success=True, message='Model successfully validated and code generated.'
             )
     else:
-        return generic_response(status_code=400, success=False, message="Whole validation process failed")
+        return generic_response(status_code=400, success=False, message='Whole validation process failed')
 
 
 def get_code_service(incoming):
@@ -58,26 +58,26 @@ def get_code_service(incoming):
         return send_file(path_or_file=file_path, as_attachment=True)
         # return generic_response(status_code=200, success=True, message="Code retrieved successfully.", data=data)
     else:
-        return generic_response(status_code=400, success=False, message="Code retrieve failed.")
+        return generic_response(status_code=400, success=False, message='Code retrieve failed.')
 
 
 def run_code_service(incoming):
     model_name = incoming[MODEL_NAME]
     file_path = CODE_GENERATION_LOCATION + model_name + CODE_GENERATION_TYPE
     if os.path.isfile(file_path):
-        run_command("python " + file_path)
-        return generic_response(status_code=200, success=True, message="Model executed successfully.")
+        run_command('python ' + file_path)
+        return generic_response(status_code=200, success=True, message='Model executed successfully.')
     else:
-        return generic_response(status_code=400, success=False, message="Model file not found.")
+        return generic_response(status_code=400, success=False, message='Model file not found.')
 
 
 def run_command(command):
     process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
     while True:
-        output = process.stdout.readline().decode("utf-8")
-        if output == "" and process.poll() is not None:
+        output = process.stdout.readline().decode('utf-8')
+        if output == '' and process.poll() is not None:
             break
-        if output.__contains__("Finish"):
+        if output.__contains__('Finish'):
             model_result(output)
             break
         if output:
@@ -88,7 +88,7 @@ def run_command(command):
 
 
 def model_result(message):
-    message = message.split("")[
+    message = message.split('')[
         -1
     ]
     socketio.emit(SOCKETIO_LISTENER, message, namespace=SOCKETIO_DL_NAMESPACE)
@@ -99,4 +99,4 @@ def get_available_model_list():
     data = []
     for model in model_list:
         data.append(model.model_name)
-    return generic_response(status_code=200, success=True, message="Model list generated successfully.", data=data)
+    return generic_response(status_code=200, success=True, message='Model list generated successfully.', data=data)

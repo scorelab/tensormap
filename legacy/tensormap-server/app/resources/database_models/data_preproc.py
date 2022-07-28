@@ -21,10 +21,10 @@ class dataset(db.Model):
 
     def serialize(self):
         return {
-            "fileName": self.fileName,
-            "filePath": self.filePath,
-            "fileFormat": self.fileFormat,
-            "features": self.features,
-            "labels": self.labels,
-            "testPercentage": self.testPercentage,
+            'fileName': self.fileName,
+            'filePath': self.filePath,
+            'fileFormat': self.fileFormat,
+            'features': self.features,
+            'labels': self.labels,
+            'testPercentage': self.testPercentage,
         }

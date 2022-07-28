@@ -14,12 +14,13 @@ repos:
     hooks:
     - id: isort
 
--   repo : https://github.com/psf/black
-    rev: 22.3.0
-    hooks:
-    - id: black
 
 -   repo: https://github.com/Lucas-C/pre-commit-hooks-nodejs
     rev: v1.1.2
     hooks:
      - id : htmlhint
+
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+    -   id: double-quote-string-fixer

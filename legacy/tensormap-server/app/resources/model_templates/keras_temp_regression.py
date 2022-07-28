@@ -9,8 +9,10 @@ from tensorflow.keras import layers
 np.random.seed(0)
 
 
-optimizerFunction = "adam"
-lossFunction = "L2 loss"
+
+optimizerType = 'adam'
+lossFunction = 'L2 loss'
+
 
 dataCsv = pd.read_csv()
 
@@ -19,7 +21,7 @@ _y = dataCsv[1]
 
 x_train, y_train, x_test, y_test = train_test_split(_x, _y, random_state=42, shuffle=True, test_size=0.10)
 
-network = tf.keras.models.Sequential(name="userModel")
+network = tf.keras.models.Sequential(name='userModel')
 
 network.compile(optimizer=optimizerFunction, loss=lossFunction)
 
@@ -33,10 +35,10 @@ mse = mean_squared_error(test_labels, prediction)
 rmse = sqrt(meanSquaredError)
 mae = mean_absolute_error(test_labels, prediction)
 
-print("MSE: ", mse)
-print("RMSE: ", rmse)
-print("MAE: ", mae)
+print('MSE: ', mse)
+print('RMSE: ', rmse)
+print('MAE: ', mae)
 
-with open("results.csv", "w") as f:
+with open('results.csv', 'w') as f:
     writer = csv.writer(f)
     writer.writerows(zip(y_test, predictions))

@@ -33,21 +33,21 @@ def code_generation(code_params):
     template = template_env.get_template(helper_map_correct_code_template(problem_type_id=code_params[PROBLEM_TYPE]))
 
     output = template.render(data=data)
-    generated_code_file = open(CODE_GENERATION_LOCATION + model[MODEL_NAME] + CODE_GENERATION_TYPE, "w+")
-    generated_code_file.write(output + "\n")
+    generated_code_file = open(CODE_GENERATION_LOCATION + model[MODEL_NAME] + CODE_GENERATION_TYPE, 'w+')
+    generated_code_file.write(output + '\n')
     generated_code_file.close()
     return True
 
 
 def helper_map_correct_code_template(problem_type_id):
-    options = {1: CODE_TEMPLATE_FOLDER + "multi-class-all-float-classification-csv.py"}
+    options = {1: CODE_TEMPLATE_FOLDER + 'multi-class-all-float-classification-csv.py'}
     return options[problem_type_id]
 
 
 def helper_generate_file_location(file_id):
     configs = get_configs()
     file = DataFile.query.filter_by(id=file_id).first()
-    return configs["api"]["upload"]["folder"] + "/" + file.file_name + "." + file.file_type
+    return configs['api']['upload']['folder'] + '/' + file.file_name + '.' + file.file_type
 
 
 def helper_generate_json_model_file_location(model_name):
