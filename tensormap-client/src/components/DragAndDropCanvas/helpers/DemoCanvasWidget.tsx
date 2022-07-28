@@ -1,25 +1,22 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
-import { css, Global } from '@emotion/react';
-
+import { css, Global, PropsOf } from '@emotion/react';
 export interface DemoCanvasWidgetProps {
 	color?: string;
 	background?: string;
+	childern? : JSX.Element;
 }
-
 namespace S {
 	export const Container = styled.div<{ color: string; background: string }>`
 		height: 100%;
 		background-color: ${(p) => p.background};
 		background-size: 50px 50px;
 		display: flex;
-
 		> * {
 			height: 100%;
 			min-height: 100%;
 			width: 100%;
 		}
-
 		background-image: linear-gradient(
 				0deg,
 				transparent 24%,
@@ -45,7 +42,6 @@ namespace S {
 				transparent
 			);
 	`;
-
 	export const Expand = css`
 		html,
 		body,
@@ -54,18 +50,31 @@ namespace S {
 		}
 	`;
 }
-
-export class DemoCanvasWidget extends React.Component<DemoCanvasWidgetProps> {
-	render() {
+export const DemoCanvasWidget =(props:any)=>{
+		console.log(props)
 		return (
 			<>
 				<Global styles={S.Expand} />
 				<S.Container
-					background={this.props.background || 'rgb(60, 60, 60)'}
-					color={this.props.color || 'rgba(255,255,255, 0.05)'}>
-					{this.props.children}
+					background={props.background || 'rgb(60, 60, 60)'}
+					color={props.color || 'rgba(255,255,255, 0.05)'}>
+					{props.childern}
 				</S.Container>
 			</>
 		);
-	}
+
 }
+// export class DemoCanvasWidget extends React.Component<DemoCanvasWidgetProps> {
+// 	render() {
+// 		return (
+// 			<>
+// 				<Global styles={S.Expand} />
+// 				<S.Container
+// 					background={this.props.background || 'rgb(60, 60, 60)'}
+// 					color={this.props.color || 'rgba(255,255,255, 0.05)'}>
+// 					{this.props.children}
+// 				</S.Container>
+// 			</>
+// 		);
+// 	}
+// }

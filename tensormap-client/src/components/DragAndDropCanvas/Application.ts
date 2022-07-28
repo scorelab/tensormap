@@ -1,34 +1,25 @@
-// import * as SRD from '@projectstorm/react-diagrams';
 import * as SRD from "storm-react-diagrams";
 /**
  * @author mahmoud mohamed
  */
-
-
-
- export class Application {
+export class Application {
 	protected activeModel: SRD.DiagramModel;
 	protected diagramEngine: SRD.DiagramEngine;
 
 	constructor() {
 		this.diagramEngine = new SRD.DiagramEngine();
 		this.diagramEngine.installDefaultFactories();
-
     this.activeModel = new SRD.DiagramModel();
 		this.newModel();
 	}
-
 	public newModel() {
 		this.activeModel = new SRD.DiagramModel();
 		this.diagramEngine.setDiagramModel(this.activeModel);
 	}
-
 	public getActiveDiagram(): SRD.DiagramModel {
-	 export class Application {
-	public getDiagramEngine(): SRD.DiagramEngine {
-		return this.diagramEngine;
+		return this.activeModel;
 	}
-	public getDiagramModel(): SRD.DiagramEngine {
+	public getDiagramEngine(): SRD.DiagramEngine {
 		return this.diagramEngine;
 	}
 }

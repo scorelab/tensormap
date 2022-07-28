@@ -1,460 +1,433 @@
-import * as React from 'react';
-// import * as _ from 'lodash';
-import { TrayWidget } from './TrayWidget';
-import { TrayItemWidget } from './TrayItemWidget';
-import { SidebarWidget } from './SidebarWidget';
-import { Application } from '../Application';
-//import { DefaultNodeModel } from '@projectstorm/react-diagrams';
-import { CanvasWidget } from '@projectstorm/react-canvas-core';
-import { DemoCanvasWidget } from '../helpers/DemoCanvasWidget';
-import styled from '@emotion/styled';
-import NodeList from "../NodesList/NodeList";
-import * as strings from "../../../constants/Strings";
-import {subject} from "../../../services";
-import { string } from 'mathjs';
+import * as React from "react";
+import { TrayWidget } from "./TrayWidget";
+import { Application } from "../Application";
+import { TrayItemWidget } from "./TrayItemWidget";
+import { SidebarWidget } from "./SidebarWidget";
+import SimpleTabs from "./Log";
 import { DefaultNodeModel, DiagramWidget, DefaultPortModel, DefaultLinkModel, DefaultLabelModel } from "storm-react-diagrams";
-
-import { baseURL } from '../../../config';
-
-
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import SaveIcon from '@material-ui/icons/Save';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Avatar from '@material-ui/core/Avatar';
 import {withStyles} from '@material-ui/core';
 import styles       from './BodyWidget.styles';
+//import FileSaver from 'file-saver';
+import { baseURL } from '../../../config';
 
 import socketIOClient from "socket.io-client";
-
 
 
 var _ = require('lodash')
 
 const endpoint = "ws://localhost:5000/nn";
 
+
 export interface BodyWidgetProps {
-	app: Application;
-	classes?:any;
-	theme?:any;
-  }
-export interface BodyWidgetState {
-	// app: Application;
-	drawer: boolean;
-	drawerlink: boolean;
-	dialog: boolean;
-	accuracy: boolean;
-	neg_mean_square_error: boolean;
-	tmp_id: string;
-	dialog_group:boolean;
-	layer_name:string;
-	layer_color:any;
-	runtime_data:string;
-	code:string;
-	node:
-	{
-		id: string;
-		param: Array<any>;
-	}[];
-	tmp_form: {
-		[key: string]: any;
-	};
-	config: {
-		[key: string]: any;
-	}
+  app: Application;
+  classes?:any;
+  theme?:any;
 }
 
-namespace S {
-	namespace S {
-	;
+export interface BodyWidgetState {
+  drawer: boolean;
+  drawerlink: boolean;
+  dialog: boolean;
+  accuracy: boolean;
+  neg_mean_square_error: boolean;
+  tmp_id: string;
+  dialog_group:boolean;
+  layer_name:string;
+  layer_color:any;
+  runtime_data:string;
+  code:string;
+  node:
+  {
+    id: string;
+    param: Array<any>;
+  }[];
+  tmp_form: {
+    [key: string]: any;
+  };
+  config: {
+    [key: string]: any;
+  }
 }
+
 
 class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
+  constructor(props: BodyWidgetProps) {
+    super(props);
+    this.state = {
+      drawer: false,
+      drawerlink: false,
+      dialog: false,
+      dialog_group:false,
+      tmp_id: "",
+      accuracy: false,
+      neg_mean_square_error: false,
+      layer_name:"",
 
-	constructor(props: BodyWidgetProps) {
-		super(props);
-		this.state = {
-		  drawer: false,
-		  drawerlink: false,
-		  dialog: false,
-		  dialog_group:false,
-		  tmp_id: "",
-		  accuracy: false,
-		  neg_mean_square_error: false,
-		  layer_name:"",
+      layer_color:"",
+      runtime_data:"Epoch Number: 25, Val Acc: 87.3623%, Train Acc: 90.821% ",
+      code:"from keras.datasets import mnist\nfrom keras.layers import Dense, Conv2D, Flatten\nmodel = Sequential()\nmodel.add(Conv2D(64, kernel_size=3, activation=’relu’, input_shape=(28,28,1)))\nmodel.add(Flatten())\nmodel.add(Dense(10, activation=’softmax’))\nmodel.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3)",
+      node: [
+        {
+          id: "",
+          param: [],
+        }
+      ]
+      ,
+      tmp_form:
+      {
+        error_text:"",
+        units: "",
+        activation: "",
+      },
+      config: {
+        "optimizer": "'Adam'",
+        "loss": "'sparse_categorical_crossentropy'",
+        "metrics": [],
+      }
+    };
 
-		  layer_color:"",
-		  runtime_data:"Epoch Number: 25, Val Acc: 87.3623%, Train Acc: 90.821% ",
-		  code:"from keras.datasets import mnist\nfrom keras.layers import Dense, Conv2D, Flatten\nmodel = Sequential()\nmodel.add(Conv2D(64, kernel_size=3, activation=’relu’, input_shape=(28,28,1)))\nmodel.add(Flatten())\nmodel.add(Dense(10, activation=’softmax’))\nmodel.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=3)",
-		  node: [
-			{
-			  id: "",
-			  param: [],
-			}
-		  ]
-		  ,
-		  tmp_form:
-		  {
-			error_text:"",
-			units: "",
-			activation: "",
-		  },
-		  config: {
-			"optimizer": "'Adam'",
-			"loss": "'sparse_categorical_crossentropy'",
-			"metrics": [],
-		  },
-		//   inputNodes:[], flattenNodes:[], denseNodes:[]
-		};
+    this.handleNodeDelete = this.handleNodeDelete.bind(this)
+    this.handleNodeAdd = this.handleNodeAdd.bind(this)
+    this.handleNodeEdit = this.handleNodeEdit.bind(this)
+    this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this)
+    this.handleClose = this.handleClose.bind(this)
+    this.handleExeConfig = this.handleExeConfig.bind(this)
+    this.handleSelection = this.handleSelection.bind(this)
+    this.handleExecute = this.handleExecute.bind(this)
+    this.handleCloseGrouping = this.handleCloseGrouping.bind(this)
+    this.handledelete = this.handledelete.bind(this)
+    this.handleLayerCreated = this.handleLayerCreated.bind(this)
+  };
 
-		this.handleNodeDelete = this.handleNodeDelete.bind(this)
-		this.handleNodeAdd = this.handleNodeAdd.bind(this)
-		this.handleNodeEdit = this.handleNodeEdit.bind(this)
-		this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this)
-		this.handleClose = this.handleClose.bind(this)
-		this.handleExeConfig = this.handleExeConfig.bind(this)
-		this.handleSelection = this.handleSelection.bind(this)
-		this.handleExecute = this.handleExecute.bind(this)
-		this.handleCloseGrouping = this.handleCloseGrouping.bind(this)
-		this.handledelete = this.handledelete.bind(this)
-		this.handleLayerCreated = this.handleLayerCreated.bind(this)
-	  };
+  componentDidMount() {
+    const socket = socketIOClient(endpoint);
+    socket.on("nn_execute", (data: any) => console.log(data));
+    var model = this.props.app.getDiagramEngine().getDiagramModel();
 
+    model.addListener({
+      linksUpdated: (e) => {
+        var link = e.link;
+        link.extras = {
+          weight: "0.3",
+        };
+        var data_ = link.extras as any;
+        (link as DefaultLinkModel).addLabel(data_.weight);
+        if (e.isCreated) {
+          link.addListener({
+            targetPortChanged: (e) => {
+              //call function a valid link added
+            }
+          })
+        }
+        else {
+          //call function link deleted
+        }
+      },
+      nodesUpdated: (e) => {
+        // call functions in here that are realted to node addition and deletetion
+        var node = e.node;
+        if (e.isCreated) {
+          this.handleNodeAdd(node.id, node.extras.name, [], model.id);
+          console.log("node created");
+        }
+        else {
+          //call function link deleted
+          this.handleNodeDelete(node.id)
+          console.log("node deleted");
 
-	  componentDidMount() {
-		const socket = socketIOClient(endpoint);
-		socket.on("nn_execute", (data: any) => console.log(data));
-		 var model = this.props.app.getDiagramEngine().getDiagramModel();
+        }
+      }
+    })
+  }
 
-		model.addListener({
-		  linksUpdated: (e) => {
-			var link = e.link;
-			link.extras = {
-			  weight: "0.3",
-			};
-			var data_ = link.extras as any;
-			(link as DefaultLinkModel).addLabel(data_.weight);
-			if (e.isCreated) {
-			  link.addListener({
-				targetPortChanged: (e: any) => {
-				  //call function a valid link added
-				}
-			  })
-			}
-			else {
-			  //call function link deleted
-			}
-		  },
-		  nodesUpdated: (e: any) => {
-			// call functions in here that are realted to node addition and deletetion
-			var node = e.node;
-			if (e.isCreated) {
-			  this.handleNodeAdd(node.id, node.extras.name, [], model.id);
-			  console.log("node created");
-			}
-			else {
-			  //call function link deleted
-			  this.handleNodeDelete(node.id)
-			  console.log("node deleted");
+  toggleDrawer = (call_: boolean, node_id: string, islink: boolean) => {
+    this.setState({
+      tmp_form:
+      {
+        units: "",
+        activation: "",
+      },
+    });
+    if (islink) {
+      console.log("link selected");
+      this.setState({ drawerlink: call_ });
+    } else {
+      this.setState({ drawer: call_ });
+      // console.log(node_id);
+    }
+  };
 
-			}
-		  }
-		})
-	  }
+  get_serialized() {
+    var str = JSON.stringify(this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram());
+    return str
+  };
 
-	  toggleDrawer = (call_: boolean, node_id: string, islink: boolean) => {
-		this.setState({
-		  tmp_form:
-		  {
-			units: "",
-			activation: "",
-		  },
-		});
-		if (islink) {
-		  console.log("link selected");
-		  this.setState({ drawerlink: call_ });
-		} else {
-		  this.setState({ drawer: call_ });
-		  // console.log(node_id);
-		}
-	  };
+  handleChange = (key: number, param_name: string, event: React.ChangeEvent<HTMLInputElement>, islink: boolean, id: string) => {
+    var tmp_form = this.state.tmp_form;
+ if (/^(\s*|\d+)$/.test(event.target.value)){
+    if (islink) {
+      var link = this.props.app.getDiagramEngine().getDiagramModel().getLink(id);
+      if (link != null) {
+        link.extras = {
+          weight: event.target.value
+        };
+        var labels_node = link.labels[0] as DefaultLabelModel;
+        labels_node.setLabel(event.target.value);
+      }
+      tmp_form[param_name] = event.target.value
+      this.setState({
+        tmp_form
+      } as any)
+    }
+    else {
+      tmp_form[param_name] = event.target.value
+      tmp_form["error_text"]=""
+      this.setState({
+        tmp_form,
 
-	  get_serialized() {
-		var str = JSON.stringify(this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram());
-		return str
-	  };
+      } as any)
+    }
+ }else{
 
-	  handleChange = (key: number, param_name: string, event: React.ChangeEvent<HTMLInputElement>, islink: boolean, id: string) => {
-		var tmp_form = this.state.tmp_form;
-	 if (/^(\s*|\d+)$/.test(event.target.value)){
-		if (islink) {
-		  var link = this.props.app.getDiagramEngine().getDiagramModel().getLink(id);
-		  if (link != null) {
-			link.extras = {
-			  weight: event.target.value
-			};
-			var labels_node = link.labels[0] as DefaultLabelModel;
-			labels_node.setLabel(event.target.value);
-		  }
-		  tmp_form[param_name] = event.target.value
-		  this.setState({
-			tmp_form
-		  } as any)
-		}
-		else {
-		  tmp_form[param_name] = event.target.value
-		  tmp_form["error_text"]=""
-		  this.setState({
-			tmp_form,
+   tmp_form["error_text"]="Please Enter A valid Number"
+   this.setState({
+ tmp_form,} as any)
+ }
+  };
 
-		  } as any)
-		}
-	 }else{
+  handleSave = () => {
+    // console.log(this.state.tmp_form);
+    var param_ = [
+      this.state.tmp_form,
+    ]
 
-	   tmp_form["error_text"]="Please Enter A valid Number"
-	   this.setState({
-	 tmp_form,} as any)
-	 }
-	  };
+    var new_val = [{
+      id: this.state.tmp_id,
+      param: param_,
+    }];
+    // console.log(new_val);
+    var joined = this.state.node.concat(new_val);
+    // console.log(joined);
+    this.setState({ node: joined, });
+    // console.log(this.state.node);
+  }
+  handleOutputError=()=>{
+    var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
+    var output_layer=0;
+    json_graph.nodes.map(item=>{if(item.extras.name==="Output Node"){output_layer+=1}})
+    if(output_layer===0){
+      window.alert("There is no Output layer")
+    }
+  }
+  handleExecute = () => {
+    var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
+    var node_data = this.state.node
+    var comp_data = {
+      graph: [json_graph],
+      node_param: node_data
+    }
+    console.log(comp_data);
+    this.handleOutputError();
+    // const socket = socketIOClient(endpoint);
+    // socket.emit('nn_execute', comp_data, function(response: any) {
+    //   console.log(response)
+    //   this.setState({
+    //     runtime_data:response.json()
+    //   })
+    // });
 
-	  handleSave = () => {
-		// console.log(this.state.tmp_form);
-		var param_ = [
-		  this.state.tmp_form,
-		]
+  }
 
-		var new_val = [{
-		  id: this.state.tmp_id,
-		  param: param_,
-		}];
-		// console.log(new_val);
-		var joined = this.state.node.concat(new_val);
-		// console.log(joined);
-		this.setState({ node: joined, });
-		// console.log(this.state.node);
-	  }
-	  handleOutputError=()=>{
-		var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
-		var output_layer=0;
-		json_graph.nodes.map(item=>{if(item.extras.name==="Output Node"){output_layer+=1}})
-		if(output_layer===0){
-		  window.alert("There is no Output layer")
-		}
-	  }
-	  handleExecute = () => {
-		var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
-		var node_data = this.state.node
-		var comp_data = {
-		  graph: [json_graph],
-		  node_param: node_data
-		}
-		console.log(comp_data);
-		this.handleOutputError();
-		// const socket = socketIOClient(endpoint);
-		// socket.emit('nn_execute', comp_data, function(response: any) {
-		//   console.log(response)
-		//   this.setState({
-		//     runtime_data:response.json()
-		//   })
-		// });
+  handleGetCode = () => {
+    var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
+    var node_data = this.state.node
+    var data = {
+      graph: [json_graph],
+      node_param: node_data
+    }
+    // console.log(data);
+    var url_ = baseURL + 'getcode/';
+    // console.log(url_)
+    fetch(url_, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .then(response => this.setState({
+        code:response
+      }))
+      .catch(response => console.log(response));
+  }
 
-	  }
+  handleExeConfig = () => {
+    var data = [this.state.config]
+    console.log(data);
+    this.handleClose();
 
-	  handleGetCode = () => {
-		var json_graph = this.props.app.getDiagramEngine().getDiagramModel().serializeDiagram();
-		var node_data = this.state.node
-		var data = {
-		  graph: [json_graph],
-		  node_param: node_data
-		}
-		// console.log(data);
-		var url_ = baseURL + 'getcode/';
-		// console.log(url_)
-		fetch(url_, {
-		  method: 'POST',
-		  headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-		  },
-		  body: JSON.stringify(data),
-		})
-		  .then(response => response.json())
-		  .then(response => this.setState({
-			code:response
-		  }))
-		  .catch(response => console.log(response));
-	  }
+    var url_ = baseURL + 'getcode/';
+    fetch(url_, {
+      method: 'POST',
+      headers: {
+        'access-control-allow-origin': '*',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
 
-	  handleExeConfig = () => {
-		var data = [this.state.config]
-		console.log(data);
-		this.handleClose();
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .catch(response => console.log(response));
+  }
 
-		var url_ = baseURL + 'getcode/';
-		fetch(url_, {
-		  method: 'POST',
-		  headers: {
-			'access-control-allow-origin': '*',
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-		  },
+  handleNodeDelete = (nodeid: string) => {
+    var data = {
+      layerID: nodeid
+    }
+    // console.log(data);
+    var url_ = baseURL + 'delete/';
+    fetch(url_, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .catch(response => console.log(response));
+  }
 
-		  body: JSON.stringify(data),
-		})
-		  .then(response => response.json())
-		  .catch(response => console.log(response));
-	  }
+  handleNodeAdd = (nodeid: string, layertype: string, layerSpec: Array<any>, parentnode: string) => {
+    var data = {
+      layerId: nodeid,
+      layerType: layertype,
+      layerSpec: layerSpec,
+      parentNodeId: parentnode
+    }
+    // console.log(data);
+    var url_ = baseURL + 'add/';
+    fetch(url_, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .catch(response => console.log(response));
+  }
 
-	  handleNodeDelete = (nodeid: string) => {
-		var data = {
-		  layerID: nodeid
-		}
-		// console.log(data);
-		var url_ = baseURL + 'delete/';
-		fetch(url_, {
-		  method: 'POST',
-		  headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-		  },
-		  body: JSON.stringify(data),
-		})
-		  .then(response => response.json())
-		  .catch(response => console.log(response));
-	  }
+  handleNodeEdit = () => {
+    this.handleSave()
+    this.toggleDrawer(false, "close", false)
+    var new_val = [this.state.tmp_form];
+    var data = {
+      layerId: this.state.tmp_id,
+      layerSpec: new_val,
+    }
+    var url_ = baseURL + 'edit/';
+    fetch(url_, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .catch(response => console.log(response));
+  }
 
-	  handleNodeAdd = (nodeid: string, layertype: string, layerSpec: Array<any>, parentnode: string) => {
-		var data = {
-		  layerId: nodeid,
-		  layerType: layertype,
-		  layerSpec: layerSpec,
-		  parentNodeId: parentnode
-		}
-		// console.log(data);
-		var url_ = baseURL + 'add/';
-		fetch(url_, {
-		  method: 'POST',
-		  headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-		  },
-		  body: JSON.stringify(data),
-		})
-		  .then(response => response.json())
-		  .catch(response => console.log(response));
-	  }
+  //Dialog functions
 
-	  handleNodeEdit = () => {
-		this.handleSave()
-		this.toggleDrawer(false, "close", false)
-		var new_val = [this.state.tmp_form];
-		var data = {
-		  layerId: this.state.tmp_id,
-		  layerSpec: new_val,
-		}
-		var url_ = baseURL + 'edit/';
-		fetch(url_, {
-		  method: 'POST',
-		  headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-		  },
-		  body: JSON.stringify(data),
-		})
-		  .then(response => response.json())
-		  .catch(response => console.log(response));
-	  }
+  handleClickOpen = () => {
+    this.setState({
+      dialog: true
+    })
+  }
 
-	  //Dialog functions
+  handleClose = () => {
+    this.setState({
+      dialog: false
+    })
+  }
 
-	  handleClickOpen = () => {
-		this.setState({
-		  dialog: true
-		})
-	  }
+  handleClickOpenGrouping = () => {
+    this.setState({
+      dialog_group: true,
+      layer_name:"",
+      layer_color:"",
+    })
+  }
 
-	  handleClose = () => {
-		this.setState({
-		  dialog: false
-		})
-	  }
+  handleCloseGrouping = () => {
+    this.setState({
+      dialog_group: false
+    })
+  }
 
-	  handleClickOpenGrouping = () => {
-		this.setState({
-		  dialog_group: true,
-		  layer_name:"",
-		  layer_color:"",
-		})
-	  }
+  handleCheckBoxChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ [name]: event.target.checked } as any);
+    var joined = this.state.config.metrics.concat(name);
 
-	  handleCloseGrouping = () => {
-		this.setState({
-		  dialog_group: false
-		})
-	  }
+    var tmp_form = this.state.config;
+    tmp_form["metrics"] = joined
+    this.setState({
+      tmp_form
+    } as any)
 
-	  handleCheckBoxChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-		this.setState({ [name]: event.target.checked } as any);
-		var joined = this.state.config.metrics.concat(name);
+    // console.log(tmp_form)
+    // console.log(tmp_form.metrics)
+  };
 
-		var tmp_form = this.state.config;
-		tmp_form["metrics"] = joined
-		this.setState({
-		  tmp_form
-		} as any)
+  handleSelection = () => {
+    var graph = this.props.app.getDiagramEngine().getDiagramModel()
+    var selected = graph.getSelectedItems()
 
-		// console.log(tmp_form)
-		// console.log(tmp_form.metrics)
-	  };
+    // console.log(selected.length)
+    for( var i = 0 ; i < selected.length ; ++i){
+      if(selected[i].constructor.name === "DefaultNodeModel"){
+        (selected[i] as DefaultNodeModel).extras.layer = this.state.layer_name;
+        (selected[i] as DefaultNodeModel).extras.layer_color = this.state.layer_color;
+        (selected[i] as DefaultNodeModel).color = this.state.layer_color;
+        this.handleLayerCreated()
+      };
+      console.log(graph);
+    };
+    this.handleCloseGrouping()
+  };
 
-	  handleSelection = () => {
-		var graph = this.props.app.getDiagramEngine().getDiagramModel()
-		var selected = graph.getSelectedItems()
+  handleLayerCreated = () =>{
+    //Post request to backend
+  }
+  handledeleteKey=(event: any)=>{
+    if(event.key==='Enter'){
+      this.handledelete();
+    }
+  }
 
-		// console.log(selected.length)
-		for( var i = 0 ; i < selected.length ; ++i){
-		  if(selected[i].constructor.name === "DefaultNodeModel"){
-			(selected[i] as DefaultNodeModel).extras.layer = this.state.layer_name;
-			(selected[i] as DefaultNodeModel).extras.layer_color = this.state.layer_color;
-			(selected[i] as DefaultNodeModel).color = this.state.layer_color;
-			this.handleLayerCreated()
-		  };
-		  console.log(graph);
-		};
-		this.handleCloseGrouping()
-	  };
+  handledelete = () => {
+			_.forEach(this.props.app.getDiagramEngine().getDiagramModel().getSelectedItems(), (element : any) => {
+				if (!this.props.app.getDiagramEngine().isModelLocked(element)) {
+					element.remove();
+        }
+        else{
+          window.alert("Select a node!")
+        }
+			});
+			this.forceUpdate();
+  };
 
-	  handleLayerCreated = () =>{
-		//Post request to backend
-	  }
-	  handledeleteKey=(event: any)=>{
-		if(event.key==='Enter'){
-		  this.handledelete();
-		}
-	  }
-
-	  handledelete = () => {
-				_.forEach(this.props.app.getDiagramEngine().getDiagramModel().getSelectedItems(), (element : any) => {
-					if (!this.props.app.getDiagramEngine().isModelLocked(element)) {
-						element.remove();
-			}
-			else{
-			  window.alert("Select a node!")
-			}
-				});
-				this.forceUpdate();
-	  };
 
 
   render() {
@@ -469,34 +442,33 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                       <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Node" color = "rgb(192,255,0)" />
                       <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "Hidden Node" color = "rgb(0,192,255)" />
                       <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Node" color = "rgb(90,102,255)" />
-                   </TrayWidget>
+                    </TrayWidget>
                     <TrayWidget nntype="RNN">
                       <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Node" color = "rgb(192,255,0)" />
                       <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "Recurrent Node" color = "rgb(0,192,255)" />
                       <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Node" color = "rgb(90,102,255)" />
-					  </TrayWidget>
-
+                    </TrayWidget>
                     <TrayWidget nntype="LSTM">
                       <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Node" color = "rgb(192,255,0)" />
                       <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "Memory Node" color = "rgb(0,192,255)" />
                       <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Node" color = "rgb(90,102,255)" />
-					  </TrayWidget>
-
-					  <TrayWidget nntype="CNN">
-                      <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Node" color = "rgb(192,255,0)" />
-                      <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "convolution Node" color = "rgb(0,192,255)" />
-                      <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Node" color = "rgb(90,102,255)" />
-					  </TrayWidget>
-
+                    </TrayWidget>
+			  <TrayWidget nntype="CNN">
+                    <TrayItemWidget model={{ type: "in", name: 'inp_layer' }} name = "Input Node" color = "rgb(192,255,0)" />
+                    <TrayItemWidget model={{ type: "out", name: 'hid_layer' }} name = "Convolution Node" color = "rgb(0,192,255)" />
+                    <TrayItemWidget model={{ type: "in", name: "out_layer" }} name = "Output Node" color = "rgb(90,102,255)" />
+				  </TrayWidget>
                   </SidebarWidget>
                 </Paper>
               </Grid>
-              <Grid item xs={8} spacing={5}>
+              <Grid item xs={10} spacing={5}>
+				  {/* //clear button part */}
               <Grid item xs style={{paddingBottom:10}}>
                 <Paper square>
                   <Button variant= "contained" onClick = {this.handledelete} style={{backgroundColor:"#fff",boxShadow:"none"}}> <DeleteIcon /></Button>
                 </Paper>
               </Grid>
+			  {/* //diagram part */}
                 <Grid item >
                   <Paper square>
                     <div
@@ -554,9 +526,9 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                             var selected_link = document.getElementsByClassName("srd-default-link--path-selected ")
 
                             if (selected_node.length > 0) {
-                              // console.log(selected_node);
-                              // console.log(selected_link);
-                              // data-nodeid
+                            //   console.log(selected_node);
+                            //   console.log(selected_link);
+                            // //   data-nodeid
                               var node_id = selected_node[0].getAttribute("data-nodeid");
                               // console.log(selected_node[0].getAttribute("data-nodeid"));
                               if (node_id !== null) {
@@ -589,27 +561,22 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
                       />
                     </div>
                   </Paper>
+				  {/* // diplay code part */}
                   </Grid>
-                  <Grid item xs style={{paddingTop:10, textAlign:"right"}}>
+                  {/* <Grid item xs style={{paddingTop:10, textAlign:"right"}}>
                     <Paper style={{padding:5}} square>
                       <Button variant= "contained"  onClick = {this.handleExecute} className={classes.button}> Get Code </Button>
                       <Button variant = "contained"  onClick = { this.handleClickOpen } className={classes.button}> Change Exe Config </Button>
                       <Button variant = "contained"  onClick = { this.handleClickOpenGrouping } className={classes.button}> Group Selection </Button>
                       </Paper>
-                  </Grid>
+                  </Grid> */}
               </Grid>
-              <Grid item xs={2} >
-                <Paper square>
-                  {/* <Properties/> */}
-                </Paper>
-              </Grid>
-            </Grid>
-            <Grid container spacing={8}>
+            {/* <Grid container spacing={8}>
               <Grid item xs>
                 <Paper square>
-                  {/* <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data}  divStyle={classes.divStyle} exportStyle={classes.exportButton}/> */}
+                  <SimpleTabs code={this.state.code} runtimeData = {this.state.runtime_data}  divStyle={classes.divStyle} exportStyle={classes.exportButton}/>
                 </Paper>
-              </Grid>
+              </Grid> */}
             </Grid>
 
 
@@ -792,5 +759,4 @@ class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState> {
 	}
 }
 
- export default withStyles(styles, {withTheme: true})(BodyWidget)
-// export default BodyWidget;
+export default withStyles(styles, {withTheme: true})(BodyWidget)

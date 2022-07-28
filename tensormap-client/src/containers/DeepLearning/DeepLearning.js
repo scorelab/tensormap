@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import { Grid } from 'semantic-ui-react';
-import Canvas from "../../components/DragAndDropCanvas/canvas";
+//import Canvas from "../../components/DragAndDropCanvas/canvas";
 import PropertiesBar from "../../components/PropertiesBar/PropertiesBar";
 import ResultPanel from "../../components/ResultPanel/ResultPanel";
+import Workflow from "../../components/DragAndDropCanvas/Workflow";
 
 class DeepLearning extends Component {
 
@@ -14,7 +15,7 @@ class DeepLearning extends Component {
                 <Grid celled='internally'>
                     <Grid.Row>
                         <Grid.Column width={13}>
-                            <Canvas/>
+                            <Workflow/>
                         </Grid.Column>
                         <Grid.Column width={3}>
                             <PropertiesBar/>
