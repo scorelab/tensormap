@@ -15,6 +15,6 @@ MainURLRegister(app=app)
 SettingUp(app=app)
 CORS(app)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     socketio = get_socket_ref()
     socketio.run(app)

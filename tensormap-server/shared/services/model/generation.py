@@ -23,8 +23,8 @@ def model_generation(model_params):
             data[layer] = model_params[layer]
 
     output = template.render(data=data)
-    generated_model_file = open(MODEL_GENERATION_LOCATION + model_params[MODEL_NAME] + MODEL_GENERATION_TYPE, "w+")
-    generated_model_file.write(output + "\n")
+    generated_model_file = open(MODEL_GENERATION_LOCATION + model_params[MODEL_NAME] + MODEL_GENERATION_TYPE, 'w+')
+    generated_model_file.write(output + '\n')
     generated_model_file.close()
     return True
 

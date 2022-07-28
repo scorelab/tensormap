@@ -15,12 +15,12 @@ def create_app(debug=False):
 
     app = Flask(__name__)
     app.debug = debug
-    app.config["SESSION_TYPE"] = "filesystem"
-    app.config["SECRET_KEY"] = "secret"
-    app.config["USE_PERMANENT_SESSION"] = True
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.config['SECRET_KEY'] = 'secret'
+    app.config['USE_PERMANENT_SESSION'] = True
     # app.config['SECRET_KEY'] = os.urandom(25)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:pass@localhost/tensormap"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass@localhost/tensormap'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     from .resources import main
 
@@ -29,5 +29,5 @@ def create_app(debug=False):
     socketio.init_app(app)
     db.init_app(app)
     sess.init_app(app)
-    CORS(app, expose_headers="Authorization", support_credentials=True)
+    CORS(app, expose_headers='Authorization', support_credentials=True)
     return app
