@@ -1,4 +1,4 @@
-from endpoints.DeepLearning.views import ValidateModel, GetCode, RunCode, GetModelList
+from endpoints.DeepLearning.views import GetCode, GetModelList, RunCode, ValidateModel
 from shared.constants import *
 from shared.services.config import get_configs
 

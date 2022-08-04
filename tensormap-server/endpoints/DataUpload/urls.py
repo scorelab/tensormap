@@ -8,5 +8,5 @@ def data_urls(api):
     base = configs['api']['base']
     data_uri = configs['api']['upload']['uri']
 
-    api.add_resource(UploadDataFile, base + data_uri + "/file")
-    api.add_resource(UploadFileIDOperations, base + data_uri + "/file/<int:file_id>")
+    api.add_resource(UploadDataFile, base + data_uri + '/file')
+    api.add_resource(UploadFileIDOperations, base + data_uri + '/file/<int:file_id>')

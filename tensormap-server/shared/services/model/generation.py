@@ -1,5 +1,4 @@
-from jinja2 import FileSystemLoader, Environment
-
+from jinja2 import Environment, FileSystemLoader
 from shared.constants import *
 
 
@@ -25,7 +24,7 @@ def model_generation(model_params):
 
     output = template.render(data=data)
     generated_model_file = open(MODEL_GENERATION_LOCATION + model_params[MODEL_NAME] + MODEL_GENERATION_TYPE, 'w+')
-    generated_model_file.write(output + "\n")
+    generated_model_file.write(output + '\n')
     generated_model_file.close()
     return True
 
@@ -40,7 +39,8 @@ def helper_generate_dense_layers(dense):
     layers = []
     i = 1
     for layer in dense:
-        layers.append({DENSE_UNITS: layer[DENSE_UNITS], DENSE_ACTIVATION_FUNCTION: layer[DENSE_ACTIVATION_FUNCTION],
-                       DENSE_ID: i})
+        layers.append(
+            {DENSE_UNITS: layer[DENSE_UNITS], DENSE_ACTIVATION_FUNCTION: layer[DENSE_ACTIVATION_FUNCTION], DENSE_ID: i}
+        )
         i += 1
     return layers

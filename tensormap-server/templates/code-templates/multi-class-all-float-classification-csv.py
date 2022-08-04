@@ -7,7 +7,7 @@ import yaml
 
 
 def deep_learning_model():
-    features = pd.read_csv("{{data.dataset.file_name}}")
+    features = pd.read_csv('{{data.dataset.file_name}}')
 
     # Split Training and testing sets
     training_features = features.sample(frac={{data.dataset.training_split}}, random_state=200)
@@ -23,14 +23,14 @@ def deep_learning_model():
     x_training = x_training / np.linalg.norm(x_training)
     x_testing = x_testing / np.linalg.norm(x_testing)
 
-    json_string = json.dumps(yaml.load(open("{{data.dl_model.json_file}}")))
-    model = tf.keras.models.model_from_json(
-        json_string, custom_objects=None
-    )
+    json_string = json.dumps(yaml.load(open('{{data.dl_model.json_file}}')))
+    model = tf.keras.models.model_from_json(json_string, custom_objects=None)
 
-    model.compile(optimizer='{{data.dl_model.optimizer}}',
-                  loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-                  metrics=['{{data.dl_model.metric}}'])
+    model.compile(
+        optimizer='{{data.dl_model.optimizer}}',
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        metrics=['{{data.dl_model.metric}}'],
+    )
 
     history = model.fit(x_training, y_training, epochs={{data.dl_model.epochs}})
 
@@ -39,6 +39,6 @@ def deep_learning_model():
     return history, test_loss, test_acc
 
 
-print("Starting")
+print('Starting')
 history, test_loss, test_acc = deep_learning_model()
-print("Finish")
+print('Finish')

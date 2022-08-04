@@ -1,7 +1,8 @@
-from shared.utils import get_db_ref, create_db_connection, get_socket_ref
-from shared.services.config import get_configs
-from flask_migrate import Migrate
 import os
+
+from flask_migrate import Migrate
+from shared.services.config import get_configs
+from shared.utils import create_db_connection, get_db_ref, get_socket_ref
 
 configs = get_configs()
 
@@ -12,10 +13,9 @@ All the application related settings handle through here
 
 
 class SettingUp:
-
     def __init__(self, app):
         self.app = app
-        self.app.config['SECRET_KEY'] = os.getenv("secret_key")
+        self.app.config['SECRET_KEY'] = os.getenv('secret_key')
         self.app.host = configs['api']['host']
         self.app.port = configs['api']['port']
         self.app.debug = configs['app']['debug']
@@ -43,5 +43,3 @@ class SettingUp:
     def socketio_setup(self):
         socketio = get_socket_ref()
         socketio.init_app(self.app)
-
-

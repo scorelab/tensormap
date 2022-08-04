@@ -9,8 +9,8 @@ class ModelBasic(db.Model):
     model_dataset = db.Column(db.Integer, db.ForeignKey('data_file.id'))
     model_type = db.Column(db.Integer, nullable=False)
     target_class = db.Column(db.String(50), nullable=False)
-    configs = db.relationship("ModelConfigs", cascade="all,delete", backref="model")
-    results = db.relationship("ModelResults", cascade="all,delete", backref="model")
+    configs = db.relationship('ModelConfigs', cascade='all,delete', backref='model')
+    results = db.relationship('ModelResults', cascade='all,delete', backref='model')
     created_on = db.Column(db.DateTime, server_default=db.func.now())
     updated_on = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 

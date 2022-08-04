@@ -1,28 +1,28 @@
 ## Backend setup and architecture
 
 
-First, make sure you have MySQL server and Python 3.x installed in your system. 
+First, make sure you have MySQL server and Python 3.x installed in your system.
 (the recommended version is python 3.9)
 
 
 ### Installation instructions
 
-* All the backend related required libraries are listed in the **requirements.txt** file. 
-  Before installing the libraries, install a python virtual environment. You can install 
-  the python virtual environment by following [this](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) 
-  guide. Follow the relevant guide based on your operating system. 
+* All the backend related required libraries are listed in the **requirements.txt** file.
+  Before installing the libraries, install a python virtual environment. You can install
+  the python virtual environment by following [this](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+  guide. Follow the relevant guide based on your operating system.
 
 
-  
+
 * Then Active the virtual environment and run the following
-  command to install the pip packages to your virtual 
-  environment. 
-  
+  command to install the pip packages to your virtual
+  environment.
+
 `pip install -r requirements.txt`
 
-* To set up the database, open your MySQL console and create a database. 
+* To set up the database, open your MySQL console and create a database.
   And add a .env file and add the following details as shown below.
-  
+
 ```
 secret_key = 'Your secret key'
 db_name = 'database name'
@@ -36,8 +36,8 @@ db_user = 'database username'
 `export FLASK_APP=app.py`
 
 * Now the backend is ready to go ! You can run the backend
-  by the following command. 
-  
+  by the following command.
+
 `python app.py`
  or
 `flask run`
@@ -45,7 +45,7 @@ db_user = 'database username'
 
 ### Application Architecture
 
-The application architecture is set up as follows. 
+The application architecture is set up as follows.
 
 ```
 .
@@ -90,8 +90,8 @@ Once you change to database models or create one, it will not affect as soon you
 You have to migrate the database accordingly. To migrate database, please follow the below steps.
 
 * run `flask db migrate`
-This will generate migration scripts in `migrations/versions` directory. 
-  
+This will generate migration scripts in `migrations/versions` directory.
+
 * To apply migrations to the database, run `flask db upgrade`
 
 * Don't forget to commit the generated migration scripts to code.
