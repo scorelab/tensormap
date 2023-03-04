@@ -5,6 +5,7 @@ import { css, Global } from '@emotion/react';
 export interface DemoCanvasWidgetProps {
 	color?: string;
 	background?: string;
+	children?: React.ReactNode;
 }
 
 namespace S {
@@ -54,7 +55,6 @@ namespace S {
 		}
 	`;
 }
-
 export class DemoCanvasWidget extends React.Component<DemoCanvasWidgetProps> {
 	render() {
 		return (
