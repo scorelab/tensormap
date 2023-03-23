@@ -20,6 +20,8 @@ def add_file_service():
     file.save(os.path.join(upload_folder, filename))
 
     # Extract the file name and type and save details in the database
+
+    # file_name has to be passed through secure_filename function to store the same name in the db(issue#182)
     file_name_db = secure_filename(file.filename.rsplit('.', 1)[0].lower())
     file_type_db = file.filename.rsplit('.', 1)[1].lower()
     data = DataFile(file_name=file_name_db, file_type=file_type_db)
