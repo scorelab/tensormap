@@ -23,7 +23,7 @@ ipython_config.py
 .env
 env
 
-data/
+
 
 templates/generated-code/*.py
 templates/json-model/*.json
