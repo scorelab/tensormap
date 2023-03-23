@@ -21,8 +21,9 @@ ipython_config.py
 
 # Environment
 .env
+env
 
-data/*.csv
+data/
 
 templates/generated-code/*.py
 templates/json-model/*.json
