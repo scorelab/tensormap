@@ -12,7 +12,7 @@ First, make sure you have MySQL server and Python 3.x installed in your system.
   the python virtual environment by following [this](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
   guide. Follow the relevant guide based on your operating system.
 
-
+* run the setup script using `./setup.sh` to create a virtual environment and activate it.
 
 * Then Active the virtual environment and run the following
   command to install the pip packages to your virtual
