@@ -19,9 +19,11 @@ First, make sure you have MySQL server and Python 3.x installed in your system.
   environment.
 
 `pip install -r requirements.txt`
+* Create and set up the database, using MySQL console refer [this](https://www.inmotionhosting.com/support/server/databases/create-a-mysql-database/).
 
-* To set up the database, open your MySQL console and create a database.
-  And add a .env file and add the following details as shown below.
+
+* And add a .env file and add the following details as shown below.
+
 
 ```
 secret_key = 'Your secret key'
@@ -30,6 +32,8 @@ db_host = 'host ip address'
 db_password = 'database user password'
 db_user = 'database username'
 ```
+
+* Make data dir at root of tensormap-server to store all dataset `mkdir data`.
 
 * set up the FLASK_APP environment variable:
 
