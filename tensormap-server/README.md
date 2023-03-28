@@ -19,8 +19,13 @@ First, make sure you have MySQL server and Python 3.x installed in your system.
   environment.
 
 `pip install -r requirements.txt`
-* Create and set up the database, using MySQL console refer [this](https://www.inmotionhosting.com/support/server/databases/create-a-mysql-database/).
-
+* Create and set up the database, using MySQL console refer [this](https://stackoverflow.com/questions/50177216/how-to-grant-all-privileges-to-root-user-in-mysql-8-0).
+```
+mysql> CREATE USER 'database user'@'%' IDENTIFIED BY 'database user password';
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'database user'@'%' WITH GRANT OPTION;
+mysql> FLUSH PRIVILEGES;
+mysql> CREATE DATABASE database name;
+```
 
 * And add a .env file and add the following details as shown below.
 
