@@ -17,6 +17,8 @@ def add_file_service():
     # Extract the file and save it in the ./data folder
     file = request.files['data']
     filename = secure_filename(file.filename)
+    if not os.path.exists(upload_folder):
+        os.mkdir(upload_folder)
     file.save(os.path.join(upload_folder, filename))
 
     # Extract the file name and type and save details in the database
