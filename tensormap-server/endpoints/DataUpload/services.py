@@ -16,7 +16,7 @@ upload_folder = configs['api']['upload']['folder']
 def add_file_service():
     # Extract the file and save it in the ./data folder
     file = request.files['data']
-    filename = secure_filename(file.filename)
+    filename = secure_filename(file.filename.lower())
     file.save(os.path.join(upload_folder, filename))
 
     # Extract the file name and type and save details in the database
