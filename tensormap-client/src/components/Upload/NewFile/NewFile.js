@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {Form, Button, Icon, Modal, Header} from 'semantic-ui-react';
+import {Form, Button, Icon} from 'semantic-ui-react';
 import * as strings from "../../../constants/Strings";
 import axios from "axios";
 import * as urls from '../../../constants/Urls';
+import ModalComponent from '../../shared/Modal';
 
 class NewFile extends Component {
 
@@ -70,6 +71,7 @@ class NewFile extends Component {
         }).catch(err => {
             console.log(err);
             this.setState({...this.state, fileAddedSuccessfully:false});
+            this.modelOpen();
         })
     };
 
@@ -93,31 +95,21 @@ class NewFile extends Component {
         * */
 
         const addedSuccessfully = (
-            <Modal open={this.state.modalOpen} onClose={this.modelClose} basic size='small' >
-
-                <Header icon='check circle' content={strings.UPLOAD_SUCCESS_MODEL_MESSAGE} />
-
-
-                <Modal.Actions>
-                    <Button color='green' onClick={this.modelClose} inverted>
-                        <Icon name='checkmark' /> {strings.PROCESS_SUCCESS_MODEL_BUTTON}
-                    </Button>
-                </Modal.Actions>
-
-            </Modal>
+            <ModalComponent
+                modalOpen={this.state.modalOpen}
+                modelClose={this.modelClose}
+                sucess={true}
+                Modalmessage = {strings.UPLOAD_SUCCESS_MODEL_MESSAGE}
+                />
         );
 
         const errorInAddition = (
-            <Modal open={this.state.modalOpen} onClose={this.modelClose} basic size='small' >
-
-                <Header icon='exclamation' content={strings.PROCESS_FAIL_MODEL_MESSAGE} />
-
-                <Modal.Actions>
-                    <Button color='red' onClick={this.modelClose} inverted>
-                        <Icon name='checkmark' /> {strings.PROCESS_FAIL_MODEL_BUTTON}
-                    </Button>
-                </Modal.Actions>
-            </Modal>
+            <ModalComponent
+                modalOpen={this.state.modalOpen}
+                modelClose={this.modelClose}
+                sucess={false}
+                Modalmessage = {strings.PROCESS_FAIL_MODEL_MESSAGE}
+                />
         );
 
         return (
