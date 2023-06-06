@@ -6,10 +6,24 @@ import { withRouter } from "react-router-dom";
 
 class SideBar extends Component {
 
-    state = { activeItem: constants.HOME_SIDEBAR };
+    state = { activeItem:''};
+
+    componentDidMount(){
+        this.updateActiveItem();
+    }
+
+    componentDidUpdate(prevProps){
+        if (prevProps.location.pathname !== this.props.location.pathname){
+            this.updateActiveItem();
+        }
+    }
+
+    updateActiveItem = () => {
+        const {pathname} = this.props.location;
+        this.setState({activeItem:pathname})
+    }
 
     handleItemClick = (e, { name }) => {
-        this.setState({ activeItem: name });
         if (name === constants.HOME_SIDEBAR){
             this.props.history.push(urls.HOME_URL);
         }else if (name === constants.DATA_UPLOAD_SIDEBAR){
@@ -29,25 +43,25 @@ class SideBar extends Component {
                         <Menu fluid vertical tabular size='massive' >
                             <Menu.Item
                                 name={constants.HOME_SIDEBAR}
-                                active={this.state.activeItem === constants.HOME_SIDEBAR}
+                                active={this.state.activeItem === urls.HOME_URL}
                                 onClick={this.handleItemClick}
                                 style={{"fontWeight":"bold"}}
                             />
                             <Menu.Item
                                 name={constants.DATA_UPLOAD_SIDEBAR}
-                                active={this.state.activeItem === constants.DATA_UPLOAD_SIDEBAR}
+                                active={this.state.activeItem === urls.DATA_UPLOAD_URL}
                                 onClick={this.handleItemClick}
                                 style={{"fontWeight":"bold"}}
                             />
                             <Menu.Item
                                 name={constants.DATA_PROCESS_SIDEBAR}
-                                active={this.state.activeItem === constants.DATA_PROCESS_SIDEBAR}
+                                active={this.state.activeItem === urls.DATA_PROCESS_URL}
                                 onClick={this.handleItemClick}
                                 style={{"fontWeight":"bold"}}
                             />
                             <Menu.Item
                                 name={constants.DEEP_LEARNING_SIDEBAR}
-                                active={this.state.activeItem === constants.DEEP_LEARNING_SIDEBAR}
+                                active={this.state.activeItem === urls.DEEP_LEARN_URL}
                                 onClick={this.handleItemClick}
                                 style={{"fontWeight":"bold"}}
                             />
