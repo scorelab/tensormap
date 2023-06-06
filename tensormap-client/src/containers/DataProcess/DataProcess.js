@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import * as strings from "../../constants/Strings";
-import {Segment, Dropdown, Form, Button, Header, Icon, Modal} from "semantic-ui-react";
+import {Segment, Dropdown, Form, Button} from "semantic-ui-react";
 import axios from "../../shared/Axios";
 import * as urls from '../../constants/Urls';
+import ModalComponent from '../../components/shared/Modal';
 
 class DataProcess extends Component {
 
@@ -88,7 +89,6 @@ class DataProcess extends Component {
     * */
     modelClose = () => {
         this.setState({ ...this.state, modalOpen: false });
-        window.location.reload();
     }
 
     modelOpen = () => this.setState({ ...this.state, modalOpen: true });
@@ -100,31 +100,21 @@ class DataProcess extends Component {
         *
         * */
         const addedSuccessfully = (
-            <Modal open={this.state.modalOpen} onClose={this.modelClose} basic size='small' >
-
-                <Header icon='check circle' content={strings.PROCESS_SUCCESS_MODEL_MESSAGE} />
-
-
-                <Modal.Actions>
-                    <Button color='green' onClick={this.modelClose} inverted>
-                        <Icon name='checkmark' /> {strings.PROCESS_SUCCESS_MODEL_BUTTON}
-                    </Button>
-                </Modal.Actions>
-
-            </Modal>
+            <ModalComponent
+            modalOpen={this.state.modalOpen}
+            modelClose={this.modelClose}
+            sucess={true}
+            Modalmessage = {strings.PROCESS_SUCCESS_MODEL_MESSAGE}
+            />
         );
 
         const errorInAddition = (
-            <Modal open={this.state.modalOpen} onClose={this.modelClose} basic size='small' >
-
-                <Header icon='exclamation' content={strings.PROCESS_FAIL_MODEL_MESSAGE} />
-
-                <Modal.Actions>
-                    <Button color='red' onClick={this.modelClose} inverted>
-                        <Icon name='checkmark' /> {strings.PROCESS_FAIL_MODEL_BUTTON}
-                    </Button>
-                </Modal.Actions>
-            </Modal>
+            <ModalComponent
+            modalOpen={this.state.modalOpen}
+            modelClose={this.modelClose}
+            sucess={false}
+            Modalmessage = {strings.PROCESS_FAIL_MODEL_MESSAGE}
+            />
         );
 
         /*
