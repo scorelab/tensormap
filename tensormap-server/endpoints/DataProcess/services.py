@@ -8,13 +8,15 @@ from shared.utils import delete_one_record, save_one_record
 def add_target_service(incoming):
     file_id = incoming[FILE_ID]
     target = incoming[FILE_TARGET_FIELD]
-
-    if DataFile.query.filter_by(id=file_id).count() > 0:
-        data_process = DataProcess(file_id=file_id, file=DataFile.query.filter_by(id=file_id).first(), target=target)
-        save_one_record(record=data_process)
-        return generic_response(status_code=201, success=True, message='Target field added successfully')
-    else:
-        return generic_response(status_code=400, success=False, message="File doesn't exist in DB")
+    try:
+        if DataFile.query.filter_by(id=file_id).count() > 0:
+            data_process = DataProcess(file_id=file_id, file=DataFile.query.filter_by(id=file_id).first(), target=target)
+            save_one_record(record=data_process)
+            return generic_response(status_code=201, success=True, message='Target field added successfully')
+        else:
+            return generic_response(status_code=400, success=False, message="File doesn't exist in DB")
+    except Exception as e:
+        return generic_response(status_code=500, success=False, message=f"Error storing record: {str(e)}")
 
 
 def get_all_targets_service():

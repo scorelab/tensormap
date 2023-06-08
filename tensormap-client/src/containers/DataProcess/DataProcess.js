@@ -77,8 +77,9 @@ class DataProcess extends Component {
                     this.modelOpen();
                 }
             }).catch(err => {
-            console.log(err);
+            console.log(err.response.data.message);
             this.setState({...this.state, targetAddedSuccessfully:false});
+            this.modelOpen()
         });
 
     }
