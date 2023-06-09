@@ -67,7 +67,8 @@ class DataProcess extends Component {
             this.setState({...this.state, disableButton:false})
         }
     }
-
+    
+    // Select the target field for a particular data file
     setTargetFieldHandler = () => {
         const { selectedFile, targetField } = this.state;
         setTargetField(selectedFile, targetField)

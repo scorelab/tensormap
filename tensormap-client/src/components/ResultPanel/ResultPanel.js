@@ -81,6 +81,7 @@ class ResultPanel extends Component {
             }
         )
 
+        // Get all the created models from the backend for the model selector.
         getAllModels()
         .then(
             response => {
@@ -107,6 +108,7 @@ class ResultPanel extends Component {
         if (this.state.selectedModel != null){
             const model_name = this.state.selectedModel;
 
+            // Get the Python script for the particular project
             download_code(model_name)
             .catch(error => {
                 console.error(error);
@@ -118,6 +120,8 @@ class ResultPanel extends Component {
         this.setState({...this.state, resultValues: ""}, ()=> {
             if (this.state.selectedModel != null){
                 const { selectedModel } = this.state;
+
+                // Run the selected model in the backend
                 runModel(selectedModel)
                 .then(message => {
                 console.log(message);

@@ -46,6 +46,7 @@ class PropertiesBar extends Component {
                 denseNodesList:res.denseNodes})
         });
 
+        // Get the list of datafiles from the backend for the file selector
         getAllFiles()
         .then(
             response => {
@@ -201,6 +202,7 @@ class PropertiesBar extends Component {
             data.model["dense"] = denseNodeDataList
         }
         
+        // Send the model data to the backend for validation and update the Modal state accordingly
         validateModel(data)
           .then(modelValidatedSuccessfully => {
             this.setState(prevState => ({...prevState,
