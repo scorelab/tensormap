@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {Form, Button, Icon} from 'semantic-ui-react';
 import * as strings from "../../../constants/Strings";
-import axios from "axios";
-import * as urls from '../../../constants/Urls';
 import ModalComponent from '../../shared/Modal';
+import { uploadFile } from '../../../services/FileServices'
 
 class NewFile extends Component {
 
@@ -56,23 +55,16 @@ class NewFile extends Component {
     * */
     fileUploadHandler = () => {
 
-        const file = new FormData();
-        file.append("data", this.state.file)
-        axios({
-            method: "post",
-            url: urls.base_URL + urls.BACKEND_FILE_UPLOAD,
-            data: file,
-            headers: { "Content-Type": "multipart/form-data" },
-        }).then( resp => {
-            if(resp.data.success === true){
-                this.setState({...this.state, fileAddedSuccessfully:true});
-                this.modelOpen();
-            }
-        }).catch(err => {
-            console.log(err);
-            this.setState({...this.state, fileAddedSuccessfully:false});
-            this.modelOpen();
-        })
+        uploadFile(this.state.file)
+      .then(fileAddedSuccessfully => {
+        this.setState({ fileAddedSuccessfully });
+        this.modelOpen();
+      })
+      .catch(error => {
+        console.error(error);
+        this.setState({ fileAddedSuccessfully: false });
+        this.modelOpen();
+      });
     };
 
 

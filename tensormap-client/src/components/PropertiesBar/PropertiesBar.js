@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {Form, Message, Segment, Dropdown, Button} from 'semantic-ui-react';
-import axios from "../../shared/Axios";
-import * as urls from '../../constants/Urls';
 import * as strings from "../../constants/Strings";
 import {subject} from "../../services";
 import ModalComponent from '../shared/Modal';
+import { getAllFiles } from '../../services/FileServices';
+import { validateModel } from '../../services/ModelServices';
 
 class PropertiesBar extends Component {
 
@@ -46,19 +46,22 @@ class PropertiesBar extends Component {
                 denseNodesList:res.denseNodes})
         });
 
-        axios.get(urls.BACKEND_GET_ALL_FILES)
-            .then(resp =>{
-                if (resp.data.success === true){
-                    this.setState(
-                        {...this.state,
-                            fileList: resp.data.data.map((file,index)=>(
-                                {"text": file.file_name +"."+ file.file_type, "value": file.file_id, "key":index}
-                            )),
-                            totalDetails: resp.data.data
-                        }
-                    );
-                }
-            })
+        getAllFiles()
+        .then(
+            response => {
+                const fileList = response.map((file,index)=>(
+                    {"text": file.file_name +"."+ file.file_type, "value": file.file_id, "key":index}
+                ))
+                this.setState(prevState => ({
+                    ...prevState,
+                    fileList: fileList,
+                    totalDetails: response
+                  }))
+            }
+        )
+        .catch(err => {
+            console.error(err)
+        })
     }
 
     componentWillUnmount() {
@@ -197,18 +200,19 @@ class PropertiesBar extends Component {
         if (denseNodeDataList.length !== 0){
             data.model["dense"] = denseNodeDataList
         }
-
-        axios.post(urls.BACKEND_VALIDATE_MODEL,data)
-            .then(resp=>{
-                if(resp.data.success === true){
-                    this.setState({...this.state, modelValidatedSuccessfully:true});
-                    this.modelOpen();
-                }
-            }).catch(err => {
-                console.log(err);
-                this.setState({...this.state, modelValidatedSuccessfully:false});
-                this.modelOpen();
-        });
+        
+        validateModel(data)
+          .then(modelValidatedSuccessfully => {
+            this.setState(prevState => ({...prevState,
+                modelValidatedSuccessfully: modelValidatedSuccessfully,
+              }));
+            this.modelOpen();
+          })
+          .catch(error => {
+            console.error(error);
+            this.setState({ modelValidatedSuccessfully: false });
+            this.modelOpen();
+          });
     }
 
     /*
