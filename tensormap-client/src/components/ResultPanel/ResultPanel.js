@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import io from "socket.io-client";
 import * as urls from '../../constants/Urls';
 import * as strings from "../../constants/Strings";
-import axios from "../../shared/Axios";
 import {Grid, Menu, Button, Form, Dropdown, Segment, Dimmer, Loader} from 'semantic-ui-react';
 import Result from "./Result/Result";
+import { getAllModels,download_code,runModel } from '../../services/ModelServices';
 
 class ResultPanel extends Component {
 
@@ -81,20 +81,21 @@ class ResultPanel extends Component {
             }
         )
 
-
-
-        axios.get(urls.BACKEND_GET_ALL_MODELS)
-            .then(resp => {
-                if (resp.data.success === true){
-                    this.setState({
-                        ...this.state,
-                        resultFinished:null,
-                        modelList: resp.data.data.map((file, index)=> (
-                            {"text":file + strings.MODEL_EXTENSION, "value":file, "key":index}
-                        ))
-                    })
-                }
-            })
+        getAllModels()
+        .then(
+            response => {
+                const models = response.map((file, index) => ({
+                    "text": file + strings.MODEL_EXTENSION,
+                    "value": file,
+                    "key": index
+                  }));
+                  this.setState(prevState => ({
+                    ...prevState,
+                    resultFinished: null,
+                    modelList: models,
+                  }));
+            }
+        )
     }
 
     modelSelectHandler = (event,val)=> {
@@ -104,37 +105,26 @@ class ResultPanel extends Component {
 
     modelDownloadHandler = ()=> {
         if (this.state.selectedModel != null){
-            const data = {"model_name": this.state.selectedModel};
+            const model_name = this.state.selectedModel;
 
-            axios.post(urls.BACKEND_DOWNLOAD_CODE,data).then(resp =>{
-                let link = document.createElement("a");
-                link.href = window.URL.createObjectURL(
-                    new Blob([resp.data], { type: "application/octet-stream" })
-                );
-                link.download = this.state.selectedModel + strings.MODEL_EXTENSION;
-
-                document.body.appendChild(link);
-
-                link.click();
-
-                setTimeout(function () {
-                    window.URL.revokeObjectURL(link);
-                }, 200);
-
-        });
+            download_code(model_name)
+            .catch(error => {
+                console.error(error);
+      });
         }
     }
 
     RunButtonHandler = () => {
         this.setState({...this.state, resultValues: ""}, ()=> {
             if (this.state.selectedModel != null){
-                const data = {"model_name": this.state.selectedModel};
-
-                    axios.post(urls.BACKEND_RUN_MODEL, data).then( resp => {
-                        if(resp.data.success === true){
-                            console.log(resp.data.message);
-                            this.setState({...this.state, disableRunButton: false, disableClearButton:false, })
-                        }
+                const { selectedModel } = this.state;
+                runModel(selectedModel)
+                .then(message => {
+                console.log(message);
+                this.setState({ disableRunButton: false, disableClearButton: false });
+                })
+                .catch(error => {
+                console.error(error);
                 });
 
                 this.setState({...this.state, disableRunButton:true});

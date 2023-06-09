@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import * as strings from "../../constants/Strings";
 import {Segment, Dropdown, Form, Button} from "semantic-ui-react";
-import axios from "../../shared/Axios";
-import * as urls from '../../constants/Urls';
 import ModalComponent from '../../components/shared/Modal';
+import { getAllFiles,setTargetField } from '../../services/FileServices';
 
 class DataProcess extends Component {
 
@@ -25,19 +24,20 @@ class DataProcess extends Component {
         * In this react life cycle hook, file data is fetch from backend and added to state
         *
         * */
-       axios.get(urls.BACKEND_GET_ALL_FILES)
-           .then(resp =>{
-                if (resp.data.success === true){
-                    this.setState(
-                        {...this.state,
-                            fileList: resp.data.data.map((file,index)=>(
-                                {"text": file.file_name +"."+ file.file_type, "value": file.file_id, "key":index}
-                            )),
-                            totalDetails: resp.data.data
-                        }
-                    );
-                }
-           })
+       getAllFiles()
+       .then(
+        response => {
+            const fileList =  response.map((file,index)=>(
+                {"text": file.file_name +"."+ file.file_type, "value": file.file_id, "key":index}
+            ))
+            this.setState(prevState => ({
+                   ...prevState,
+                    fileList:fileList,
+                    totalDetails:response
+            }))
+        }
+       )
+
     }
 
     fileSelectHandler = (event,val) => {
@@ -69,19 +69,17 @@ class DataProcess extends Component {
     }
 
     setTargetFieldHandler = () => {
-        const data = {"file_id": this.state.selectedFile, "target": this.state.targetField}
-        axios.post(urls.BACKEND_ADD_TARGET_FIELD,data)
-            .then(resp=>{
-                if(resp.data.success === true){
-                    this.setState({...this.state, targetAddedSuccessfully:true});
-                    this.modelOpen();
-                }
-            }).catch(err => {
-            console.log(err.response.data.message);
-            this.setState({...this.state, targetAddedSuccessfully:false});
-            this.modelOpen()
-        });
-
+        const { selectedFile, targetField } = this.state;
+        setTargetField(selectedFile, targetField)
+      .then(targetAddedSuccessfully => {
+        this.setState({ targetAddedSuccessfully });
+        this.modelOpen();
+      })
+      .catch(error => {
+        console.error(error);
+        this.setState({ targetAddedSuccessfully: false });
+        this.modelOpen();
+      });
     }
 
     /*

@@ -3,8 +3,7 @@ import { Grid, Segment, Divider, Dimmer, Loader } from 'semantic-ui-react';
 import FilesList from "../../components/Upload/FilesList/FilesList";
 import * as strings from "../../constants/Strings";
 import NewFile from "../../components/Upload/NewFile/NewFile";
-import axios from "../../shared/Axios";
-import * as urls from "../../constants/Urls";
+import { getAllFiles } from "../../services/FileServices"
 
 class DataUpload extends Component {
 
@@ -15,17 +14,19 @@ class DataUpload extends Component {
         * GET data from backend save them in the states => fileList
         *
         * */
-
-        axios.get(urls.BACKEND_GET_ALL_FILES)
-            .then(resp => {
-                if (resp.data.success === true){
-                    this.setState(
-                        {...this.state, fileList: resp.data.data.map(item =>(
-                            {"SavedFileName": item.file_name, "SavedFileType": item.file_type}
-                            ) ) }
-                    );
-                }
-            });
+       getAllFiles()
+       .then(response => {
+           const fileList = response.map(item => ({
+               "SavedFileName": item.file_name,
+               "SavedFileType": item.file_type
+            }));
+            this.setState(prevState => ({
+                ...prevState,
+                 fileList:fileList }));
+    })
+      .catch(error => {
+        console.error('Error retrieving files:', error);
+      });
     }
 
     render() {
