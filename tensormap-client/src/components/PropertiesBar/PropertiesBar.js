@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Form, Message, Segment, Dropdown, Button} from 'semantic-ui-react';
 import * as strings from "../../constants/Strings";
-import {subject} from "../../services";
 import ModalComponent from '../shared/Modal';
 import { getAllFiles } from '../../services/FileServices';
 import { validateModel } from '../../services/ModelServices';
@@ -39,13 +38,6 @@ class PropertiesBar extends Component {
 
     componentDidMount() {
 
-        this.subscription = subject.subscribe(res => {
-            this.setState({...this.state,
-                inputNodesList:res.inputNodes,
-                flattenNodesList:res.flattenNodes,
-                denseNodesList:res.denseNodes})
-        });
-
         // Get the list of datafiles from the backend for the file selector
         getAllFiles()
         .then(
@@ -63,10 +55,6 @@ class PropertiesBar extends Component {
         .catch(err => {
             console.error(err)
         })
-    }
-
-    componentWillUnmount() {
-        this.subscription.unsubscribe();
     }
 
     fileSelectHandler = (event,val) => {
@@ -269,104 +257,7 @@ class PropertiesBar extends Component {
             Modalmessage = {strings.PROCESS_FAIL_MODEL_MESSAGE}/>
         );
 
-        let inputNodes = this.state.inputNodesList.map((nodeName, index)=> (
-            <Segment key={"input_node_"+index} style={{marginTop:'5px',marginBottom:'5px'}}>
-                <Form>
-                    <Form.Field>
-                        <Form.Input
-                            fluid
-                            size='small'
-                            placeholder={nodeName}
-                            readOnly
-                            style={{marginTop:"2%", marginLeft:"-5px"}}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <input
-                            placeholder='Dim X'
-                            type='number'
-                            style={{marginTop:'5px',marginBottom:'5px'}}
-                            onChange={(e) =>this.inputDimXHandler(e, nodeName)}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <input
-                            placeholder='Dim Y'
-                            type='number'
-                            style={{marginTop:'5px',marginBottom:'5px'}}
-                            onChange={(e) =>this.inputDimYHandler(e, nodeName)}
-                        />
-                    </Form.Field>
-                </Form>
-            </Segment>
-        ));
-
-        let flattenNodes = this.state.flattenNodesList.map((nodeName, index)=> (
-            <Segment key={"flatten_node_"+index} style={{marginTop:'5px',marginBottom:'5px'}}>
-                <Form>
-                    <Form.Field>
-                        <Form.Input
-                            fluid
-                            size='small'
-                            placeholder={nodeName}
-                            readOnly
-                            style={{marginTop:"2%", marginLeft:"-5px"}}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <input
-                            placeholder='Dim X'
-                            type='number'
-                            style={{marginTop:'5px',marginBottom:'5px'}}
-                            onChange={(e) =>this.flattenDimXHandler(e, nodeName)}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <input
-                            placeholder='Dim Y'
-                            type='number'
-                            style={{marginTop:'5px',marginBottom:'5px'}}
-                            onChange={(e) =>this.flattenDimYHandler(e, nodeName)}
-                        />
-                    </Form.Field>
-                </Form>
-            </Segment>
-        ));
-
-        let denseNodes = this.state.denseNodesList.map((nodeName, index)=>(
-            <Segment key={"flatten_node_"+index} style={{marginTop:'5px',marginBottom:'5px'}}>
-                <Form>
-                    <Form.Field>
-                        <Form.Input
-                            fluid
-                            size='small'
-                            placeholder={nodeName}
-                            readOnly
-                            style={{marginTop:"2%", marginLeft:"-5px"}}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <input
-                            placeholder='No of Units'
-                            type='number'
-                            style={{marginTop:'5px',marginBottom:'5px'}}
-                            onChange={(e) =>this.denseNodeUnitHandler(e, nodeName)}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <Form.Select
-                            fluid options={this.activationOptions}
-                            placeholder='Activation function'
-                            name={nodeName}
-                            style={{marginTop:'5px',marginBottom:'5px'}}
-                            onChange={this.denseNodeActHandler}
-                        />
-                    </Form.Field>
-                </Form>
-            </Segment>
-        ));
-
-
+        
         let fileFieldsList = <Form.Input
             fluid
             size='large'
@@ -457,15 +348,6 @@ class PropertiesBar extends Component {
                             />
                         </Form.Field>
                     </Form>
-
-                    <Message style={{textAlign:"center"}}>Model Related </Message>
-
-                    {inputNodes}
-
-                    {flattenNodes}
-
-                    {denseNodes}
-
                     <Form>
                         <Form.Field>
                             <Button
