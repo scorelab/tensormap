@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Form, Message, Segment, Dropdown, Button} from 'semantic-ui-react';
+import {Form, Message, Segment, Dropdown} from 'semantic-ui-react';
 import * as strings from "../../constants/Strings";
 import ModalComponent from '../shared/Modal';
 import { getAllFiles } from '../../services/FileServices';
@@ -10,8 +10,7 @@ class PropertiesBar extends Component {
     state = {
         fileList:null,
         totalDetails:null,
-        showFieldsList: false,
-        fieldsList: null,
+        fieldsList: [{"text":"Select a file first", "value":null, "key":0,disabled:true}],
         selectedFile:null,
         targetField:null,
         modalName:null,
@@ -51,24 +50,17 @@ class PropertiesBar extends Component {
                     totalDetails: response
                   }))
             }
+            
         )
         .catch(err => {
             console.error(err)
         })
     }
 
-    fileSelectHandler = (event,val) => {
-
-        const promise = new Promise(resolve => {
-            this.setState({...this.state, selectedFile: val.value, showFieldsList:true }, () => resolve());
-        });
-
-        promise.then(()=>{
-            const selectedFIleDetails = this.state.totalDetails.filter(item => item.file_id === this.state.selectedFile);
-
-            this.setState({...this.state, fieldsList: selectedFIleDetails[0].fields.map(
-                    (item,index)=>({"text":item, "value":item, "key":index})) });
-        });
+    fileSelectHandler = (event,val) => {    
+        const selectedFIleDetails = this.state.totalDetails.filter(item => item.file_id === val.value);
+        this.setState({...this.state, selectedFile: val.value,  fieldsList: selectedFIleDetails[0].fields.map(
+            (item,index)=>({"text":item, "value":item, "key":index})) })
     };
 
     fieldSelectHandler = (event,val) => {
@@ -100,56 +92,12 @@ class PropertiesBar extends Component {
 
     }
 
-    inputDimXHandler = (event)=>{
-        this.setState({...this.state, inputXParam:event.target.value}, ()=>this.enableSubmitButton());
-    }
-
-    inputDimYHandler = (event)=>{
-        this.setState({...this.state, inputYParam:event.target.value}, ()=>this.enableSubmitButton());
-    }
-
-    flattenDimXHandler = (event)=>{
-        this.setState({...this.state, flattenXParam:event.target.value}, ()=>this.enableSubmitButton());
-    }
-
-    flattenDimYHandler = (event)=>{
-        this.setState({...this.state, flattenYParam:event.target.value}, ()=>this.enableSubmitButton());
-    }
-
-    denseNodeUnitHandler = (event, nodeID)=>{
-        let denseUnitList = this.state.denseUnitParamsList;
-        denseUnitList[nodeID] = event.target.value;
-        this.setState({...this.state, denseUnitParamsList:denseUnitList}, ()=>this.enableSubmitButton());
-    }
-
-    denseNodeActHandler = (event, {name, value})=> {
-        let denseActList = this.state.denseActParamsList;
-        denseActList[name] = value;
-        this.setState({...this.state, denseActParamsList:denseActList}, ()=>this.enableSubmitButton());
-    }
-
     enableSubmitButton = ()=>{
         if (this.state.selectedFile !== null && this.state.targetField !==null && this.state.modalName !== null &&
             this.state.problemType !== null && this.state.optimizer !== null && this.state.metric !== null &&
-            this.state.epochCount !== null && this.state.trainTestRatio != null && this.state.inputXParam !== null &&
-            this.state.inputYParam !==null && this.state.denseNodesList.length !== 0){
-            if (this.state.denseUnitParamsList.length === this.state.denseActParamsList.length ){
-                if ((this.state.flattenXParam === null && this.state.flattenYParam === null) ||
-                    (this.state.flattenXParam !== null && this.state.flattenYParam !== null)){
+            this.state.epochCount !== null && this.state.trainTestRatio != null){              
                     this.setState({...this.state, disableButton:false});
-                }
-            }
         }
-
-
-
-
-    }
-
-    handleButtonClick = () =>{
-        // Wenas karapan
-        this.props.onClick()
-        this.props.setFormData(this.state)
 
     }
 
@@ -264,26 +212,17 @@ class PropertiesBar extends Component {
             Modalmessage = {strings.PROCESS_FAIL_MODEL_MESSAGE}/>
         );
 
-        
-        let fileFieldsList = <Form.Input
-            fluid
-            size='large'
-            placeholder={strings.PROCESS_SELECT_FILE_FIELD_BEFORE}
-            readOnly
+       
+        let fileFieldsList = <Dropdown
             style={{"marginTop":"2%"}}
+            fluid
+            placeholder='Target field'
+            search
+            selection
+            onChange={this.fieldSelectHandler}
+            options={this.state.fieldsList}
         />
-
-        if (this.state.showFieldsList){
-            fileFieldsList = <Dropdown
-                style={{"marginTop":"2%"}}
-                fluid
-                placeholder='Target field'
-                search
-                selection
-                onChange={this.fieldSelectHandler}
-                options={this.state.fieldsList}
-            />
-        }
+        
 
 
         return (
