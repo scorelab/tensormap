@@ -1,0 +1,30 @@
+.dense-node {
+    height: fit-content;
+    border: 1px solid #000000;
+    padding: 0px 0px 10px 0px;
+    border-radius: 8px;
+    background: rgb(43, 161, 255);
+  }
+  
+  .dense-node label {
+    display: block;
+    color: #ffffff;
+    font-size: 12px;
+    padding: 5px;
+  }
+  
+  .dense-node input{
+    margin: 0px 5px 0px 5px;
+  }
+  .dense-node select{
+    margin: 0px 5px 0px 5px;
+    width: 95%;
+  }
+
+  .dense-node>.node-header{
+    padding: 5px;
+    border-radius: 8px 8px 0px 0px;
+    background-color: #3271b2;
+    color: #ffffff;
+    font-weight:bolder;
+  }

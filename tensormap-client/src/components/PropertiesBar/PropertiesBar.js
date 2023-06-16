@@ -6,7 +6,7 @@ import { getAllFiles } from '../../services/FileServices';
 import { validateModel } from '../../services/ModelServices';
 
 class PropertiesBar extends Component {
-
+    
     state = {
         fileList:null,
         totalDetails:null,
@@ -143,6 +143,13 @@ class PropertiesBar extends Component {
 
 
 
+
+    }
+
+    handleButtonClick = () =>{
+        // Wenas karapan
+        this.props.onClick()
+        this.props.setFormData(this.state)
 
     }
 
@@ -284,7 +291,7 @@ class PropertiesBar extends Component {
 
                 {(this.state.modelValidatedSuccessfully)? validatedSuccessfully : errorInValidation}
 
-                <Segment style={{overflow: 'auto', maxHeight: '60vh', minWidth:'15vw', marginLeft:'-13px',marginRight:'-28px'}}>
+                <Segment style={{overflow: 'auto', maxHeight: '55vh', minWidth:'15vw', marginLeft:'-13px',marginRight:'-28px'}}>
                     <Message style={{textAlign:"center"}}>Code Related </Message>
                     <Form>
                         <Form.Field required>
@@ -348,20 +355,6 @@ class PropertiesBar extends Component {
                             />
                         </Form.Field>
                     </Form>
-                    <Form>
-                        <Form.Field>
-                            <Button
-                                color='green'
-                                size='medium'
-                                style={{"marginTop":"2%"}}
-                                onClick={this.modelValidateHandler}
-                                disabled ={this.state.disableButton}
-                            >
-                                Validate Model
-                            </Button>
-                        </Form.Field>
-                    </Form>
-
                 </Segment>
 
             </div>

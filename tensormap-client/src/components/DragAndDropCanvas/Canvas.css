@@ -1,0 +1,65 @@
+.dndflow {
+    flex-direction: column;
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+  }
+  
+  .dndflow aside {
+    border-right: 1px solid #eee;
+    padding: 15px 10px;
+    font-size: 12px;
+    background: #141414;
+    color: #eee;
+  }
+  
+  .dndflow aside .description {
+    margin-bottom: 10px;
+  }
+  
+  
+  .dndflow .dndnode {
+    height: 30px;
+    border: 1px solid #1a192b;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    font-family: Helvetica, Arial
+  }
+  
+  .dndflow .reactflow-wrapper {
+    flex-grow: 1;
+    height: 100%;
+  }
+  
+  .dndflow .selectall {
+    margin-top: 10px;
+  }
+  
+  @media screen and (min-width: 768px) {
+    .dndflow {
+      flex-direction: row;
+    }
+  
+    .dndflow aside {
+      width: 20%;
+      max-width: 250px;
+    }
+  }
+  
+  .dndflow .dndnode.input-sidebar {
+    border-color: rgb(105, 172, 61);
+  }
+  
+  .dndflow .dndnode.dense-sidebar {
+    border-color: rgb(43, 161, 255);
+  }
+
+  .dndflow .dndnode.flatten-sidebar {
+    border-color: rgb(247, 173, 20);
+  }
+  
+  
