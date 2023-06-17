@@ -22,7 +22,7 @@ function DenseNode({data,id }) {
               ...node.data,
               params: {
                 ...node.data.params,
-                [name]: value,
+                [name]: name === 'units' ? Number(value) : value,
               },
             };
           }
@@ -38,7 +38,7 @@ function DenseNode({data,id }) {
         <Handle type="target" position={Position.Left} isConnectable={true} id={`${id}_in`}  />
         <div className='node-header'>Dense Node</div>
         <label htmlFor="no. units">No. Units</label>
-        <input id="units" name="units" onChange={onChange} className="nodrag" value={data.params["units"]}/>
+        <input id="units" name="units" type='number' min="0" onChange={onChange} className="nodrag" value={data.params["units"]}/>
         <label htmlFor="activation">Activation</label>
       <select id = "activation" className="activation" name="activation" onChange={onChange} value={data.params["activation"]}>
         {activations.map((option) => (

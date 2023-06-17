@@ -17,6 +17,7 @@ import FlattenNode from './CustomNodes/FlattenNode/FlattenNode.js';
 import Sidebar from './Sidebar.js';
 import PropertiesBar from '../PropertiesBar/PropertiesBar.js';
 import './Canvas.css';
+import { enableValidateButton } from './Helpers.js';
 
 
 let id = 0;
@@ -29,6 +30,23 @@ const Canvas = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [formState,setFormState] = useState(
+    {
+      fileList:null,
+      totalDetails:null,
+      fieldsList: [{"text":"Select a file first", "value":null, "key":0,disabled:true}],
+      selectedFile:null,
+      targetField:null,
+      modalName:"",
+      problemType:null,
+      optimizer:null,
+      metric:null,
+      epochCount:0,
+      trainTestRatio:0,
+      disableButton:true,
+      modalOpen:false,
+      modelValidatedSuccessfully:false,
+  })
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
   const nodeTypes = useMemo(() => ({ custominput: InputNode,customdense:DenseNode,customflatten:FlattenNode }), [])
@@ -37,6 +55,7 @@ const Canvas = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
+  const modelData = (reactFlowInstance===null?{}:reactFlowInstance.toObject())
   const modelValidateHandler = ()=>{
     console.log(reactFlowInstance.toObject())
   }
@@ -123,7 +142,7 @@ const Canvas = () => {
                </div>
                 </Grid.Column>
                 <Grid.Column width={3}>
-                    <PropertiesBar />
+                    <PropertiesBar formState = {formState} setFormState = {setFormState} />
                     <Form>
                         <Form.Field>
                             <Button
@@ -131,7 +150,7 @@ const Canvas = () => {
                                 size='medium'
                                 style={{"marginTop":"10%", "marginLeft":"15%"}}
                                 onClick={modelValidateHandler}
-                                // disabled ={properties.disableButton}
+                                disabled ={enableValidateButton(formState,modelData)}
                             >
                                 Validate Model
                             </Button>

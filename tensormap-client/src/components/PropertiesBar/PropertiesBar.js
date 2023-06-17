@@ -6,37 +6,9 @@ import { getAllFiles } from '../../services/FileServices';
 import { validateModel } from '../../services/ModelServices';
 
 class PropertiesBar extends Component {
-    
-    state = {
-        fileList:null,
-        totalDetails:null,
-        fieldsList: [{"text":"Select a file first", "value":null, "key":0,disabled:true}],
-        selectedFile:null,
-        targetField:null,
-        modalName:null,
-        problemType:null,
-        optimizer:null,
-        metric:null,
-        epochCount:null,
-        trainTestRatio:null,
-        inputNodesList: [],
-        flattenNodesList: [],
-        denseNodesList: [],
-        inputXParam:null,
-        inputYParam:null,
-        flattenXParam:null,
-        flattenYParam:null,
-        denseUnitParamsList:[],
-        denseActParamsList:[],
-        disableButton:true,
-        modalOpen:false,
-        modelValidatedSuccessfully:false,
-    }
-
-
 
     componentDidMount() {
-
+        
         // Get the list of datafiles from the backend for the file selector
         getAllFiles()
         .then(
@@ -44,7 +16,7 @@ class PropertiesBar extends Component {
                 const fileList = response.map((file,index)=>(
                     {"text": file.file_name +"."+ file.file_type, "value": file.file_id, "key":index}
                 ))
-                this.setState(prevState => ({
+                this.props.setFormState(prevState => ({
                     ...prevState,
                     fileList: fileList,
                     totalDetails: response
@@ -58,49 +30,75 @@ class PropertiesBar extends Component {
     }
 
     fileSelectHandler = (event,val) => {    
-        const selectedFIleDetails = this.state.totalDetails.filter(item => item.file_id === val.value);
-        this.setState({...this.state, selectedFile: val.value,  fieldsList: selectedFIleDetails[0].fields.map(
-            (item,index)=>({"text":item, "value":item, "key":index})) })
+        const selectedFIleDetails = this.props.formState.totalDetails.filter(item => item.file_id === val.value);
+        const newFieldsList = selectedFIleDetails[0].fields.map((item, index) => ({
+            text: item,
+            value: item,
+            key: index,
+          }));
+        this.props.setFormState((prevState) => ({
+            ...prevState,
+            selectedFile: val.value,
+            fieldsList: newFieldsList,
+          }))
     };
 
     fieldSelectHandler = (event,val) => {
-        this.setState({...this.state, targetField:val.value},()=>this.enableSubmitButton());
+        this.props.setFormState((prevState) => ({
+            ...prevState,
+            targetField: val.value,
+          }))
+        
     }
 
     modalNameHandler = (event) => {
-        this.setState({...this.state, modalName:event.target.value }, ()=>this.enableSubmitButton());
+        this.props.setFormState((prevState) => ({
+            ...prevState,
+            modalName: event.target.value,
+          }))
     }
 
     problemTypeHandler = (event,val) => {
-        this.setState({...this.state, problemType:val.value}, ()=>this.enableSubmitButton());
+        this.props.setFormState((prevState) => ({
+            ...prevState,
+            problemType: val.value,
+          }))
+        
     }
 
     optimizerHandler = (event,val) => {
-        this.setState({...this.state, optimizer:val.value}, ()=>this.enableSubmitButton());
+        this.props.setFormState((prevState) => ({
+            ...prevState,
+            optimizer: val.value,
+          }))
+        
     }
 
     metricHandler = (event,val) => {
-        this.setState({...this.state, metric:val.value}, ()=>this.enableSubmitButton());
+        this.props.setFormState((prevState) => ({
+            ...prevState,
+            metric: val.value,
+          }))
+        
     }
 
     epochCountHandler = (event)=> {
-        this.setState({...this.state, epochCount:event.target.value}, ()=>this.enableSubmitButton());
+        this.props.setFormState((prevState) => ({
+            ...prevState,
+            epochCount: event.target.value,
+          }))
+        
     }
 
     trainTestRatioHandler = (event)=>{
-        this.setState({...this.state, trainTestRatio:event.target.value}, ()=>this.enableSubmitButton());
+        this.props.setFormState((prevState) => ({
+            ...prevState,
+            trainTestRatio: event.target.value,
+          }))
+        
 
     }
-
-    enableSubmitButton = ()=>{
-        if (this.state.selectedFile !== null && this.state.targetField !==null && this.state.modalName !== null &&
-            this.state.problemType !== null && this.state.optimizer !== null && this.state.metric !== null &&
-            this.state.epochCount !== null && this.state.trainTestRatio != null){              
-                    this.setState({...this.state, disableButton:false});
-        }
-
-    }
-
+    
     modelValidateHandler = ()=> {
         let data = {
             "model": {
@@ -108,37 +106,37 @@ class PropertiesBar extends Component {
                     "input",
                     "dense"
                 ],
-                "model_name":this.state.modalName,
+                "model_name":this.props.formState.modalName,
                 "input": {
-                    "input_dim":[this.state.inputXParam, this.state.inputYParam]
+                    "input_dim":[this.props.formState.inputXParam, this.props.formState.inputYParam]
                 }
             },
             "code": {
                 "dataset": {
-                    "file_id": this.state.selectedFile,
-                    "target_field": this.state.targetField,
-                    "training_split": this.state.trainTestRatio
+                    "file_id": this.props.formState.selectedFile,
+                    "target_field": this.props.formState.targetField,
+                    "training_split": this.props.formState.trainTestRatio
                 },
                 "dl_model": {
-                    "model_name": this.state.modalName,
-                    "optimizer": this.state.optimizer,
-                    "metric": this.state.metric,
-                    "epochs": this.state.epochCount
+                    "model_name": this.props.formState.modalName,
+                    "optimizer": this.props.formState.optimizer,
+                    "metric": this.props.formState.metric,
+                    "epochs": this.props.formState.epochCount
                 },
-                "problem_type_id": this.state.problemType
+                "problem_type_id": this.props.formState.problemType
             }
         }
-        if (this.state.flattenNodesList.length !== 0){
+        if (this.props.formState.flattenNodesList.length !== 0){
             data.model.layer_types.push("flatten");
             data.model["flatten"] = {
-                "input_dim": [this.state.flattenXParam, this.state.flattenYParam]
+                "input_dim": [this.props.formState.flattenXParam, this.props.formState.flattenYParam]
             }
         }
         let denseNodeDataList = []
-        for (const denseNode of this.state.denseNodesList){
+        for (const denseNode of this.props.formState.denseNodesList){
             denseNodeDataList.push({
-                "units": this.state.denseUnitParamsList[denseNode],
-                "activation":this.state.denseActParamsList[denseNode]})
+                "units": this.props.formState.denseUnitParamsList[denseNode],
+                "activation":this.props.formState.denseActParamsList[denseNode]})
         }
 
         if (denseNodeDataList.length !== 0){
@@ -148,14 +146,14 @@ class PropertiesBar extends Component {
         // Send the model data to the backend for validation and update the Modal state accordingly
         validateModel(data)
           .then(modelValidatedSuccessfully => {
-            this.setState(prevState => ({...prevState,
+            this.props.setFormState(prevState => ({...prevState,
                 modelValidatedSuccessfully: modelValidatedSuccessfully,
               }));
             this.modelOpen();
           })
           .catch(error => {
             console.error(error);
-            this.setState({ modelValidatedSuccessfully: false });
+            this.props.setFormState({ modelValidatedSuccessfully: false });
             this.modelOpen();
           });
     }
@@ -165,11 +163,11 @@ class PropertiesBar extends Component {
     *
     * */
     modelClose = () => {
-        this.setState({ ...this.state, modalOpen: false });
+        this.props.setFormState({ ...this.props.formState, modalOpen: false });
         window.location.reload();
     }
 
-    modelOpen = () => this.setState({ ...this.state, modalOpen: true });
+    modelOpen = () => this.props.setFormState({ ...this.props.formState, modalOpen: true });
 
 
     optimizerOptions = [
@@ -198,7 +196,7 @@ class PropertiesBar extends Component {
         * */
         const validatedSuccessfully = (
             <ModalComponent
-            modalOpen={this.state.modalOpen}
+            modalOpen={this.props.formState.modalOpen}
             modelClose={this.modelClose}
             sucess={true}
             Modalmessage = {strings.MODEL_VALIDATION_MODAL_MESSAGE}/>
@@ -206,7 +204,7 @@ class PropertiesBar extends Component {
 
         const errorInValidation = (
             <ModalComponent
-            modalOpen={this.state.modalOpen}
+            modalOpen={this.props.formState.modalOpen}
             modelClose={this.modelClose}
             sucess={false}
             Modalmessage = {strings.PROCESS_FAIL_MODEL_MESSAGE}/>
@@ -220,7 +218,7 @@ class PropertiesBar extends Component {
             search
             selection
             onChange={this.fieldSelectHandler}
-            options={this.state.fieldsList}
+            options={this.props.formState.fieldsList}
         />
         
 
@@ -228,7 +226,7 @@ class PropertiesBar extends Component {
         return (
             <div>
 
-                {(this.state.modelValidatedSuccessfully)? validatedSuccessfully : errorInValidation}
+                {(this.props.formState.modelValidatedSuccessfully)? validatedSuccessfully : errorInValidation}
 
                 <Segment style={{overflow: 'auto', maxHeight: '55vh', minWidth:'15vw', marginLeft:'-13px',marginRight:'-28px'}}>
                     <Message style={{textAlign:"center"}}>Code Related </Message>
@@ -279,7 +277,7 @@ class PropertiesBar extends Component {
                                 search
                                 selection
                                 onChange={this.fileSelectHandler}
-                                options={this.state.fileList}
+                                options={this.props.formState.fileList}
                             />
                         </Form.Field>
                         <Form.Field required>
