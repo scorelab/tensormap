@@ -47,7 +47,7 @@ const Canvas = () => {
       modalOpen:false,
       modelValidatedSuccessfully:false,
   })
-
+  const defaultViewport = { x: 10, y: 15, zoom: 0.5 }
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
   const nodeTypes = useMemo(() => ({ custominput: InputNode,customdense:DenseNode,customflatten:FlattenNode }), [])
   const onDragOver = useCallback((event) => {
@@ -131,7 +131,7 @@ const Canvas = () => {
                         onDrop={onDrop}
                         onDragOver={onDragOver}
                         nodeTypes={nodeTypes}
-                        fitView
+                        defaultViewport={defaultViewport}
                       >
                         <Controls />
                         <Background id="1" gap={10} color="#454545" style={{ backgroundColor: "#3c3c3c" }} variant={BackgroundVariant.Lines}/>
@@ -150,7 +150,7 @@ const Canvas = () => {
                                 size='medium'
                                 style={{"marginTop":"10%", "marginLeft":"15%"}}
                                 onClick={modelValidateHandler}
-                                disabled ={enableValidateButton(formState,modelData)}
+                                // disabled ={enableValidateButton(formState,modelData)}
                             >
                                 Validate Model
                             </Button>
