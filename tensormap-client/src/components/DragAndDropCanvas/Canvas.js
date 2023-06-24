@@ -17,7 +17,8 @@ import FlattenNode from './CustomNodes/FlattenNode/FlattenNode.js';
 import Sidebar from './Sidebar.js';
 import PropertiesBar from '../PropertiesBar/PropertiesBar.js';
 import './Canvas.css';
-import { enableValidateButton } from './Helpers.js';
+import { enableValidateButton,generateModelJSON } from './Helpers.js';
+import { validateModel } from '../../services/ModelServices';
 
 
 let id = 0;
@@ -49,7 +50,7 @@ const Canvas = () => {
   })
   const defaultViewport = { x: 10, y: 15, zoom: 0.5 }
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
-  const nodeTypes = useMemo(() => ({ custominput: InputNode,customdense:DenseNode,customflatten:FlattenNode }), [])
+ 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
@@ -57,9 +58,40 @@ const Canvas = () => {
 
   const modelData = (reactFlowInstance===null?{}:reactFlowInstance.toObject())
   const modelValidateHandler = ()=>{
-    console.log(reactFlowInstance.toObject())
+    let data = {
+      "code": {
+          "dataset": {
+          "file_id": formState.selectedFile,
+          "target_field": formState.targetField,
+          "training_split": formState.trainTestRatio
+        },
+      "dl_model": {
+          "model_name": formState.modalName,
+          "optimizer": formState.optimizer,
+          "metric": formState.metric,
+          "epochs": formState.epochCount
+      },
+        "problem_type_id": formState.problemType
+    },
+    "model" : generateModelJSON(reactFlowInstance.toObject())
+    }
+
+     // Send the model data to the backend for validation and update the Modal state accordingly
+     validateModel(data)
+     .then(modelValidatedSuccessfully => {
+       setFormState(prevState => ({...prevState,
+           modelValidatedSuccessfully: modelValidatedSuccessfully,
+         }));
+       this.modelOpen();
+     })
+     .catch(error => {
+       console.error(error);
+       setFormState({ modelValidatedSuccessfully: false });
+       this.modelOpen();
+     });
   }
 
+  const nodeTypes = useMemo(() => ({ custominput: InputNode,customdense:DenseNode,customflatten:FlattenNode }), [])
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
@@ -150,7 +182,7 @@ const Canvas = () => {
                                 size='medium'
                                 style={{"marginTop":"10%", "marginLeft":"15%"}}
                                 onClick={modelValidateHandler}
-                                // disabled ={enableValidateButton(formState,modelData)}
+                                disabled ={enableValidateButton(formState,modelData)}
                             >
                                 Validate Model
                             </Button>
