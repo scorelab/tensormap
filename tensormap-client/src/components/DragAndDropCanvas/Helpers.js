@@ -46,3 +46,27 @@ const isGraphConnected = (graph) =>  {
     }
     return visited.size === graph.nodes.length;
   }
+
+
+export const generateModelJSON = (model_data) => {
+    let filteredJSON = model_data
+    
+    filteredJSON.nodes.forEach(node => {
+        delete node.width;
+        delete node.height;
+        delete node.position;
+        delete node.positionAbsolute;
+        delete node.selected;
+        delete node.dragging
+        delete node.data.label
+      });
+
+    filteredJSON.edges.forEach(edge => {
+        delete edge.sourceHandle
+        delete edge.targetHandle
+        delete edge.id
+    })
+
+    delete filteredJSON.viewport
+    return filteredJSON
+}
