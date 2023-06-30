@@ -1,5 +1,6 @@
-import React, { useState, useRef, useCallback,useMemo } from 'react';
+import React, { useState, useRef, useCallback,useMemo,Fragment } from 'react';
 import { Grid,Form,Button } from 'semantic-ui-react';
+import * as strings from "../../constants/Strings";
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -17,37 +18,18 @@ import FlattenNode from './CustomNodes/FlattenNode/FlattenNode.js';
 import Sidebar from './Sidebar.js';
 import PropertiesBar from '../PropertiesBar/PropertiesBar.js';
 import './Canvas.css';
-import { enableValidateButton,generateModelJSON } from './Helpers.js';
+import { enableValidateButton,generateModelJSON,InitialFormState } from './Helpers.js';
 import { validateModel } from '../../services/ModelServices';
 
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
-
-
-
 const Canvas = () => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [formState,setFormState] = useState(
-    {
-      fileList:null,
-      totalDetails:null,
-      fieldsList: [{"text":"Select a file first", "value":null, "key":0,disabled:true}],
-      selectedFile:null,
-      targetField:null,
-      modalName:"",
-      problemType:null,
-      optimizer:null,
-      metric:null,
-      epochCount:0,
-      trainTestRatio:0,
-      disableButton:true,
-      modalOpen:false,
-      modelValidatedSuccessfully:false,
-  })
+  const [formState,setFormState] = useState(InitialFormState)
   const defaultViewport = { x: 10, y: 15, zoom: 0.5 }
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
  
@@ -75,6 +57,7 @@ const Canvas = () => {
     },
     "model" : generateModelJSON(reactFlowInstance.toObject())
     }
+    console.log(data)
 
      // Send the model data to the backend for validation and update the Modal state accordingly
      validateModel(data)
@@ -114,21 +97,21 @@ const Canvas = () => {
           id: getId(),
           type,
           position,
-          data: { label: `${type} node`,params:{"dim-x":0,"dim-y":0} },
+          data: { label: `${type} node`,params:{"dim-x":'',"dim-y":''} },
         };
       }else if(type==='customdense'){
         newNode = {
           id: getId(),
           type,
           position,
-          data: { label: `${type} node`,params:{"units":0, "activation":'default'} },
+          data: { label: `${type} node`,params:{"units":'', "activation":'default'} },
         };
       }else if (type==='customflatten'){
         newNode = {
           id: getId(),
           type,
           position,
-          data: { label: `${type} node`,params:{"dim-x":0,"dim-y":0}},
+          data: { label: `${type} node`,params:{"dim-x":'',"dim-y":''}},
         }}
         else{
           newNode = {
@@ -145,11 +128,11 @@ const Canvas = () => {
     );
     
     return (
-      <div>
+      <Fragment>
         <Grid celled='internally'>
             <Grid.Row>
               <Grid.Column width={13}>
-                <div className="dndflow" style={{ width: '60vw', height: '62vh' }}>
+                <div className="dndflow">
                   <ReactFlowProvider>
                   <Sidebar />
                     <div className="reactflow-wrapper" ref={reactFlowWrapper}>
@@ -191,7 +174,7 @@ const Canvas = () => {
                 </Grid.Column>
             </Grid.Row>
         </Grid>
-      </div>
+      </Fragment>
   );
 };
 

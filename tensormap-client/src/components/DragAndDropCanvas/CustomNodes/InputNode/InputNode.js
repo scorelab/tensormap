@@ -2,10 +2,10 @@ import {Handle,Position,useStoreApi,useReactFlow} from 'reactflow'
 
 import './InputNode.css'
 
-function InputNode({data,id }) {
+const InputNode = ({data,id }) => {
     const {setNodes} = useReactFlow();
     const store = useStoreApi();
-    const onChange = (evt) => {
+    const updateNodeState = (evt) => {
       const { nodeInternals } = store.getState();
       const { name, value } = evt.target;
       setNodes(
@@ -23,17 +23,14 @@ function InputNode({data,id }) {
         })
       );
     };
-
-
-  
     return (
       <div className="input-node">
         <div className='node-header'>Input Node</div>
         <label htmlFor="text">Dim X</label>
-        <input id="dim-x" name="dim-x" type='number' min="0" onChange={onChange} className="nodrag" value={data.params["dim-x"]}/>
+        <input id="dim-x" name="dim-x" type='number' min="0" onChange={updateNodeState} className="nodrag" value={data.params["dim-x"]} placeholder='Enter dim-x'/>
         <br/>
         <label htmlFor="text">Dim Y</label>
-        <input id="dim-y" name="dim-y" type='number' min="0" onChange={onChange} className="nodrag" value={data.params["dim-y"]} />
+        <input id="dim-y" name="dim-y" type='number' min="0" onChange={updateNodeState} className="nodrag" value={data.params["dim-y"]} placeholder='Enter dim-y'/>
         <Handle type="source" position={Position.Right} isConnectable={true} id={`${id}_out`}  />
       </div>
     );

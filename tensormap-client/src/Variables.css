@@ -1,0 +1,17 @@
+:root {
+    --dense_background : rgb(43, 161, 255);
+    --dense_header : rgb(50, 113, 178);
+    --input_background: rgb(105, 172, 61);
+    --input_header: rgb(93, 149, 34);
+    --flatten_background: rgb(247, 173, 20);
+    --flatten_header: rgb(170, 121, 24);
+    --node_label_font_color:#ffffff;
+    --node_header_font_color:#ffffff;
+    --node_border_color:#000000;
+    --canvas_width:60vw;
+    --canvas_height:62vh;
+    --canvas_aside_background: #141414;
+    --canvas_aside_font_color: #ffffff;
+    --canvas_aside_border_color: #eeeeee;
+    --canvas_border_color: #1a192b;
+  }
