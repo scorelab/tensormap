@@ -166,7 +166,7 @@ class PropertiesBar extends Component {
         this.props.setFormState({ ...this.props.formState, modalOpen: false });
         window.location.reload();
     }
-
+   
     modelOpen = () => this.props.setFormState({ ...this.props.formState, modalOpen: true });
 
 
@@ -209,7 +209,7 @@ class PropertiesBar extends Component {
             sucess={false}
             Modalmessage = {strings.PROCESS_FAIL_MODEL_MESSAGE}/>
         );
-
+        
        
         let fileFieldsList = <Dropdown
             style={{"marginTop":"2%"}}
@@ -225,9 +225,7 @@ class PropertiesBar extends Component {
 
         return (
             <div>
-
                 {(this.props.formState.modelValidatedSuccessfully)? validatedSuccessfully : errorInValidation}
-
                 <Segment style={{overflow: 'auto', maxHeight: '55vh', minWidth:'15vw', marginLeft:'-13px',marginRight:'-28px'}}>
                     <Message style={{textAlign:"center"}}>Code Related </Message>
                     <Form>

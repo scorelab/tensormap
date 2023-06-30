@@ -1,17 +1,35 @@
+export const InitialFormState = {
+    fileList:null,
+    totalDetails:null,
+    fieldsList: [{"text":"Select a file first", "value":null, "key":0,disabled:true}],
+    selectedFile:null,
+    targetField:null,
+    modalName:"",
+    problemType:null,
+    optimizer:null,
+    metric:null,
+    epochCount:0,
+    trainTestRatio:0,
+    disableButton:true,
+    modalOpen:false,
+    modelValidatedSuccessfully:false
+}
+
+// Checks whether all the node inputs, form inputs are filled and the graph is connected before enabling validate button 
 export const enableValidateButton = (formState,modelData)=>{
     if  (formState.selectedFile !== null && formState.targetField !==null && formState.modalName !== "" && formState.problemType !== null && formState.optimizer !== null && formState.metric !== null && formState.epochCount !== 0 && formState.trainTestRatio !== 0){
         if (modelData.edges.length !==0 || modelData.nodes.length !==0  ){
             for (let i = 0; i < modelData.nodes.length; i++){
                 if (modelData.nodes[i].type==="customdense"){   
-                    if (modelData.nodes[i].data.params.activation === "default" || modelData.nodes[i].data.params.units===0){
+                    if (modelData.nodes[i].data.params.activation === "default" || modelData.nodes[i].data.params.units===0 || modelData.nodes[i].data.params.units===''){
                         return true
                     }
                 }else if (modelData.nodes[i].type==='custominput'){
-                    if (modelData.nodes[i].data.params["dim-x"]=== 0 || modelData.nodes[i].data.params["dim-y"]=== 0){
+                    if (modelData.nodes[i].data.params["dim-x"]=== 0 || modelData.nodes[i].data.params["dim-y"]=== '' || modelData.nodes[i].data.params.units===''){
                         return true
                     }
                 }else if (modelData.nodes[i].type==='customflatten'){
-                    if (modelData.nodes[i].data.params["dim-x"]=== 0 || modelData.nodes[i].data.params["dim-y"]=== 0){
+                    if (modelData.nodes[i].data.params["dim-x"]=== 0 || modelData.nodes[i].data.params["dim-y"]=== '' || modelData.nodes[i].data.params.units===''){
                         return true
                     }
                 }

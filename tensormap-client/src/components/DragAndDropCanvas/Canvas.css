@@ -1,16 +1,20 @@
+@import '../../Variables.css';
+
 .dndflow {
     flex-direction: column;
     display: flex;
     flex-grow: 1;
     height: 100%;
+    width: var(--canvas_width);
+    height: var(--canvas_height);
   }
   
   .dndflow aside {
-    border-right: 1px solid #eee;
+    border-right: 1px solid var(--canvas_aside_border_color);
     padding: 15px 10px;
     font-size: 12px;
-    background: #141414;
-    color: #eee;
+    background: var(--canvas_aside_background);
+    color: var(--canvas_aside_font_color);
   }
   
   .dndflow aside .description {
@@ -20,7 +24,7 @@
   
   .dndflow .dndnode {
     height: 30px;
-    border: 1px solid #1a192b;
+    border: 1px solid var(--canvas_border_color);
     border-radius: 2px;
     margin-bottom: 10px;
     display: flex;
@@ -51,15 +55,15 @@
   }
   
   .dndflow .dndnode.input-sidebar {
-    border-color: rgb(105, 172, 61);
+    border-color: var(--input_background);
   }
   
   .dndflow .dndnode.dense-sidebar {
-    border-color: rgb(43, 161, 255);
+    border-color: var(--dense_background);
   }
 
   .dndflow .dndnode.flatten-sidebar {
-    border-color: rgb(247, 173, 20);
+    border-color: var(--flatten_background);
   }
   
   

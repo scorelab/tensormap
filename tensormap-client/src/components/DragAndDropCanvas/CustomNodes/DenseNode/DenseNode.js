@@ -3,16 +3,16 @@ import {Handle,Position,useStoreApi,useReactFlow} from 'reactflow'
 import './DenseNode.css'
 
 const activations = [
-  {value:'default',label:'Select'},
+  {value:'default',label:'Select activation'},
   {value:'relu',label:'ReLU'},
   {value:'linear',label:'Linear'}
 ]
 
 
-function DenseNode({data,id }) {
+const DenseNode = ({data,id }) => {
     const {setNodes} = useReactFlow();
     const store = useStoreApi();
-    const onChange = (evt) => {
+    const updateNodeState = (evt) => {
       const { nodeInternals } = store.getState();
       const { name, value } = evt.target;
       setNodes(
@@ -30,17 +30,14 @@ function DenseNode({data,id }) {
         })
       );
     };
-
-
-  
     return (
       <div className="dense-node">
         <Handle type="target" position={Position.Left} isConnectable={true} id={`${id}_in`}  />
         <div className='node-header'>Dense Node</div>
         <label htmlFor="no. units">No. Units</label>
-        <input id="units" name="units" type='number' min="0" onChange={onChange} className="nodrag" value={data.params["units"]}/>
+        <input id="units" name="units" type='number' min="0" onChange={updateNodeState} className="nodrag" value={data.params["units"]} placeholder='Enter the no. of units'/>
         <label htmlFor="activation">Activation</label>
-      <select id = "activation" className="activation" name="activation" onChange={onChange} value={data.params["activation"]}>
+      <select id = "activation" className="activation" name="activation" onChange={updateNodeState} value={data.params["activation"]}>
         {activations.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
