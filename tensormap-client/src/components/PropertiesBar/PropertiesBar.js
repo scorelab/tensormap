@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
 import {Form, Message, Segment, Dropdown} from 'semantic-ui-react';
-import * as strings from "../../constants/Strings";
-import ModalComponent from '../shared/Modal';
 import { getAllFiles } from '../../services/FileServices';
-import { validateModel } from '../../services/ModelServices';
 
 class PropertiesBar extends Component {
 
@@ -97,77 +94,7 @@ class PropertiesBar extends Component {
           }))
         
 
-    }
-    
-    modelValidateHandler = ()=> {
-        let data = {
-            "model": {
-                "layer_types": [
-                    "input",
-                    "dense"
-                ],
-                "model_name":this.props.formState.modalName,
-                "input": {
-                    "input_dim":[this.props.formState.inputXParam, this.props.formState.inputYParam]
-                }
-            },
-            "code": {
-                "dataset": {
-                    "file_id": this.props.formState.selectedFile,
-                    "target_field": this.props.formState.targetField,
-                    "training_split": this.props.formState.trainTestRatio
-                },
-                "dl_model": {
-                    "model_name": this.props.formState.modalName,
-                    "optimizer": this.props.formState.optimizer,
-                    "metric": this.props.formState.metric,
-                    "epochs": this.props.formState.epochCount
-                },
-                "problem_type_id": this.props.formState.problemType
-            }
-        }
-        if (this.props.formState.flattenNodesList.length !== 0){
-            data.model.layer_types.push("flatten");
-            data.model["flatten"] = {
-                "input_dim": [this.props.formState.flattenXParam, this.props.formState.flattenYParam]
-            }
-        }
-        let denseNodeDataList = []
-        for (const denseNode of this.props.formState.denseNodesList){
-            denseNodeDataList.push({
-                "units": this.props.formState.denseUnitParamsList[denseNode],
-                "activation":this.props.formState.denseActParamsList[denseNode]})
-        }
-
-        if (denseNodeDataList.length !== 0){
-            data.model["dense"] = denseNodeDataList
-        }
-        
-        // Send the model data to the backend for validation and update the Modal state accordingly
-        validateModel(data)
-          .then(modelValidatedSuccessfully => {
-            this.props.setFormState(prevState => ({...prevState,
-                modelValidatedSuccessfully: modelValidatedSuccessfully,
-              }));
-            this.modelOpen();
-          })
-          .catch(error => {
-            console.error(error);
-            this.props.setFormState({ modelValidatedSuccessfully: false });
-            this.modelOpen();
-          });
-    }
-
-    /*
-    * Model related functions controls the feedback of the request
-    *
-    * */
-    modelClose = () => {
-        this.props.setFormState({ ...this.props.formState, modalOpen: false });
-        window.location.reload();
-    }
-   
-    modelOpen = () => this.props.setFormState({ ...this.props.formState, modalOpen: true });
+    } 
 
 
     optimizerOptions = [
@@ -187,29 +114,7 @@ class PropertiesBar extends Component {
         { key: 'act_2', text: 'Linear', value: "linear" }
     ]
 
-    render() {
-
-
-        /*
-        * addedSuccessfully and errorInAddition are modals that will pop up after successful addition or failure.
-        *
-        * */
-        const validatedSuccessfully = (
-            <ModalComponent
-            modalOpen={this.props.formState.modalOpen}
-            modelClose={this.modelClose}
-            sucess={true}
-            Modalmessage = {strings.MODEL_VALIDATION_MODAL_MESSAGE}/>
-        );
-
-        const errorInValidation = (
-            <ModalComponent
-            modalOpen={this.props.formState.modalOpen}
-            modelClose={this.modelClose}
-            sucess={false}
-            Modalmessage = {strings.PROCESS_FAIL_MODEL_MESSAGE}/>
-        );
-        
+    render() {       
        
         let fileFieldsList = <Dropdown
             style={{"marginTop":"2%"}}
@@ -225,7 +130,6 @@ class PropertiesBar extends Component {
 
         return (
             <div>
-                {(this.props.formState.modelValidatedSuccessfully)? validatedSuccessfully : errorInValidation}
                 <Segment style={{overflow: 'auto', maxHeight: '55vh', minWidth:'15vw', marginLeft:'-13px',marginRight:'-28px'}}>
                     <Message style={{textAlign:"center"}}>Code Related </Message>
                     <Form>

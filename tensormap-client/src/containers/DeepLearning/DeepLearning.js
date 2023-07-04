@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { Grid } from 'semantic-ui-react';
-import PropertiesBar from "../../components/PropertiesBar/PropertiesBar";
 import ResultPanel from "../../components/ResultPanel/ResultPanel";
 import Canvas from '../../components/DragAndDropCanvas/Canvas';
 
