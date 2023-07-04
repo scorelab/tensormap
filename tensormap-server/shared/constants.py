@@ -26,6 +26,7 @@ MODEL_METRIC = 'metric'
 MODEL_EPOCHS = 'epochs'
 PROBLEM_TYPE = 'problem_type_id'
 CODE = 'code'
+DL_MODEL = 'dl_model'
 MODEL = 'model'
 URL_CODE = '/' + CODE
 URL_VALIDATE = '/validate'

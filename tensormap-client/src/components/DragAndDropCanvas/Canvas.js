@@ -1,6 +1,7 @@
-import React, { useState, useRef, useCallback,useMemo,Fragment } from 'react';
+import React, { useState, useRef, useCallback,Fragment } from 'react';
 import { Grid,Form,Button } from 'semantic-ui-react';
 import * as strings from "../../constants/Strings";
+import ModalComponent from '../shared/Modal';
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -24,6 +25,7 @@ import { validateModel } from '../../services/ModelServices';
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
+const nodeTypes = { custominput: InputNode,customdense:DenseNode,customflatten:FlattenNode }
 const Canvas = () => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -39,6 +41,37 @@ const Canvas = () => {
   }, []);
 
   const modelData = (reactFlowInstance===null?{}:reactFlowInstance.toObject())
+  /*
+    * Model related functions controls the feedback of the request
+    *
+    * */
+  const modelClose = () => {
+    setFormState(prevState => ({...prevState,
+      modalOpen: false,
+    }));
+    window.location.reload();
+  }
+  const modelOpen = () => {
+    setFormState(prevState => ({...prevState,
+      modalOpen: true,
+    }))};
+
+  const validatedSuccessfully = (
+    <ModalComponent
+    modalOpen={formState.modalOpen}
+    modelClose={modelClose}
+    sucess={true}
+    Modalmessage = {strings.MODEL_VALIDATION_MODAL_MESSAGE}/>
+);
+
+const errorInValidation = (
+    <ModalComponent
+    modalOpen={formState.modalOpen}
+    modelClose={modelClose}
+    sucess={false}
+    Modalmessage = {strings.PROCESS_FAIL_MODEL_MESSAGE}/>
+);
+
   const modelValidateHandler = ()=>{
     let data = {
       "code": {
@@ -55,9 +88,8 @@ const Canvas = () => {
       },
         "problem_type_id": formState.problemType
     },
-    "model" : generateModelJSON(reactFlowInstance.toObject())
+    "model" : {...generateModelJSON(reactFlowInstance.toObject()),"model_name": formState.modalName,}
     }
-    console.log(data)
 
      // Send the model data to the backend for validation and update the Modal state accordingly
      validateModel(data)
@@ -65,16 +97,16 @@ const Canvas = () => {
        setFormState(prevState => ({...prevState,
            modelValidatedSuccessfully: modelValidatedSuccessfully,
          }));
-       this.modelOpen();
+       modelOpen();
      })
      .catch(error => {
        console.error(error);
        setFormState({ modelValidatedSuccessfully: false });
-       this.modelOpen();
+       modelOpen();
      });
   }
 
-  const nodeTypes = useMemo(() => ({ custominput: InputNode,customdense:DenseNode,customflatten:FlattenNode }), [])
+  
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
@@ -129,6 +161,7 @@ const Canvas = () => {
     
     return (
       <Fragment>
+        {(formState.modelValidatedSuccessfully)? validatedSuccessfully : errorInValidation}
         <Grid celled='internally'>
             <Grid.Row>
               <Grid.Column width={13}>

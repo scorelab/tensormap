@@ -17,7 +17,7 @@ socketio = get_socket_ref()
 def model_validate_service(incoming):
     # Generate basic model and config records
     model = ModelBasic(
-        model_name=incoming[MODEL][MODEL_NAME],
+        model_name=incoming[CODE][DL_MODEL][MODEL_NAME],
         model_dataset=incoming[CODE][DATASET][FILE_ID],
         model_type=incoming[CODE][PROBLEM_TYPE],
         target_class=incoming[CODE][DATASET][FILE_TARGET],
