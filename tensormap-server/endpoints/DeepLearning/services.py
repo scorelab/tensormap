@@ -1,7 +1,10 @@
 import os
 import shlex
 import subprocess
+import tensorflow as tf
+import json
 
+import constants.errors as errors
 from endpoints.DeepLearning.models import ModelBasic, ModelConfigs
 from flask import send_file
 from flatten_json import flatten
@@ -33,20 +36,36 @@ def model_validate_service(incoming):
 
     # Model validation and code generation
     model_generated = model_generation(model_params=incoming[MODEL])
-
-    if model_generated:
-        code_generated = code_generation(code_params=incoming[CODE])
-        if not code_generated:
-            return generic_response(
-                status_code=400, success=False, message='Model validated successfully but code generation unsuccessful.'
-            )
-        else:
-            return generic_response(
-                status_code=200, success=True, message='Model successfully validated and code generated.'
-            )
+    # return generic_response(status_code=400, success=False, message='Whole validation process failed')
+    try:
+        tf.keras.models.model_from_json(json.dumps(model_generated))
+    except Exception as e:
+        for error in errors.err_msgs.keys():
+            if error in str(e):
+                return generic_response(status_code=400,success=False,message=errors.err_msgs[error])
+            else:
+                return generic_response(status_code=400,success=False,message='Model validation failed. Please recheck the model and inputs')
+    
+    generated_model_file = open(MODEL_GENERATION_LOCATION + incoming[CODE][DL_MODEL][MODEL_NAME] + MODEL_GENERATION_TYPE, 'w+')
+    
+    try:
+        generated_model_file.write(json.dumps(model_generated) + '\n')
+    except Exception as e:
+        print(e)
+        return generic_response(status_code=400,success=False,message='Model validated but failed to save')
     else:
-        return generic_response(status_code=400, success=False, message='Whole validation process failed')
+        generated_model_file.close()
 
+    
+    code_generated = code_generation(code_params=incoming[CODE])
+    if not code_generated:
+        return generic_response(
+            status_code=400, success=False, message='Model validated successfully but code generation unsuccessful.'
+        )
+    else:
+        return generic_response(
+            status_code=200, success=True, message='Model successfully validated and code generated.'
+        )
 
 def get_code_service(incoming):
     model_name = incoming[MODEL_NAME]

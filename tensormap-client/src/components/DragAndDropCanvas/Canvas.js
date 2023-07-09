@@ -69,7 +69,9 @@ const errorInValidation = (
     modalOpen={formState.modalOpen}
     modelClose={modelClose}
     sucess={false}
-    Modalmessage = {strings.PROCESS_FAIL_MODEL_MESSAGE}/>
+    Modalmessage = {strings.PROCESS_FAIL_MODEL_MESSAGE}
+    modalText={formState.modalContent}
+    />
 );
 
   const modelValidateHandler = ()=>{
@@ -93,15 +95,16 @@ const errorInValidation = (
 
      // Send the model data to the backend for validation and update the Modal state accordingly
      validateModel(data)
-     .then(modelValidatedSuccessfully => {
+     .then(validationResp => {
        setFormState(prevState => ({...prevState,
-           modelValidatedSuccessfully: modelValidatedSuccessfully,
+           modelValidatedSuccessfully: validationResp.success,
+           modalContent:validationResp.message
          }));
        modelOpen();
      })
      .catch(error => {
        console.error(error);
-       setFormState({ modelValidatedSuccessfully: false });
+       setFormState({ modelValidatedSuccessfully: false,modalContent:error.message });
        modelOpen();
      });
   }

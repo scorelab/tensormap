@@ -96,16 +96,7 @@ def model_generation(model_params):
                 0
                 ])
         
-
-    generated_model_file = open(MODEL_GENERATION_LOCATION + model_params[MODEL_NAME] + MODEL_GENERATION_TYPE, 'w+')
-    try:
-        generated_model_file.write(json.dumps(starter_json) + '\n')
-    except Exception as e:
-        print("ERR",e)
-        return False
-    else:
-        generated_model_file.close()
-    return True
+    return starter_json
 
 
 # Get the JSON for each node type
