@@ -12,7 +12,8 @@ export const InitialFormState = {
     trainTestRatio:0,
     disableButton:true,
     modalOpen:false,
-    modelValidatedSuccessfully:false
+    modelValidatedSuccessfully:false,
+    modalContent:null
 }
 
 // Checks whether all the node inputs, form inputs are filled and the graph is connected before enabling validate button 

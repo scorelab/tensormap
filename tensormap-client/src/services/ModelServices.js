@@ -5,14 +5,16 @@ import * as strings from "../constants/Strings";
 export const validateModel = async (data) => {
     return axios.post(urls.BACKEND_VALIDATE_MODEL, data)
       .then(resp => {
-        if (resp.data.success === true) {
-          return true;
-        }
-        return false;
+        return resp.data
       })
       .catch(err => {
         console.error(err);
-        return false;
+        if (err.response && err.response.data){
+          return err.response.data
+        }else{
+          return {success:false,message:"Unknown error occured"}
+        }
+        
       });
   };
 
