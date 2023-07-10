@@ -45,13 +45,13 @@ const Canvas = () => {
     * Model related functions controls the feedback of the request
     *
     * */
-  const modelClose = () => {
+  const closeModel = () => {
     setFormState(prevState => ({...prevState,
       modalOpen: false,
     }));
     window.location.reload();
   }
-  const modelOpen = () => {
+  const openModel = () => {
     setFormState(prevState => ({...prevState,
       modalOpen: true,
     }))};
@@ -59,7 +59,7 @@ const Canvas = () => {
   const validatedSuccessfully = (
     <ModalComponent
     modalOpen={formState.modalOpen}
-    modelClose={modelClose}
+    modelClose={closeModel}
     sucess={true}
     Modalmessage = {strings.MODEL_VALIDATION_MODAL_MESSAGE}/>
 );
@@ -67,7 +67,7 @@ const Canvas = () => {
 const errorInValidation = (
     <ModalComponent
     modalOpen={formState.modalOpen}
-    modelClose={modelClose}
+    modelClose={closeModel}
     sucess={false}
     Modalmessage = {strings.PROCESS_FAIL_MODEL_MESSAGE}
     modalText={formState.modalContent}
@@ -100,12 +100,12 @@ const errorInValidation = (
            modelValidatedSuccessfully: validationResp.success,
            modalContent:validationResp.message
          }));
-       modelOpen();
+       openModel();
      })
      .catch(error => {
        console.error(error);
        setFormState({ modelValidatedSuccessfully: false,modalContent:error.message });
-       modelOpen();
+       openModel();
      });
   }
 
