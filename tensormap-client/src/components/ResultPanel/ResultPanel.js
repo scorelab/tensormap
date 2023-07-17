@@ -1,87 +1,37 @@
-import React, {Component} from 'react';
+import React, {useState,useEffect} from 'react';
 import io from "socket.io-client";
 import * as urls from '../../constants/Urls';
 import * as strings from "../../constants/Strings";
 import {Grid, Menu, Button, Form, Dropdown, Segment, Dimmer, Loader} from 'semantic-ui-react';
 import Result from "./Result/Result";
-import { getAllModels,download_code,runModel } from '../../services/ModelServices';
+import {download_code,runModel } from '../../services/ModelServices';
+import {useRecoilState} from 'recoil'
+import {models as modelListAtom} from '../../shared/atoms'
+import { getAllModels } from '../../services/ModelServices';
 
-class ResultPanel extends Component {
+const ResultPanel = () => {
+    const [modelList,setModelList] = useRecoilState(modelListAtom)
 
-    socket = io(urls.WS_DL_RESULTS);
+    const [selectedModel,setSelectedModel] = useState(null);
+    const [disableDownloadButton,setDisableDownloadButton] = useState(true);
+    const [disableRunButton,setDisableRunButton] = useState(true);
+    const [disableClearButton, setDisableClearButton] = useState(true);
+    const [resultValues, setResultValues] = useState([]);
+    const [resultFinished, setResultFinished] = useState(null);
+    
+    const socket = io(urls.WS_DL_RESULTS);
+    
+    useEffect(() => {
+      socket.on(strings.DL_RESULT_LISTENER, (resp) => {
+        if (resp.includes('Starting')) {
+          setResultValues([]);
+        } else if (resp.includes('Finish')) {
+          setResultFinished(true);
+        } else if (Array.isArray(resultValues) && resultFinished === null) {
+          setResultValues((prevState) => [...prevState, resp]);
+        }
+      });
 
-
-    state = {
-        modelList: null,
-        selectedModel:null,
-        disableDownloadButton: true,
-        disableRunButton: true,
-        disableClearButton: true,
-        resultValues: null,
-        resultFinished:null
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        // this.socket.on(strings.DL_RESULT_LISTENER, (resp)=>{
-        //
-        //
-        //     if (!Array.isArray(prevState.resultValues) && resp.includes("Starting")){
-        //         if (!Array.isArray(this.state.resultValues)){
-        //             this.setState({...this.state, resultValues:[]})
-        //             console.log("array created")
-        //         }
-        //
-        //     }
-        //
-        //     if (Array.isArray(this.state.resultValues) && resp.includes("Finish")) {
-        //         if (this.state.resultFinished === null){
-        //
-        //             this.setState({...this.state, resultFinished:true});
-        //             console.log("Finishing");
-        //         }
-        //     }
-        //
-        //
-        //     if (Array.isArray(this.state.resultValues) && this.state.resultFinished === null){
-        //
-        //
-        //             if (this.state.resultValues[this.state.resultValues.length -1] !== resp){
-        //                 this.setState({...this.state, resultValues:this.state.resultValues.push(resp)});
-        //             }
-        //
-        //
-        //
-        //     }
-        //
-        //
-        // })
-    }
-
-    componentDidMount() {
-
-        this.socket.on(strings.DL_RESULT_LISTENER, (resp)=>{
-
-            if (resp.includes("Starting")){
-
-                this.setState({...this.state, resultValues:[]});
-
-            } else if(resp.includes("Finish")){
-
-                this.setState({...this.state, resultFinished:true});
-
-            }else if (Array.isArray(this.state.resultValues) && this.state.resultFinished === null){
-
-                let a = [...this.state.resultValues]
-                a.push(resp)
-
-                this.setState({...this.state, resultValues: a });
-
-            }
-
-            }
-        )
-
-        // Get all the created models from the backend for the model selector.
         getAllModels()
         .then(
             response => {
@@ -90,145 +40,132 @@ class ResultPanel extends Component {
                     "value": file,
                     "key": index
                   }));
-                  this.setState(prevState => ({
-                    ...prevState,
-                    resultFinished: null,
-                    modelList: models,
-                  }));
+                setModelList(models)
             }
         )
-    }
+      }, []);
+      
+      const modelSelectHandler = (event, { value }) => {
+        setSelectedModel(value);
+        setDisableDownloadButton(false);
+        setDisableRunButton(false);
+      };
 
-    modelSelectHandler = (event,val)=> {
-        this.setState({...this.state, selectedModel: val.value, disableDownloadButton: false,
-            disableRunButton:false });
-    }
-
-    modelDownloadHandler = ()=> {
-        if (this.state.selectedModel != null){
-            const model_name = this.state.selectedModel;
-
-            // Get the Python script for the particular project
-            download_code(model_name)
-            .catch(error => {
-                console.error(error);
-      });
+      const modelDownloadHandler = () => {
+        if (selectedModel != null) {
+          const model_name = selectedModel;
+          download_code(model_name).catch((error) => {
+            console.error(error);
+          });
         }
-    }
+      };
 
-    RunButtonHandler = () => {
-        this.setState({...this.state, resultValues: ""}, ()=> {
-            if (this.state.selectedModel != null){
-                const { selectedModel } = this.state;
-
-                // Run the selected model in the backend
-                runModel(selectedModel)
-                .then(message => {
-                console.log(message);
-                this.setState({ disableRunButton: false, disableClearButton: false });
-                })
-                .catch(error => {
-                console.error(error);
-                });
-
-                this.setState({...this.state, disableRunButton:true});
-            }
-        });
-    };
-
-
-    clearButtonHandler = () => {
-        this.setState({...this.state, resultValues:null, disableClearButton:true})
-    }
-
-
-    render() {
-
-        let results = null;
-
-        if(this.state.resultValues === ""){
-            results = (
-                <Segment style={{marginLeft: "10px", marginRight: "10px", height:"400px", marginTop:"10px"}} >
-                    <Dimmer active inverted>
-                        <Loader size='large' content='Model is running please wait ...' />
-                    </Dimmer>
-                </Segment>
-            );
+      const runButtonHandler = () => {
+        setResultValues('');
+        if (selectedModel != null) {
+          runModel(selectedModel)
+            .then((message) => {
+              console.log(message);
+              setDisableRunButton(false);
+              setDisableClearButton(false);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+    
+          setDisableRunButton(true);
         }
+      };
 
-        if (Array.isArray(this.state.resultValues) ){
+      const clearButtonHandler = () => {
+        setResultValues(null);
+        setDisableClearButton(true);
+      };
 
-            results = this.state.resultValues.map((item, index)=> (
-                <Result result={item} key={index} />
-            ));
-        }
+      
+      let results = null;
 
-        return (
-            <div>
-                <Grid.Row>
-                    <Grid.Column>
-                        <Menu>
-                            <Menu.Item>Model Execution</Menu.Item>
+      if(resultValues === ""){
+          results = (
+              <Segment style={{marginLeft: "10px", marginRight: "10px", height:"400px", marginTop:"10px"}} >
+                  <Dimmer active inverted>
+                      <Loader size='large' content='Model is running please wait ...' />
+                  </Dimmer>
+              </Segment>
+          );
+      }
 
+      if (Array.isArray(resultValues) ){
+          results = resultValues.map((item, index) => <Result result={item} key={index} />);
+      }
+
+
+
+      return (
+        <div>
+            <Grid.Row>
+                <Grid.Column>
+                    <Menu>
+                        <Menu.Item>Model Execution</Menu.Item>
+
+                        <Menu.Item>
+                            <Form>
+                                <Form.Field>
+                                    <Dropdown
+                                        fluid
+                                        placeholder='Select a File'
+                                        search
+                                        selection
+                                        onChange={modelSelectHandler}
+                                        options={modelList}
+                                    />
+                                </Form.Field>
+                            </Form>
+                        </Menu.Item>
+
+                        <Menu.Menu position='right'>
                             <Menu.Item>
-                                <Form>
-                                    <Form.Field>
-                                        <Dropdown
-                                            fluid
-                                            placeholder='Select a File'
-                                            search
-                                            selection
-                                            onChange={this.modelSelectHandler}
-                                            options={this.state.modelList}
-                                        />
-                                    </Form.Field>
-                                </Form>
+                                <Button
+                                    color='blue'
+                                    onClick={modelDownloadHandler}
+                                    disabled ={disableDownloadButton}
+                                >
+                                    Download Code
+                                </Button>
                             </Menu.Item>
 
-                            <Menu.Menu position='right'>
-                                <Menu.Item>
-                                    <Button
-                                        color='blue'
-                                        onClick={this.modelDownloadHandler}
-                                        disabled ={this.state.disableDownloadButton}
-                                    >
-                                        Download Code
-                                    </Button>
-                                </Menu.Item>
+                            <Menu.Item>
+                                <Button
+                                    color='green'
+                                    onClick={runButtonHandler}
+                                    disabled={disableRunButton}
+                                >
+                                    Model Run
+                                </Button>
+                            </Menu.Item>
 
-                                <Menu.Item>
-                                    <Button
-                                        color='green'
-                                        onClick={this.RunButtonHandler}
-                                        disabled={this.state.disableRunButton}
-                                    >
-                                        Model Run
-                                    </Button>
-                                </Menu.Item>
-
-                                <Menu.Item>
-                                    <Button
-                                        color='brown'
-                                        onClick={this.clearButtonHandler}
-                                        disabled={this.state.disableClearButton}
-                                    >
-                                        Clear Panel
-                                    </Button>
-                                </Menu.Item>
-                            </Menu.Menu>
-                        </Menu>
-                    </Grid.Column>
-                </Grid.Row>
-                <Grid.Row>
-                    <Grid.Column>
-                        {results}
-                    </Grid.Column>
-                </Grid.Row>
+                            <Menu.Item>
+                                <Button
+                                    color='brown'
+                                    onClick={clearButtonHandler}
+                                    disabled={disableClearButton}
+                                >
+                                    Clear Panel
+                                </Button>
+                            </Menu.Item>
+                        </Menu.Menu>
+                    </Menu>
+                </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+                <Grid.Column>
+                    {results}
+                </Grid.Column>
+            </Grid.Row>
 
 
-            </div>
-        );
-    }
+        </div>
+    );
 }
 
-export default ResultPanel;
+export default ResultPanel

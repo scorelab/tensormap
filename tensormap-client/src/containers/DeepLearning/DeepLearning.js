@@ -1,11 +1,9 @@
-import React, {Component} from 'react';
+import React from 'react';
 import { Grid } from 'semantic-ui-react';
 import ResultPanel from "../../components/ResultPanel/ResultPanel";
 import Canvas from '../../components/DragAndDropCanvas/Canvas';
 
-
-class DeepLearning extends Component {
-    render() {
+const DeepLearning = () => {
         return (
             <div>
                 <Grid celled='internally'>
@@ -22,7 +20,6 @@ class DeepLearning extends Component {
                 </Grid>
             </div>
         );
-    }
 }
 
 export default DeepLearning;
