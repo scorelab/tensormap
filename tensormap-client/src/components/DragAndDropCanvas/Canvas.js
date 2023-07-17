@@ -21,13 +21,15 @@ import PropertiesBar from '../PropertiesBar/PropertiesBar.js';
 import './Canvas.css';
 import { enableValidateButton,generateModelJSON,InitialFormState } from './Helpers.js';
 import { validateModel } from '../../services/ModelServices';
-
+import { models as allModels } from '../../shared/atoms';
+import {useRecoilState} from 'recoil'
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 const nodeTypes = { custominput: InputNode,customdense:DenseNode,customflatten:FlattenNode }
 const Canvas = () => {
   const reactFlowWrapper = useRef(null);
+  const [modelList,setModelList] = useRecoilState(allModels)
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -49,7 +51,6 @@ const Canvas = () => {
     setFormState(prevState => ({...prevState,
       modalOpen: false,
     }));
-    window.location.reload();
   }
   const openModel = () => {
     setFormState(prevState => ({...prevState,
@@ -96,6 +97,15 @@ const errorInValidation = (
      // Send the model data to the backend for validation and update the Modal state accordingly
      validateModel(data)
      .then(validationResp => {
+      if (validationResp.success){
+        setModelList(prevList => (
+        [...prevList,{
+                  "text":  formState.modalName + strings.MODEL_EXTENSION,
+                  "value": formState.modalName,
+                  "key": prevList.length+1
+        }]
+        ))
+      }
        setFormState(prevState => ({...prevState,
            modelValidatedSuccessfully: validationResp.success,
            modalContent:validationResp.message
