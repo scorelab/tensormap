@@ -5,7 +5,7 @@ db = get_db_ref()
 
 class ModelBasic(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    model_name = db.Column(db.String(50), nullable=False)
+    model_name = db.Column(db.String(50), nullable=False,unique=True)
     model_dataset = db.Column(db.Integer, db.ForeignKey('data_file.id'))
     model_type = db.Column(db.Integer, nullable=False)
     target_class = db.Column(db.String(50), nullable=False)
