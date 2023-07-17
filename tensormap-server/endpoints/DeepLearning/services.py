@@ -13,12 +13,27 @@ from shared.request.response import generic_response
 from shared.services.code.generation import code_generation
 from shared.services.model.generation import model_generation
 from shared.utils import get_socket_ref, save_multiple_records, save_one_record
+import pymysql
 
 socketio = get_socket_ref()
 
 
 def model_validate_service(incoming):
-    # Generate basic model and config records
+    # Model generation
+    model_generated = model_generation(model_params=incoming[MODEL])
+    
+    # Validate the Model first
+    try:
+        tf.keras.models.model_from_json(json.dumps(model_generated))
+    except Exception as e:
+        print(e)
+        for error in errors.err_msgs.keys():
+            if error in str(e):
+                return generic_response(status_code=400,success=False,message=errors.err_msgs[error])
+            else:
+                return generic_response(status_code=400,success=False,message='Model validation failed. Please recheck the model and inputs')
+    
+    # Only the valid models are saved in the DB
     model = ModelBasic(
         model_name=incoming[CODE][DL_MODEL][MODEL_NAME],
         model_dataset=incoming[CODE][DATASET][FILE_ID],
@@ -31,20 +46,16 @@ def model_validate_service(incoming):
     for param in params:
         configs.append(ModelConfigs(model_id=model.id, parameter=param, value=params[param]))
 
-    save_one_record(record=model)
-    save_multiple_records(records=configs)
-
-    # Model validation and code generation
-    model_generated = model_generation(model_params=incoming[MODEL])
-    # return generic_response(status_code=400, success=False, message='Whole validation process failed')
     try:
-        tf.keras.models.model_from_json(json.dumps(model_generated))
-    except Exception as e:
+        save_one_record(record=model)
+        save_multiple_records(records=configs)
+    except pymysql.err.IntegrityError as e:
+        print(e)
         for error in errors.err_msgs.keys():
             if error in str(e):
                 return generic_response(status_code=400,success=False,message=errors.err_msgs[error])
             else:
-                return generic_response(status_code=400,success=False,message='Model validation failed. Please recheck the model and inputs')
+                return generic_response(status_code=400,success=False,message='Model saving failed. Please recheck the model configs')
     
     generated_model_file = open(MODEL_GENERATION_LOCATION + incoming[CODE][DL_MODEL][MODEL_NAME] + MODEL_GENERATION_TYPE, 'w+')
     
