@@ -19,30 +19,41 @@ const ResultPanel = () => {
     const [resultValues, setResultValues] = useState([]);
     const [resultFinished, setResultFinished] = useState(null);
     
-    const socket = io(urls.WS_DL_RESULTS);
+    
     
     useEffect(() => {
-      socket.on(strings.DL_RESULT_LISTENER, (resp) => {
-        if (resp.includes('Starting')) {
-          setResultValues([]);
-        } else if (resp.includes('Finish')) {
-          setResultFinished(true);
-        } else if (Array.isArray(resultValues) && resultFinished === null) {
-          setResultValues((prevState) => [...prevState, resp]);
-        }
-      });
-
-        getAllModels()
-        .then(
-            response => {
-                const models = response.map((file, index) => ({
-                    "text": file + strings.MODEL_EXTENSION,
-                    "value": file,
-                    "key": index
-                  }));
-                setModelList(models)
-            }
-        )
+      try {
+        const socket = io(urls.WS_DL_RESULTS);
+  
+        const dlResultListener = (resp) => {
+          if (resp.includes('Starting')) {
+            setResultValues([]);
+          } else if (resp.includes('Finish')) {
+            setResultFinished(true);
+          } else if (Array.isArray(resultValues) && resultFinished === null) {
+            setResultValues((prevState) => [...prevState, resp]);
+          }
+        };
+  
+        socket.on(strings.DL_RESULT_LISTENER, dlResultListener);
+  
+        // Fetch models and set the modelList state
+        getAllModels().then((response) => {
+          const models = response.map((file, index) => ({
+            text: file + strings.MODEL_EXTENSION,
+            value: file,
+            key: index,
+          }));
+          setModelList(models);
+        });
+  
+        // Cleanup function to unsubscribe from the socket event listener
+        return () => {
+          socket.off(strings.DL_RESULT_LISTENER, dlResultListener);
+        };
+      } catch (error) {
+        console.error('Error connecting to the socket:', error);
+      }
       }, []);
       
       const modelSelectHandler = (event, { value }) => {

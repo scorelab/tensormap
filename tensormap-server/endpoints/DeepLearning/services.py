@@ -33,6 +33,10 @@ def model_validate_service(incoming):
             else:
                 return generic_response(status_code=400,success=False,message='Model validation failed. Please recheck the model and inputs')
     
+    # Check for duplicate file names
+    if ModelBasic.query.filter_by(model_name=incoming[CODE][DL_MODEL][MODEL_NAME]).first():
+        return generic_response(status_code=400,success=False,message="Model name already used. Use a different name")
+    
     # Only the valid models are saved in the DB
     model = ModelBasic(
         model_name=incoming[CODE][DL_MODEL][MODEL_NAME],
