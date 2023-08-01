@@ -96,6 +96,13 @@ class PropertiesBar extends Component {
 
     } 
 
+    batchSizeHandler = (event) => {
+        this.props.setFormState((prevState) => (
+        {   ...prevState,
+            batchSize:event.target.value}
+        ))
+    }
+
 
     optimizerOptions = [
         { key: 'opt_1', text: 'Adam', value: 'adam' },
@@ -170,6 +177,14 @@ class PropertiesBar extends Component {
                                 type='number'
                                 style={{marginTop:'5px',marginBottom:'5px'}}
                                 onChange={this.epochCountHandler}
+                            />
+                        </Form.Field>
+                        <Form.Field required>
+                            <input
+                                placeholder='Batch Size'
+                                type='number'
+                                style={{marginTop:'5px',marginBottom:'5px'}}
+                                onChange={this.batchSizeHandler}
                             />
                         </Form.Field>
                         <Form.Field>
