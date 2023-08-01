@@ -81,7 +81,9 @@ const ResultPanel = () => {
               setDisableClearButton(false);
             })
             .catch((error) => {
-              console.error(error);
+              console.error(error.response.data);
+              setResultValues([error.response.data.message])
+              setDisableClearButton(false);
             });
     
           setDisableRunButton(true);
