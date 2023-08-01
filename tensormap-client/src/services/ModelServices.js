@@ -35,13 +35,13 @@ export const download_code = async (model_name) =>  {
   const data = {"model_name": model_name}
   return axios.post(urls.BACKEND_DOWNLOAD_CODE, data)
     .then(resp => {
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(new Blob([resp.data], { type: "application/octet-stream" }));
-      link.download = data.selectedModel + strings.MODEL_EXTENSION;
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(new Blob([resp.data], { type: "application/octet-stream" }));
+        link.download = data.model_name + strings.MODEL_EXTENSION;
 
-      document.body.appendChild(link);
+        document.body.appendChild(link);
 
-      link.click();
+        link.click();
 
       setTimeout(function () {
         window.URL.revokeObjectURL(link.href);
@@ -64,7 +64,8 @@ export const runModel = async (modelName) => {
       if (resp.data.success === true) {
         return resp.data.message;
       }
-      throw new Error(resp.data.message);
+      console.log(resp.data.message)
+      throw new Error(resp.data);
     })
     .catch(err => {
       throw err
