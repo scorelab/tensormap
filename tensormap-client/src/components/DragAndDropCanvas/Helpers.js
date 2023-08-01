@@ -13,7 +13,8 @@ export const InitialFormState = {
     disableButton:true,
     modalOpen:false,
     modelValidatedSuccessfully:false,
-    modalContent:null
+    modalContent:null,
+    batchSize:1
 }
 
 // Checks whether all the node inputs, form inputs are filled and the graph is connected before enabling validate button 
