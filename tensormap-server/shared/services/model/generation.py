@@ -115,7 +115,7 @@ def helper_generate_layers(layer_params):
             "inbound_nodes": []
         }
 
-        default_input["config"]["batch_input_shape"] = [layer_params["data"]["params"]["dim-x"],layer_params["data"]["params"]["dim-y"]]
+        default_input["config"]["batch_input_shape"] = [None,layer_params["data"]["params"]["dim-y"]]
         default_input["config"]["name"] = layer_params["id"]
         default_input["name"] = layer_params["id"]
 
