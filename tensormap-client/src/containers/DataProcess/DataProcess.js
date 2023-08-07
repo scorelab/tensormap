@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import * as strings from "../../constants/Strings";
-import {Segment, Dropdown, Form, Button} from "semantic-ui-react";
+import {Segment, Dropdown, Form, Button,Tab} from "semantic-ui-react";
 import ModalComponent from '../../components/shared/Modal';
-import { getAllFiles,setTargetField } from '../../services/FileServices';
+import CovarianceHeatMap from '../../components/Process/HeatMap';
+import SelectFileModal from '../../components/Process/SelectFileModal';
+import { getAllFiles,setTargetField,getCovMatrix as getCorrMatrix } from '../../services/FileServices';
 
 class DataProcess extends Component {
 
@@ -15,10 +17,21 @@ class DataProcess extends Component {
         targetField: null,
         disableButton: true,
         targetAddedSuccessfully:false,
-        modalOpen:false
+        modalOpen:false,
+        covMatrix:null
     }
 
+    panes = [
+        {
+          menuItem: 'Metrics',
+          render: () => this.state.covMatrix?<CovarianceHeatMap covMatrix={this.state.covMatrix}/>:<SelectFileModal />,
+        },
+        { menuItem: 'View Dataset', render: () => <Tab.Pane loading>Tab 2 Content</Tab.Pane> },
+    ]
+      
+    
     componentDidMount() {
+
 
         /*
         * In this react life cycle hook, file data is fetch from backend and added to state
@@ -42,6 +55,15 @@ class DataProcess extends Component {
 
     fileSelectHandler = (event,val) => {
 
+        getCorrMatrix(val.value)
+        .then(
+            response => {
+                console.log(response)
+                this.setState({...this.state, covMatrix:response});
+                
+            }
+
+        )
         const promise = new Promise(resolve => {
             this.setState({...this.state, selectedFile: val.value, showFieldsList:true }, () => resolve());
         });
@@ -167,6 +189,7 @@ class DataProcess extends Component {
                 >
                     {strings.PROCESS_TARGET_FIELD_SUBMIT_BUTTON}
                 </Button>
+                <Tab panes={this.panes} style={{"marginTop":"2%"}}/>
             </div>
         );
     }

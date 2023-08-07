@@ -53,3 +53,18 @@ export const setTargetField = async (fileId, targetField) => {
       return false;
     });
 };
+
+
+export const getCovMatrix = async (file_id) => {
+  return axios.get(urls.BACKEND_GET_COV_MATRIX+file_id)
+  .then(resp => {
+    if (resp.data.success === true) {
+      return resp.data.data
+    }
+  })
+  .catch(err=> {
+    console.error(err)
+    throw(err)
+  })
+
+}
