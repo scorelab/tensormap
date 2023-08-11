@@ -12,4 +12,4 @@ export const BACKEND_ADD_TARGET_FIELD = '/data/process/target';
 export const BACKEND_FILE_UPLOAD = '/data/upload/file';
 export const WS_DL_RESULTS = "http://127.0.0.1:5000/dl-result";
 export const BACKEND_VALIDATE_MODEL = "/model/validate";
-export const BACKEND_GET_COV_MATRIX = "/data/process/corr_matrix/";
+export const BACKEND_GET_COV_MATRIX = "/data/process/data_metrics/";

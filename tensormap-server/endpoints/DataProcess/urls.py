@@ -1,4 +1,4 @@
-from endpoints.DataProcess.views import ProcessAddNGet, ProcessIDOperations,GetCovMatrix
+from endpoints.DataProcess.views import ProcessAddNGet, ProcessIDOperations,GetDataMetrics
 from shared.services.config import get_configs
 
 configs = get_configs()
@@ -10,4 +10,4 @@ def process_urls(api):
 
     api.add_resource(ProcessAddNGet, base + data_uri + '/target')
     api.add_resource(ProcessIDOperations, base + data_uri + '/target/<int:file_id>')
-    api.add_resource(GetCovMatrix,base + data_uri+'/corr_matrix/<int:file_id>')
+    api.add_resource(GetDataMetrics,base + data_uri+'/data_metrics/<int:file_id>')

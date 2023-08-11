@@ -6,7 +6,7 @@ const SelectFileModal = () => (
     <Icon name='file alternate outline' />
     Select a File
     <Header.Subheader>
-      Select a dataset to view the co-relation matrix
+      Select a dataset to view the metrics of the Dataset
     </Header.Subheader>
   </Header>
   </div>
