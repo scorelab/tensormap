@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import * as strings from "../../constants/Strings";
 import {Segment, Dropdown, Form, Button,Tab} from "semantic-ui-react";
 import ModalComponent from '../../components/shared/Modal';
-import CovarianceHeatMap from '../../components/Process/HeatMap';
+import Metrics from '../../components/Process/Metrics';
 import SelectFileModal from '../../components/Process/SelectFileModal';
 import { getAllFiles,setTargetField,getCovMatrix as getCorrMatrix } from '../../services/FileServices';
 
@@ -18,13 +18,15 @@ class DataProcess extends Component {
         disableButton: true,
         targetAddedSuccessfully:false,
         modalOpen:false,
-        covMatrix:null
+        corrMatrix:null,
+        dataTypes:null,
+        metrics:null
     }
 
     panes = [
         {
           menuItem: 'Metrics',
-          render: () => this.state.covMatrix?<CovarianceHeatMap covMatrix={this.state.covMatrix}/>:<SelectFileModal />,
+          render: () => this.state.corrMatrix?<Tab.Pane style={{ padding: '30px',backgroundColor:'#e6e9f0' }}><Metrics corrMatrix={this.state.corrMatrix} dataTypes={this.state.dataTypes} metrics={this.state.metrics} /></Tab.Pane>:<Tab.Pane  style={{ padding: '30px'}}><SelectFileModal /></Tab.Pane>,
         },
         { menuItem: 'View Dataset', render: () => <Tab.Pane loading>Tab 2 Content</Tab.Pane> },
     ]
@@ -59,7 +61,7 @@ class DataProcess extends Component {
         .then(
             response => {
                 console.log(response)
-                this.setState({...this.state, covMatrix:response});
+                this.setState({...this.state, corrMatrix:response.correlation_matrix,dataTypes:response.data_types,metrics:response.metric});
                 
             }
 

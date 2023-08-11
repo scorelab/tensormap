@@ -3,7 +3,7 @@ from endpoints.DataProcess.services import (
     delete_one_target_by_id_service,
     get_all_targets_service,
     get_one_target_by_id_service,
-    get_corr_matrix
+    get_data_metrics
 )
 from endpoints.DataProcess.validators import target_add_post_validator
 from flask_restful import Resource
@@ -26,6 +26,6 @@ class ProcessIDOperations(Resource):
     def get(self, file_id):
         return get_one_target_by_id_service(file_id=file_id)
     
-class GetCovMatrix(Resource):
+class GetDataMetrics(Resource):
     def get(self,file_id):
-        return get_corr_matrix(file_id=file_id)
+        return get_data_metrics(file_id=file_id)

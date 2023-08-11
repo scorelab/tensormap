@@ -70,14 +70,19 @@ def get_one_target_by_id_service(file_id):
     else:
         return generic_response(status_code=400, success=False, message="File doesn't exist in DB")
 
-def get_corr_matrix(file_id):
+def get_data_metrics(file_id):
     configs = get_configs()
     file = DataFile.query.filter_by(id=file_id).first()
     if file:
         FILE_NAME = configs['api']['upload']['folder'] + '/' + file.file_name + '.' + file.file_type
         df = pd.read_csv(FILE_NAME)
-        cov_matrix = df.corr().to_dict()
+        metrics = {}
+        metrics['data_types']  = df.dtypes.apply(str).to_dict()
+        metrics['correlation_matrix'] = df.corr().to_dict()
+        metrics['metric'] = df.describe().to_dict()
         # cov_matrix_rounded = np.around(cov_matrix.values, 2).tolist()
         return generic_response(
-                    status_code=200, success=True, message='Co-variant matrix generated succesfully', data=cov_matrix
+                    status_code=200, success=True, message='Dataset metrics generated succesfully', data=metrics
                 )
+    else:
+        return generic_response(status_code=400, success=False, message="File doesn't exist in DB")
