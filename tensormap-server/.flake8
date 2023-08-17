@@ -1,0 +1,24 @@
+[flake8]
+# Base flake8 configuration
+exclude =
+    # No need to traverse these directories
+    .git,
+    __pycache__,
+    migrations,
+    env,
+    venv,
+    templates
+max-line-length = 88
+max-complexity = 10
+ignore = 
+    # Ignore line break before binary operator
+    W503,
+    # Ignore line length for comments and docstrings
+    E501
+
+# Plugins configurations
+# If you use plugins like flake8-import-order, flake8-docstrings, etc., you can configure them here
+
+# For example, for flake8-import-order
+# import-order-style = google
+# application-import-names = flask, your_app_module

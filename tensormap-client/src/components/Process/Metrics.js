@@ -11,7 +11,7 @@ const Metrics = (props) => {
                         <Grid.Column textAlign="center" width={4} style={{ backgroundColor: 'white', borderRadius: '10px',margin:'0px 20px',padding:'15px',display: 'flex', flexDirection: 'column'}}>
                             <DataTypes dataTypes={props.dataTypes} />
                         </Grid.Column>
-                        <Grid.Column textAlign="center" style={{ backgroundColor: 'white', borderRadius: '10px',padding:'15px',display: 'flex', flexDirection: 'column',margin:'0px 20px' }} width={11}>
+                        <Grid.Column textAlign="center" style={{ backgroundColor: 'white', borderRadius: '10px',padding:'15px',display: 'flex', flexDirection: 'column',margin:'0px 11px' }} width={11}>
                             <MetricTable metrics={props.metrics} />
                         </Grid.Column>
                     </Grid.Row>
