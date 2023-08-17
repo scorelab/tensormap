@@ -1,0 +1,18 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "jest":true
+    },
+    "extends": [
+        "react-app",
+        "react-app/jest",
+        "airbnb"
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+    }
+}
