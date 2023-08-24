@@ -101,4 +101,4 @@ This will generate migration scripts in `migrations/versions` directory.
 * Don't forget to commit the generated migration scripts to code.
 
 ## Testing
-For the backend, `PyTest` is used for testing. Sample unit tests and configurations are added inside the `tests` directory. For database tests make sure to create a mock database and add a sample datafile using `db_session` and `add_sample_file` fixtures in `conftest.py`.
+For the backend, `PyTest` is used for testing. Sample unit tests and configurations are added inside the `tests` directory. For database tests make sure to create a mock database and add a sample datafile using `db_session` and `add_sample_file` fixtures in `conftest.py`. To run backend tests simply run `pytest .` in the terminal.
