@@ -79,7 +79,11 @@ The application architecture is set up as follows.
 │   │   └── config.py
 │   └── utils.py
 ├── static
-└── templates
+├── templates
+|__ tests
+    |_ unit
+    |_ test.csv
+    |_ conftest.py
 ```
 
 ##### TODO: Describe architecture and how to do incremental developments.
@@ -95,3 +99,6 @@ This will generate migration scripts in `migrations/versions` directory.
 * To apply migrations to the database, run `flask db upgrade`
 
 * Don't forget to commit the generated migration scripts to code.
+
+## Testing
+For the backend, `PyTest` is used for testing. Sample unit tests and configurations are added inside the `tests` directory. For database tests make sure to create a mock database and add a sample datafile using `db_session` and `add_sample_file` fixtures in `conftest.py`.
