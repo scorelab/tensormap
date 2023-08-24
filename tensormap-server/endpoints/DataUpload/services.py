@@ -21,13 +21,13 @@ def add_file_service():
 
     # Extract the file name and type and save details in the database
 
-    # file_name has to be passed through secure_filename function to store the same name in the db(issue#182)
+    # file_name has to be passed through secure_filename function to store the same name in the db
     file_name_db = secure_filename(file.filename.rsplit('.', 1)[0].lower())
     file_type_db = file.filename.rsplit('.', 1)[1].lower()
     data = DataFile(file_name=file_name_db, file_type=file_type_db)
     save_one_record(record=data)
-
-    return generic_response(status_code=201, success=True, message='File saved successfully')
+    file_id = data.id
+    return generic_response(status_code=201, success=True, message='File saved successfully',file_id=file_id)
 
 
 def get_all_files_service():
