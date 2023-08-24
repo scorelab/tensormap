@@ -20,3 +20,7 @@ Follow the steps below to create your machine learning algorithm:
 4.  Drag and drop components from the sidebar onto the canvas to create your model.
 5.  Edit the properties of the selected component on the canvas to customize your algorithm.
 6.  Preview your algorithm in the preview window to see how it will perform.
+
+## Testing
+
+For the front end, `Jest` is used for testing. All the configurations and sample tests are added in the `__tests__` directory located inside the `components` directory. To run the rests simply run `npm run test` in the terminal.
