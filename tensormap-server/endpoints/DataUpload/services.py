@@ -26,8 +26,7 @@ def add_file_service():
     file_type_db = file.filename.rsplit('.', 1)[1].lower()
     data = DataFile(file_name=file_name_db, file_type=file_type_db)
     save_one_record(record=data)
-    file_id = data.id
-    return generic_response(status_code=201, success=True, message='File saved successfully',file_id=file_id)
+    return generic_response(status_code=201, success=True, message='File saved successfully')
 
 
 def get_all_files_service():
